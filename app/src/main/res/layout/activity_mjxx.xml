@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@color/blue_sl_false">
+
+                <Button
+                    android:id="@+id/cancle_btn"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/cmdclose_sl" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="模具管理"
+                    android:textColor="@android:color/white"
+                    android:textSize="30dp" />
+            </FrameLayout>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="模具编号"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/mjbh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="模具名称"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/mjmc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="模具尺寸"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/mjgg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="模具吨位"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/dw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="模具腔数"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/xs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="成型周期"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/cxsj"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="模架编号"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/mjah"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="存放位置"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/cwdm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="凸模材质"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/tmcz"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="责任人员"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/zrry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="配套设备"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:id="@+id/mjsb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:visibility="invisible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="备注"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:textSize="@dimen/mjxx_text_size"
+                        android:visibility="invisible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+                </TableRow>
+            </TableLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/blue_sl_false"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="850dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="【生产动态】"
+                        android:textColor="@android:color/black"
+                        android:textSize="23dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="40dp"
+                            android:layout_height="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@color/colorPrimary"></View>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="实际成型时间(s)"
+                            android:textColor="@android:color/black" />
+
+                        <View
+                            android:layout_width="40dp"
+                            android:layout_height="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="20dp"
+                            android:background="@android:color/holo_red_dark"></View>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="标准成型时间(s)"
+                            android:textColor="@android:color/black" />
+                    </LinearLayout>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/lineChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.LineChart>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="【生产履历】"
+                        android:textColor="@android:color/black"
+                        android:textSize="23dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:background="@color/blue_sl_false"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:textSize="@dimen/mjxx_text_size"
+                            android:layout_width="160dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/text_bg"
+                            android:gravity="center"
+                            android:text="生产日期"
+                            android:textColor="@android:color/black" />
+
+                        <TextView
+                            android:textSize="@dimen/mjxx_text_size"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/text_bg"
+                            android:gravity="center"
+                            android:text="机台"
+                            android:textColor="@android:color/black" />
+
+                        <TextView
+                            android:textSize="@dimen/mjxx_text_size"
+                            android:layout_width="110dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/text_bg"
+                            android:gravity="center"
+                            android:text="合模次数"
+                            android:textColor="@android:color/black" />
+                    </LinearLayout>
+
+                    <ListView
+                        android:id="@+id/list_b2"
+                        android:layout_width="370dp"
+                        android:divider="@color/touming"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginBottom="10dp"></ListView>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/ok_btn"
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp"
+                    android:text="确定"
+                    android:background="@drawable/blue_btn_sl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp"
+                    android:text="取消"
+                    android:background="@drawable/blue_btn_sl"
+                    android:layout_marginLeft="1dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>

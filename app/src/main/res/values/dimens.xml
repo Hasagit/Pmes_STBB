@@ -1,0 +1,26 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="info_ig_height">35dp</dimen>
+    <dimen name="card_height">170dp</dimen>
+    <dimen name="bt_right">30dp</dimen>
+    <dimen name="text_size">15dp</dimen>
+    <dimen name="b3_lable">98dp</dimen>
+    <dimen name="b4_lable">105dp</dimen>
+    <dimen name="b7_lable">90dp</dimen>
+    <dimen name="mjxx_text_size">15dp</dimen>
+    <dimen name="pzgl_text_width">85dp</dimen>
+    <dimen name="pzgl_text_width2">157dp</dimen>
+    <dimen name="status_btn_height">90dp</dimen>
+    <dimen name="status_btn_width">170dp</dimen>
+    <dimen name="status_ele">3dp</dimen>
+    <dimen name="status_rad">20dp</dimen>
+    <dimen name="blyyfx_text_width">230dp</dimen>
+    <dimen name="num_widht">100dp</dimen>
+    <dimen name="num_height">78dp</dimen>
+    <dimen name="blnum_width">110dp</dimen>
+    <dimen name="blnum_height">85dp</dimen>
+    <dimen name="ycfx_width">200dp</dimen>
+    <dimen name="ycfx_height">35dp</dimen>
+    <dimen name="jtjqsbg_num_heigth">80dp</dimen>
+    <dimen name="jtjqsbg_num_width">125dp</dimen>
+</resources>

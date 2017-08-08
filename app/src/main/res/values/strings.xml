@@ -1,0 +1,76 @@
+<resources>
+    <string name="app_name">RdyPmes</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="production_information">生产信息</string>
+    <string name="engineering_status">工程状态</string>
+    <string name="production_management">生产管理</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="zmsw">50</string>
+    <string name="cxpt">64</string>
+    <string name="kjsl">52</string>
+    <string name="ds">65</string>
+    <string name="sjqc">66</string>
+    <string name="sjjc">53</string>
+    <string name="pzyc">54</string>
+    <string name="tiaoji">51</string>
+    <string name="ts">63</string>
+    <string name="tingji">57</string>
+    <string name="dl">58</string>
+    <string name="by">61</string>
+    <string name="sm">60</string>
+    <string name="sl">62</string>
+    <string name="mjwx">55</string>
+    <string name="jtwx">56</string>
+    <string name="zyg">67</string>
+    <string name="cm">68</string>
+    <string name="rysg">*</string>
+    <string name="pgxj">*1</string>
+    <string name="js">F3</string>
+
+    <string name="zlmc_50">换模</string>
+    <string name="zlmc_51">调机</string>
+    <string name="zlmc_52">换色</string>
+    <string name="zlmc_53">首件</string>
+    <string name="zlmc_54">品质异常</string>
+    <string name="zlmc_55">修模</string>
+    <string name="zlmc_56">机台维修</string>
+    <string name="zlmc_57">停机</string>
+    <string name="zlmc_58">待料</string>
+    <string name="zlmc_59">首件NG</string>
+    <string name="zlmc_60">试模</string>
+    <string name="zlmc_61">换料</string>
+    <string name="zlmc_62">保养</string>
+    <string name="zlmc_63">待人</string>
+    <string name="zlmc_64">计划停机</string>
+    <string name="zlmc_65">工单暂停</string>
+    <string name="zlmc_66">待送首件</string>
+    <string name="zlmc_67"></string>
+    <string name="zlmc_68"></string>
+    <string name="zlmc_69"></string>
+    <string name="zlmc_70"></string>
+    <string name="zlmc_F3">结束</string>
+    <string name="zlmc_x">人员上岗</string>
+    <string name="zlmc_xj">品质巡机</string>
+
+    <string name="sbxx">D01</string>
+    <string name="mjxx">D02</string>
+    <string name="gdgl">D03</string>
+    <string name="jtjqsbg">D04</string>
+    <string name="gycs">D05</string>
+    <string name="scrz">D06</string>
+    <string name="ycfx">D07</string>
+    <string name="blfx">D08</string>
+    <string name="oeefx">D09</string>
+    <string name="zybz">D10</string>
+
+    <string name="gpio_update_time">10000</string>
+    <string name="base_info_update_time">60000</string>
+    <!--<string name="service_ip">http://192.168.2.121</string>-->
+    <string name="service_ip">http://192.168.1.39</string>
+
+    <string name="cust_cmp_name">广东邦宝益智玩具股份有限公司</string>
+    <string name="main_btn_01">生产信息</string>
+    <string name="main_btn_02">工程状态</string>
+    <string name="main_btn_03">作业指导</string>
+</resources>

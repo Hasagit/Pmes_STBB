@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="800dp"
+    android:background="@android:color/white"
+    android:layout_height="500dp"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp"
+        android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#99ccff">
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/cmdclose_sl"
+                android:id="@+id/cancle_btn"
+                android:layout_gravity="center_vertical|right"/>
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="30dp"
+                android:text="设备信息"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:layout_width="220dp"
+                android:layout_marginBottom="20dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+               >
+
+                <TableRow android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="机台编号"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/jtbh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_bg"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+                </TableRow>
+
+                <TableRow android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="机台名称"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/jtmc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_bg"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+                </TableRow>
+
+                <TableRow android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="所属组别"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/bbdm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_bg"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+                </TableRow>
+
+                <TableRow android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="机台吨位"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/jtdw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_bg"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+                </TableRow>
+
+                <TableRow android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="设备地址"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/wgid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_bg"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+                </TableRow>
+                <TableRow android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="最小宽度"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/minkd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_bg"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+                </TableRow>
+                <TableRow android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="最大宽度"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/maxkd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_bg"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+                </TableRow>
+                <TableRow android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="最小厚度"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/minhd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_bg"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+                </TableRow>
+                <TableRow android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="最大厚度"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:id="@+id/maxhd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_bg"
+                        android:textColor="@android:color/black"
+                        android:textSize="17dp" />
+                </TableRow>
+
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_marginTop="9dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:background="@color/blue_sl_false"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="550dp"
+                    android:layout_height="35dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:layout_width="110dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:text="模具编号"/>
+                    <TextView
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:text="模具名称"/>
+                    <TextView
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:text="合模次数"/>
+                    <TextView
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:text="良品率%"/>
+                    <TextView
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:layout_width="180dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:text="最近生产时间"/>
+                </LinearLayout>
+                <ListView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="550dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:divider="@color/touming"
+                    android:id="@+id/b1_list"
+                    android:layout_marginBottom="20dp"></ListView>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/ok_btn"
+                android:textColor="@android:color/white"
+                android:textSize="20dp"
+                android:text="确定"
+                android:background="@drawable/blue_btn_sl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <Button
+                android:textColor="@android:color/white"
+                android:textSize="20dp"
+                android:text="取消"
+                android:background="@drawable/blue_btn_sl"
+                android:layout_marginLeft="1dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

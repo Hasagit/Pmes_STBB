@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#25579a</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="lable">#dcdcdc</color>
+    <color name="bottom_sl">#81a6d7</color>
+    <color name="bottom_bt_sl">#898686</color>
+    <color name="white">#ffffff</color>
+    <color name="blue_sl_false">#99ccff</color>
+    <color name="blue_sl_true">#c1ddf9</color>
+    <color name="touming">#00000000</color>
+    <color name="color_1">#f96207</color>
+    <color name="color_2">#07f907</color>
+    <color name="color_3">#07f0f9</color>
+    <color name="color_4">#f6f907</color>
+    <color name="color_5">#1e07f9</color>
+    <color name="color_6">#c307f9</color>
+    <color name="color_7">#f9071e</color>
+    <color name="color_7_33">#33f9071e</color>
+    <color name="color_8">#81a6d7</color>
+    <color name="color_9">#8d8c92</color>
+    <color name="color_10">#FF4081</color>
+    <color name="large">#99ff99</color>
+    <color name="small">#ff9999</color>
+    <color name="lightgray">#d3d3d3</color>
+    <color name="limegreen">#32cd32</color>
+    <color name="darkviolet">#9400D3</color>
+    <color name="N">#7c7a7a</color>
+    <color name="text_bg">#ff9999</color>
+    <color name="gdgl_1">#a6ffa6</color>
+    <color name="gdgl_2">#ffbebe</color>
+    <color name="gdgl_3">#d5d5d5</color>
+    <color name="g_true">#99ccff</color>
+    <color name="g_false">#8899ccff</color>
+</resources>
