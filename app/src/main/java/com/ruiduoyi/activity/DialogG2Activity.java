@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ruiduoyi.R;
+import com.ruiduoyi.activity.Dialog.BaseDialogActivity;
 import com.ruiduoyi.model.NetHelper;
 
 import java.util.List;

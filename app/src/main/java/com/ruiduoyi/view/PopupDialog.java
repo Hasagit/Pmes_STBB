@@ -2,6 +2,7 @@ package com.ruiduoyi.view;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +28,10 @@ public class PopupDialog {
 
     public PopupDialog(Activity context,int width,int height) {
         this.context = context;
-
+        int width_dp=((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, width, context.getResources().getDisplayMetrics()));
+        int height_dp=((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, height, context.getResources().getDisplayMetrics()));
         View contenView= LayoutInflater.from(context).inflate(R.layout.popup_dialog1,null);
-        dialog=new PopupWindow(contenView, width, height);
+        dialog=new PopupWindow(contenView, width_dp, height_dp);
         title=(TextView)contenView.findViewById(R.id.title);
         cancle_btn=(Button)contenView.findViewById(R.id.cancle_btn);
         try_again=(Button)contenView.findViewById(R.id.again_btn);

@@ -460,8 +460,11 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             if (xtemp.size()<xVals.size()){
                 for (int j=0;j<xVals.size();j++){
                     String xtemp_str=xtemp.toString();
-                    int num=xtemp_str.indexOf(xVals.get(j));
-                    if (xtemp.toString().indexOf(xVals.get(j))<1){
+                    //int num=xtemp_str.indexOf(xVals.get(j));
+                   /* if (xtemp.toString().indexOf(xVals.get(j))<1){
+                        needToAddxVal.add(xVals.get(j));
+                    }*/
+                    if (AppUtils.calculate(xtemp.toString(),xVals.get(j))<1){
                         needToAddxVal.add(xVals.get(j));
                     }
                 }

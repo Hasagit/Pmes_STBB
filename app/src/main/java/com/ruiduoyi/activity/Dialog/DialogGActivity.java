@@ -1,4 +1,4 @@
-package com.ruiduoyi.activity;
+package com.ruiduoyi.activity.Dialog;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,13 +15,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ruiduoyi.R;
+import com.ruiduoyi.activity.BlfxActivity;
+import com.ruiduoyi.activity.GdglActivity;
+import com.ruiduoyi.activity.JtjqsbgActivity;
+import com.ruiduoyi.activity.PzxjActivity;
+import com.ruiduoyi.activity.YcfxActivity;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 
-import java.math.BigInteger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class DialogGActivity extends BaseDialogActivity implements View.OnClickListener{
@@ -39,7 +46,11 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
         public void onReceive(Context context, Intent intent) {
             num=intent.getStringExtra("num");
             num_edit.setText(num);
-            getNetData(0x100);
+            if (title.equals("品管巡机")){
+                readEles();
+            }else {
+                getNetData(0x100);
+            }
         }
     };
 
@@ -58,69 +69,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
             switch (msg.what){
                 case 0x100:
                     String readCardResult= (String) msg.obj;
-                    final String two=readCardResult.substring(0,2);
-                    if (readCardResult.substring(0,2).equals("OK")){
-                        if (type.equals("OPR")){//执行指令操作
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_SrvCon '"+jtbh+"','"+zldm+"','"+num+"',''");
-                                    if (list!=null){
-                                        if (list.size()>0){
-                                            if (list.get(0).size()>0){
-                                                if (list.get(0).get(0).trim().equals("OK")){
-                                                  if (isFromBlyyfx){//从BlyyfxActivity启动来的
-                                                      type="DOC";
-                                                      getNetData(0x101);
-                                                  }else {//从statusFragment启动来的
-                                                      Intent intent=new Intent();
-                                                      intent.setAction("UpdateInfoFragment");
-                                                      sendBroadcast(intent);
-                                                      if (!(title.equals("结束")|title.equals("人员上岗")|title.equals("品管巡机"))){
-                                                          Intent intent2=new Intent();
-                                                          intent2.setAction("com.Ruiduoyi.returnToInfoReceiver");
-                                                          sendBroadcast(intent2);
-                                                      }
-                                                      finish();
-                                                  }
-                                                }else {
-                                                    Message msg=handler.obtainMessage();
-                                                    msg.what=0x102;
-                                                    msg.obj=list.get(0).get(0);
-                                                    handler.sendMessage(msg);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }).start();
-                        }else {//执行文档操作
-                            String wkno=readCardResult.substring(2,readCardResult.length());
-                            Intent intent;
-                            if (title.equals("工单管理")){
-                                intent=new Intent(DialogGActivity.this,GdglActivity.class);
-                                intent.putExtra("wkno",wkno);
-                                startActivity(intent);
-                            }else if(title.equals("异常分析")){
-                                intent=new Intent(DialogGActivity.this,YcfxActivity.class);
-                                intent.putExtra("wkno",wkno);
-                                startActivity(intent);
-                            }else if(title.equals("不良分析")){
-                                intent=new Intent(DialogGActivity.this,BlfxActivity.class);
-                                intent.putExtra("wkno",wkno);
-                                startActivity(intent);
-                            }else if(title.equals("穴数变更")){
-                                intent=new Intent(DialogGActivity.this,JtjqsbgActivity.class);
-                                intent.putExtra("wkno",wkno);
-                                startActivity(intent);
-                            }
-                            finish();
-
-                        }
-                    }else {
-                        tip_text.setText(readCardResult);
-                        tip_text.setTextColor(Color.RED);
-                    }
+                    execOPRorDOC(readCardResult);
                     break;
                 case 0x101:
                     String result= (String) msg.obj;
@@ -197,6 +146,100 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
         }).start();
     }
 
+    private void execOPRorDOC(String readCardResult){
+        final String two=readCardResult.substring(0,2);
+        if (readCardResult.substring(0,2).equals("OK")){
+            if (type.equals("OPR")){//执行指令操作
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_SrvCon '"+jtbh+"','"+zldm+"','"+num+"',''");
+                        if (list!=null){
+                            if (list.size()>0){
+                                if (list.get(0).size()>0){
+                                    if (list.get(0).get(0).trim().equals("OK")){
+                                        if (isFromBlyyfx){//从BlyyfxActivity启动来的
+                                            type="DOC";
+                                            getNetData(0x101);
+                                        }else {//从statusFragment启动来的
+                                            AppUtils.sendUpdateInfoFragmentReceiver(DialogGActivity.this);
+                                            if (!title.equals("人员上岗")|title.equals("品管巡机")){
+                                                AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
+                                            }
+                                            finish();
+                                        }
+                                    }else {
+                                        Message msg=handler.obtainMessage();
+                                        msg.what=0x102;
+                                        msg.obj=list.get(0).get(0);
+                                        handler.sendMessage(msg);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }).start();
+            }else {//执行文档操作
+                String wkno=readCardResult.substring(2,readCardResult.length());
+                Intent intent;
+                if (title.equals("工单管理")){
+                    intent=new Intent(DialogGActivity.this,GdglActivity.class);
+                    intent.putExtra("wkno",wkno);
+                    startActivity(intent);
+                }else if(title.equals("异常分析")){
+                    intent=new Intent(DialogGActivity.this,YcfxActivity.class);
+                    intent.putExtra("wkno",wkno);
+                    startActivity(intent);
+                }else if(title.equals("不良分析")){
+                    intent=new Intent(DialogGActivity.this,BlfxActivity.class);
+                    intent.putExtra("wkno",wkno);
+                    startActivity(intent);
+                }else if(title.equals("穴数变更")){
+                    intent=new Intent(DialogGActivity.this,JtjqsbgActivity.class);
+                    intent.putExtra("wkno",wkno);
+                    startActivity(intent);
+                }
+                finish();
+
+            }
+        }else {
+            tip_text.setText(readCardResult);
+            tip_text.setTextColor(Color.RED);
+        }
+    }
+
+    private void readEles() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+               try {
+                   JSONArray array=NetHelper.getQuerysqlResultJsonArray(" Exec PAD_Check_Usr_Prg '"
+                           +num_edit.getText().toString()+"','mom107p1'");
+                   if (array!=null){
+                       if (array.length()>0){
+                           JSONObject json=array.getJSONObject(0);
+                           String readCardResult=json.getString("Column1");
+                           if (readCardResult.substring(0,2).equals("OK")){
+                               Intent intent=new Intent(DialogGActivity.this,PzxjActivity.class);
+                               intent.putExtra("wkno",readCardResult.substring(2,readCardResult.length()));
+                               startActivity(intent);
+                               finish();
+                           }else {
+                               Message msg=handler.obtainMessage();
+                               msg.what=0x102;
+                               msg.obj=readCardResult;
+                               handler.sendMessage(msg);
+                           }
+                       }
+                   }else {
+                       AppUtils.uploadNetworkError("Exec PAD_Check_Usr_Prg",jtbh,sharedPreferences.getString("mac",""));
+                   }
+               }catch (JSONException e){
+                   e.printStackTrace();
+               }
+            }
+        }).start();
+    }
 
 
     @Override

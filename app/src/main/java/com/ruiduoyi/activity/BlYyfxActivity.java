@@ -3,9 +3,7 @@ package com.ruiduoyi.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,11 +12,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.ruiduoyi.Fragment.BlfxFragment;
-import com.ruiduoyi.Fragment.InfoFragment;
-import com.ruiduoyi.Fragment.StatusFragment;
-import com.ruiduoyi.Fragment.TestFragment;
 import com.ruiduoyi.Fragment.YyfxFragment;
 import com.ruiduoyi.R;
+import com.ruiduoyi.activity.Dialog.DialogGActivity;
 import com.ruiduoyi.adapter.ViewPagerAdapter;
 import com.ruiduoyi.utils.AppUtils;
 

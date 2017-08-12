@@ -32,9 +32,11 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
     private TextView text_1,text_2,text_3,text_4,text_5,text_6,text_7,text_8,text_9,text_10,text_11,text_key;
     private String jtbh,lbdm;
     private YyfxAdapter adapter;
-    String wkno="";
+    private String wkno="";
+    private String keyid;
     private PopupWindowSpinner spinner_list;
     private PopupDialog dialog;
+    private PopupDialog dialog_tip;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,10 +68,22 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
         cancle_btn.setOnClickListener(this);
         sub_btn.setOnClickListener(this);
 
-        dialog=new PopupDialog(this,400,300);
+        dialog=new PopupDialog(this,400,360);
         dialog.setTitle("提示");
         dialog.getCancle_btn().setVisibility(View.GONE);
         dialog.getOkbtn().setText("确定");
+
+
+        dialog_tip=new PopupDialog(this,400,360);
+        dialog_tip.setTitle("提示");
+        dialog_tip.getCancle_btn().setVisibility(View.GONE);
+        dialog_tip.getOkbtn().setText("确定");
+        dialog_tip.getOkbtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog_tip.dismiss();
+            }
+        });
     }
 
     private void initData(){
@@ -97,6 +111,7 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
             map.put("lab_10",item.get(12));
             map.put("lab_11",item.get(13));
             map.put("lab_12",item.get(7));
+            map.put("keyid",item.get(1));
             data.add(map);
         }
         List<TextView>list_text=new ArrayList<>();
@@ -126,7 +141,9 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                     initListView(list_1);
                     break;
                 case 0x107:
-                    String zldm= (String) msg.obj;
+                    Map<String,String>map_select= (Map<String, String>) msg.obj;
+                    String zldm= map_select.get("lab_12");
+                    keyid=map_select.get("keyid");
                     getYylb(zldm);
                     break;
                 case 0x108:
@@ -162,6 +179,7 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                     blmsList.setAdapter(adapter);
                     break;
                 case 0x110:
+                    //AppUtils.sendUpdateInfoFragmentReceiver(YcfxActivity.this);
                     dialog.setMessage("提交成功");
                     dialog.setMessageTextColor(Color.BLACK);
                     dialog.getOkbtn().setOnClickListener(new View.OnClickListener() {
@@ -174,6 +192,7 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                     dialog.show();
                     break;
                 case 0x111:
+                    dialog.setMessageTextColor(Color.RED);
                     dialog.setMessage("提交失败");
                     dialog.getOkbtn().setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -204,6 +223,11 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                             msg.obj=list;
                             handler.sendMessage(msg);
                         }
+                    }else {
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x108;
+                        msg.obj=list;
+                        handler.sendMessage(msg);
                     }
                 }
             }
@@ -221,14 +245,45 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
             List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_YcmInf '"+jtbh+"'");
             Message msg=handler.obtainMessage();
             if(list!=null){
-                msg.what=0x100;
-                msg.obj=list;
-            }else {
-                msg.what=0x101;
+                if(list.size()>0){
+                    if (list.get(0).size()>13){
+                        msg.what=0x100;
+                        msg.obj=list;
+                    }
+                }else {
+                    msg.what=0x100;
+                    msg.obj=list;
+                }
             }
             handler.sendMessage(msg);
         }
     });
+
+
+    private boolean isReady(){
+        if (text_1.getText().toString().equals("")){
+            dialog_tip.setMessageTextColor(Color.RED);
+            dialog_tip.setMessage("请先选取异常信息");
+            dialog_tip.show();
+            return false;
+        }
+
+        if (spinner_1.getText().toString().equals("")){
+            dialog_tip.setMessageTextColor(Color.RED);
+            dialog_tip.setMessage("请先选取原因类别");
+            dialog_tip.show();
+            return false;
+        }
+        final List<Map<String,String>>select_data=adapter.getSelectData();
+        if (!(select_data.size()>0)){
+            dialog_tip.setMessageTextColor(Color.RED);
+            dialog_tip.setMessage("请先选取原因描述");
+            dialog_tip.show();
+            return false;
+        }
+        return true;
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -243,16 +298,29 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                 }
                 break;
             case R.id.sub_btn:
-                final List<Map<String,String>>select_data=adapter.getSelectData();
-                if (!(select_data.size()>0)){
-                    Toast.makeText(YcfxActivity.this,"请先选取原因描述",Toast.LENGTH_SHORT).show();
-                }else {
+                if (isReady()){
+                    final List<Map<String,String>>select_data=adapter.getSelectData();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
+                            String select_str="";
                             for (int i=0;i<select_data.size();i++){
                                 Map<String,String>uplaod_data=select_data.get(i);
-                                upLoadOneData(uplaod_data,wkno);
+                                select_str=select_str+uplaod_data.get("lab_1")+";";
+                                //upLoadOneData(uplaod_data,wkno);
+                            }
+                            List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Upd_YclInfo " +
+                                    "'"+jtbh+"','"+text_2.getText().toString()+"','"+lbdm+"'," + "'"+select_str+"',"+keyid+",'"+wkno+"'");
+                            if (list!=null){
+                                if (list.size()>0){
+                                    if (list.get(0).size()>0){
+                                        if (list.get(0).get(0).equals("OK")){
+                                            handler.sendEmptyMessage(0x110);
+                                        }
+                                    }
+                                }
+                            }else {
+                                handler.sendEmptyMessage(0x111);
                             }
                         }
                     }).start();
@@ -268,7 +336,8 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<List<String>>list1=NetHelper.getQuerysqlResult("Exec PAD_Get_ZlmYywh 'C','"+jtbh+"','"+list.get(position).get(0)+"'");
+                List<List<String>>list1=NetHelper.getQuerysqlResult("Exec PAD_Get_ZlmYywh 'C','"+jtbh+"','"+
+                        list.get(position).get(0)+"'");
                 if (list1!=null){
                     if (list1.size()>0){
                         if (list1.get(0).size()>1){
@@ -293,7 +362,7 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
 
     private void upLoadOneData(Map<String,String>selectData,String wkno){
         List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Upd_YclInfo " +
-                "'"+jtbh+"','"+text_2.getText().toString()+"','"+lbdm+"'," + "'"+selectData.get("lab_1")+"','0','"+wkno+"'");
+                "'"+jtbh+"','"+text_2.getText().toString()+"','"+lbdm+"'," + "'"+selectData.get("lab_1")+"',"+keyid+",'"+wkno+"'");
         if (list!=null){
             if (list.size()>0){
                 if (list.get(0).size()>0){

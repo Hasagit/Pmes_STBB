@@ -1,4 +1,4 @@
-package com.ruiduoyi.activity;
+package com.ruiduoyi.activity.Dialog;
 
 import android.os.Bundle;
 import android.os.Handler;

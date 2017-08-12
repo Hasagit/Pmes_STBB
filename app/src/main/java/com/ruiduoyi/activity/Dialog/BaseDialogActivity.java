@@ -1,4 +1,4 @@
-package com.ruiduoyi.activity;
+package com.ruiduoyi.activity.Dialog;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

@@ -168,6 +168,40 @@ public class AppUtils {
         context.sendBroadcast(intent);
     }
 
+    public static void sendUpdateOeeReceiver(Context context){
+        Intent intent=new Intent();
+        intent.setAction("com.ruiduoyi.updateOee");
+        context.sendBroadcast(intent);
+    }
+
+    public static void sendUpdateInfoFragmentReceiver(Context context){
+        Intent intent=new Intent();
+        intent.setAction("UpdateInfoFragment");
+        context.sendBroadcast(intent);
+    }
+
+    public static void sendReturnToInfoReceiver(Context context){
+        Intent intent2=new Intent();
+        intent2.setAction("com.Ruiduoyi.returnToInfoReceiver");
+        context.sendBroadcast(intent2);
+    }
+
+
+    public static int calculate(String str,String substr){
+        if (str.length()>0){
+            String temp = str;
+            int count = 0;
+            int index = temp.indexOf(substr);
+            while (index != -1) {
+                temp = temp.substring(index + 1);
+                index = temp.indexOf(substr);
+                count++;
+            }
+            return count;
+        }else {
+            return 0;
+        }
+    }
 
 
 }

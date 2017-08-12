@@ -29,11 +29,16 @@ import com.ruiduoyi.utils.AppUtils;
 import com.ruiduoyi.view.PopupDialog;
 import com.ruiduoyi.view.PopupWindowSpinner;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.id.list;
 
 public class FirstActivity extends BaseActivity{
     private boolean isServiceOpen=false;
@@ -162,9 +167,7 @@ public class FirstActivity extends BaseActivity{
 
                         dialog.setOutsideTouchable(false);
                         dialog.setBackgroundDrawable(new ColorDrawable(0xffffff));
-                        if (!FirstActivity.this.isFinishing()){
-                            dialog.showAtLocation(FirstActivity.this.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
-                        }
+                        dialog.showAtLocation(FirstActivity.this.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
                     }else {
                         TextView msg_text=(TextView)contenView.findViewById(R.id.msg_text);
                         msg_text.setText("服务器连接异常\n系统每隔十秒重连一次 \n重连次数："+msg.arg1);
@@ -216,7 +219,17 @@ public class FirstActivity extends BaseActivity{
                         new Thread(new Runnable() {//获取机台编号列表
                             @Override
                             public void run() {
-                                List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_JtmMstr ''");
+                                JSONArray array=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_JtmMstr ''");
+                                if (array!=null){
+                                    Message msg=handler.obtainMessage();
+                                    msg.what=0x105;
+                                    msg.obj=array;
+                                    handler.sendMessage(msg);
+                                }else {
+                                    AppUtils.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",
+                                            jtbh,sharedPreferences.getString("mac",""));
+                                }
+                                /*List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_JtmMstr ''");
                                 if (list!=null){
                                     Message msg=handler.obtainMessage();
                                     msg.what=0x105;
@@ -225,24 +238,67 @@ public class FirstActivity extends BaseActivity{
                                 }else {
                                     AppUtils.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",
                                             jtbh,sharedPreferences.getString("mac",""));
-                                }
+                                }*/
                             }
                         }).start();
 
                     }
                     break;
                 case 0x103:
-                    List<List<String>>list=(List<List<String>>)msg.obj;
+                    try {
+                        JSONArray array= (JSONArray) msg.obj;
+                        if (array.length()>0){
+                            jtbh=array.getJSONObject(0).getString("jtm_jtbh");
+                            SharedPreferences.Editor editor=sharedPreferences.edit();
+                            editor.putString("jtbh",jtbh);
+                            editor.commit();
+                            isJtbh=true;
+                        }
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                    /*List<List<String>>list=(List<List<String>>)msg.obj;
                     if (list.size()>0){
                         jtbh=list.get(0).get(0);
                         SharedPreferences.Editor editor=sharedPreferences.edit();
                         editor.putString("jtbh",jtbh);
                         editor.commit();
                         isJtbh=true;
-                    }
+                    }*/
                     break;
                 case 0x105:
-                    List<List<String>>list1=(List<List<String>>)msg.obj;
+                    try {
+                        JSONArray array= (JSONArray) msg.obj;
+                        if (array.length()>0){
+                            final List<String>data=new ArrayList<>();
+                            for (int i=0;i<array.length();i++){
+                                data.add(array.getJSONObject(i).getString("v_jtbh"));
+                            }
+                            spiner_btn.setVisibility(View.VISIBLE);
+                            jtbh_tip.setVisibility(View.VISIBLE);
+                            spiner_btn.setText("选择机台号");
+                            spiner_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    final PopupWindowSpinner spinner=new PopupWindowSpinner(FirstActivity.this,data,R.layout.spinner_list_b7,R.id.lab_1,200);
+                                    spinner.showUpOn(spiner_btn);
+                                    spinner.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            spiner_btn.setText(data.get(position));
+                                            spinner.dismiss();
+                                            //dialog2.dismiss();
+                                        }
+                                    });
+                                }
+                            });
+
+                        }
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+
+                    /*List<List<String>>list1=(List<List<String>>)msg.obj;
                     if (list1.size()>0){
                         final List<String>data=new ArrayList<>();
                         for (int i=0;i<list1.size();i++){
@@ -267,10 +323,21 @@ public class FirstActivity extends BaseActivity{
                             }
                         });
 
-                    }
+                    }*/
                     break;
                 case 0x106://服务器时间
-                    List<List<String>>list2=(List<List<String>>)msg.obj;
+                    try {
+                        JSONArray array= (JSONArray) msg.obj;
+                        if (array.length()>0){
+                            String time=array.getJSONObject(0).getString("Column1");
+                            String ymd_hm=time.substring(0,4)+time.substring(5,7)+time.substring(8,10)
+                                    +"."+time.substring(11,13)+time.substring(14,16)+time.substring(17,19);
+                            AppUtils.setSystemTime(FirstActivity.this,ymd_hm);
+                        }
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                   /* List<List<String>>list2=(List<List<String>>)msg.obj;
                     if(list2.size()>0){
                         String time=list2.get(0).get(0);
                         String ymd_hm=time.substring(0,4)+time.substring(5,7)+time.substring(8,10)
@@ -278,7 +345,7 @@ public class FirstActivity extends BaseActivity{
                         AppUtils.setSystemTime(FirstActivity.this,ymd_hm);
                     }else {
                         //Toast.makeText(MainActivity.this,"获取服务器时间失败",Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
                     break;
                 case 0x107:
                     isNewVersion=false;
@@ -360,7 +427,7 @@ public class FirstActivity extends BaseActivity{
                     SharedPreferences.Editor editor=sharedPreferences.edit();
                     editor.putString("mac",mac);
                     editor.commit();
-                    List<List<String>>list=NetHelper.getQuerysqlResult("Select * from jtm_mstr where jtm_flag=1 and jtm_wgip='"+mac+"'");
+                    /*List<List<String>>list=NetHelper.getQuerysqlResult("Select * from jtm_mstr where jtm_flag=1 and jtm_wgip='"+mac+"'");
                     Message msg=handler.obtainMessage();
                     if(list!=null){
                       if (list.size()>0){
@@ -370,6 +437,22 @@ public class FirstActivity extends BaseActivity{
                       }else {
 
                       }
+                    }else {
+                        AppUtils.uploadNetworkError("获取机台编号 NetWordError",
+                                jtbh,sharedPreferences.getString("mac",""));
+                        msg.what=0x104;
+                        handler.sendMessage(msg);
+                    }*/
+                    JSONArray array=NetHelper.getQuerysqlResultJsonArray("Select * from jtm_mstr where jtm_flag=1 and jtm_wgip='"+mac+"'");
+                    Message msg=handler.obtainMessage();
+                    if(array!=null){
+                        if (array.length()>0){
+                            msg.what=0x103;
+                            msg.obj=array;
+                            handler.sendMessage(msg);
+                        }else {
+
+                        }
                     }else {
                         AppUtils.uploadNetworkError("获取机台编号 NetWordError",
                                 jtbh,sharedPreferences.getString("mac",""));
@@ -385,7 +468,20 @@ public class FirstActivity extends BaseActivity{
         new Thread(new Runnable() {//获取系统时间
             @Override
             public void run() {
-                List<List<String>>list= NetHelper.getQuerysqlResult("select GETDATE()");
+                JSONArray array=NetHelper.getQuerysqlResultJsonArray("select GETDATE()");
+                Message msg=handler.obtainMessage();
+                if(array!=null){
+                    msg.obj=array;
+                    msg.what=0x106;
+                    handler.sendMessage(msg);
+                }else {
+                    AppUtils.uploadNetworkError("select GETDATE() NetWordError",
+                            jtbh,sharedPreferences.getString("mac",""));
+                    //msg.what=0x104;
+                }
+
+
+               /* List<List<String>>list= NetHelper.getQuerysqlResult("select GETDATE()");
                 Message msg=handler.obtainMessage();
                 if(list!=null){
                     msg.obj=list;
@@ -395,7 +491,7 @@ public class FirstActivity extends BaseActivity{
                     AppUtils.uploadNetworkError("select GETDATE() NetWordError",
                             jtbh,sharedPreferences.getString("mac",""));
                     //msg.what=0x104;
-                }
+                }*/
             }
         }).start();
 
@@ -403,6 +499,38 @@ public class FirstActivity extends BaseActivity{
         new Thread(new Runnable() {
             @Override
             public void run() {
+                try {
+                    JSONArray array=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_WebAddr");
+                    if (array!=null){
+                        if (array.length()>0){
+                            Message msg=handler.obtainMessage();
+                            String oldVersionName= AppUtils.getAppVersionName(FirstActivity.this);
+                            String newVersionName=array.getJSONObject(0).getString("v_WebAppVer");
+                            SharedPreferences.Editor editor=sharedPreferences.edit();
+                            editor.putString("countdownNum",array.getJSONObject(0).getString("v_WebAppMin"));
+                            editor.commit();
+                            if (!oldVersionName.equals(newVersionName)){
+                                handler.sendEmptyMessage(0x107);
+                                AppUtils.DownLoadFileByUrl(array.getJSONObject(0).getString("v_WebAppPath"),
+                                        Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/RdyPmes.apk")),
+                                        "application/vnd.android.package-archive");
+                                startActivity(intent);
+                                handler.sendEmptyMessage(0x109);
+                            }else {
+                                handler.sendEmptyMessage(0x108);
+                            }
+                        }
+                    } else {
+                        AppUtils.uploadNetworkError("PAD_Get_WebAddr NetWordError",
+                                jtbh,sharedPreferences.getString("mac",""));
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                /*
                 List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_WebAddr");
                 if (list!=null){
                     if (list.size()>0){
@@ -427,15 +555,15 @@ public class FirstActivity extends BaseActivity{
                            }
                        }
 
-                       /*Message msg=handler.obtainMessage();
+                       *//*Message msg=handler.obtainMessage();
                         msg.what=0x107;
                         msg.obj=list;
-                        handler.sendMessage(msg);*/
+                        handler.sendMessage(msg);*//*
                     }
                 }else {
                     AppUtils.uploadNetworkError("PAD_Get_WebAddr NetWordError",
                             jtbh,sharedPreferences.getString("mac",""));
-                }
+                }*/
             }
         }).start();
 

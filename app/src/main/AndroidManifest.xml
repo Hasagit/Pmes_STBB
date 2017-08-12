@@ -23,42 +23,51 @@
         tools:replace="Android:icon, android:theme,android:name">
         <activity
             android:name=".activity.MainActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.BaseActivity"
             android:label="@string/title_activity_base"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activity.SbxxActivity"
+            android:name=".activity.Dialog.SbxxActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".activity.BaseDialogActivity"
+            android:name=".activity.Dialog.BaseDialogActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Dialog"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name=".activity.DialogGActivity"
+            android:name=".activity.Dialog.DialogGActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Dialog"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".activity.ScrzActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.MjxxActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.OeeActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.BlfxActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape" />
 
         <service
@@ -68,26 +77,33 @@
 
         <activity
             android:name=".activity.GdglActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.YcfxActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.DialogB5Activty"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.DialogG2Activity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".activity.PzglActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.DialogSGActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".activity.FirstActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -111,9 +127,26 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activity.BlYyfxActivity" />
-        <activity android:name=".activity.JtjqsbgActivity" />
-        <activity android:name=".activity.Jtjqsbg2Activity"></activity>
+        <activity
+            android:name=".activity.BlYyfxActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.JtjqsbgActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.Jtjqsbg2Activity"
+            android:launchMode="singleTop" />
+        <activity android:name=".activity.PzxjActivity" />
+        <activity
+            android:name=".activity.Dialog.DialogGdSelectActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".activity.Dialog.ReSetServerIpActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>

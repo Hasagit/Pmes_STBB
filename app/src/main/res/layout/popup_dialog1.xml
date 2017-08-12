@@ -4,7 +4,7 @@
     android:id="@+id/backgrounp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lable">
+    android:background="@color/dialog_bg">
     <TextView
         android:id="@+id/title"
         android:layout_marginTop="20dp"

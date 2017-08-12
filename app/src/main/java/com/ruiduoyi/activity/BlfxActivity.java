@@ -15,9 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ruiduoyi.R;
+import com.ruiduoyi.activity.Dialog.BaseDialogActivity;
 import com.ruiduoyi.adapter.FailureAnalysisAdapter;
 import com.ruiduoyi.adapter.SigleSelectAdapter;
-import com.ruiduoyi.adapter.SigleSelectAdapter2;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 import com.ruiduoyi.view.PopupWindowSpinner;
@@ -85,6 +85,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                     listView.setAdapter(adapter2);
                     break;
                 case 0x102:
+                    blpsl_text.setText(Integer.parseInt(blpsl_text.getText().toString())+Integer.parseInt(sub_text.getText().toString())+"");
                     List<List<String>>list2= (List<List<String>>) msg.obj;
                     List<Map<String,String>>data=new ArrayList<>();
                     for (int i=0;i<list2.size();i++){
@@ -447,7 +448,6 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
 
 
 
-
     private void upLoadOneData(String wkno){
         List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Add_BlmInfo " +
                 "'A','"+zzdh_list.get(zzdh_position)+"','','','"+jtbh+"','','"+bldm_text.getText().toString()+"'," +
@@ -474,6 +474,15 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
         }else {
             upLoadOneData(wkno);
         }
+
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 
 

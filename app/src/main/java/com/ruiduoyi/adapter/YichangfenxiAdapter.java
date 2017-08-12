@@ -53,7 +53,6 @@ public class YichangfenxiAdapter extends ArrayAdapter{
         TextView lab_9=(TextView)view.findViewById(R.id.lab_9);
         TextView lab_10=(TextView)view.findViewById(R.id.lab_10);
         TextView lab_11=(TextView)view.findViewById(R.id.lab_11);
-        TextView lab_key = (TextView)view.findViewById(R.id.lab_key);
         lab_1.setText(map.get("lab_1"));
         lab_2.setText(map.get("lab_2"));
         lab_3.setText(map.get("lab_3"));
@@ -83,10 +82,10 @@ public class YichangfenxiAdapter extends ArrayAdapter{
                 list_text.get(9).setText(map.get("lab_10"));
                 list_text.get(10).setText(map.get("lab_11"));
                 list_text.get(11).setText(map.get("lab_3"));
-                list_text.get(12).setText(map.get("lab_key"));
                 Message msg=handler.obtainMessage();
                 msg.what=0x107;
-                msg.obj=map.get("lab_12");
+                //msg.obj=map.get("lab_12");
+                msg.obj=map;
                 handler.sendMessage(msg);
             }
         });

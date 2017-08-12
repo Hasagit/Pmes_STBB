@@ -1,11 +1,8 @@
 package com.ruiduoyi.Fragment;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,23 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.ruiduoyi.R;
 import com.ruiduoyi.activity.BlYyfxActivity;
-import com.ruiduoyi.activity.JtjqsbgActivity;
-import com.ruiduoyi.activity.SbxxActivity;
+import com.ruiduoyi.activity.Dialog.SbxxActivity;
 import com.ruiduoyi.activity.MjxxActivity;
 import com.ruiduoyi.activity.PzglActivity;
-import com.ruiduoyi.activity.DialogB5Activty;
 import com.ruiduoyi.activity.ScrzActivity;
 import com.ruiduoyi.activity.OeeActivity;
-import com.ruiduoyi.activity.DialogGActivity;
-import com.ruiduoyi.activity.DialogG2Activity;
+import com.ruiduoyi.activity.Dialog.DialogGActivity;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
-import com.ruiduoyi.view.AppDialog;
 import com.ruiduoyi.view.PopupDialog;
 
 import java.util.List;
@@ -41,7 +32,7 @@ import java.util.List;
 public class StatusFragment extends Fragment implements View.OnClickListener{
     private CardView cardView_g1,cardView_g2,cardView_g3,cardView_g4,cardView_g5,cardView_g6,
             cardView_g7,cardView_g8,cardView_g9,cardView_g10,cardView_g11,cardView_g12,cardView_g13,
-            cardView_g14,cardView_g15,cardView_g16,cardView_g17,cardView_g18,cardView_g19,cardView_g20,cardView_g21,
+            cardView_g14,cardView_g15,cardView_g16,cardView_g17,cardView_g18,cardView_g19,cardView_g21,cardView_pzxj,
             cardView_b1,cardView_b2,cardView_b3,cardView_b4,cardView_b5,cardView_b6,cardView_b7,
             cardView_b8,cardView_b9;
     private String startType,startZldm,startZlmc;
@@ -168,7 +159,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
 //        cardView_g17=(CardView)view.findViewById(R.id.zyg) ;
 //        cardView_g18=(CardView)view.findViewById(R.id.cm) ;
 //        cardView_g19=(CardView)view.findViewById(R.id.rysg) ;
-        cardView_g20=(CardView)view.findViewById(R.id.pgxj) ;
+        cardView_pzxj=(CardView)view.findViewById(R.id.pgxj) ;
         cardView_g21=(CardView)view.findViewById(R.id.zlF3) ;
         cardView_g1.setOnClickListener(this);
         cardView_g2.setOnClickListener(this);
@@ -189,7 +180,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
 //        cardView_g17.setOnClickListener(this);
 //        cardView_g18.setOnClickListener(this);
 //        cardView_g19.setOnClickListener(this);
-        cardView_g20.setOnClickListener(this);
+        //cardView_g20.setOnClickListener(this);
         cardView_g21.setOnClickListener(this);
         cardView_b1.setOnClickListener(this);
         cardView_b2.setOnClickListener(this);
@@ -200,6 +191,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
         cardView_b7.setOnClickListener(this);
         cardView_b8.setOnClickListener(this);
         cardView_b9.setOnClickListener(this);
+        cardView_pzxj.setOnClickListener(this);
         dialog=new PopupDialog(getActivity(),400,350);
         dialog.setTitle("提示");
         dialog.getCancle_btn().setVisibility(View.GONE);
@@ -441,8 +433,11 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                 startActivityByNetResult("*",getContext().getString(R.string.zlmc_x),"OPR");
                 break;
             case R.id.pgxj:
-                cardView_g20.startAnimation(anim);
-                startActivityByNetResult(getContext().getString(R.string.pgxj),getContext().getString(R.string.zlmc_xj),"OPR");
+                cardView_pzxj.startAnimation(anim);
+                //startActivityByNetResult(getContext().getString(R.string.pgxj),getContext().getString(R.string.zlmc_xj),"OPR");
+                Intent intent_pzxj=new Intent(getContext(), DialogGActivity.class);
+                intent_pzxj.putExtra("title","品管巡机");
+                startActivity(intent_pzxj);
                 break;
             case R.id.zlF3:
                 cardView_g21.startAnimation(anim);
