@@ -883,7 +883,42 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         }
     }
 
-
+    private int getColorByKey(String color){
+         /*
+            W	白色
+            H	灰色
+            Y	黄色
+            G	绿色
+            V	紫色
+            B	蓝色
+            P	粉色
+            R	红色
+            K	黑色
+             */
+        switch (color)
+        {
+            case "W":
+                return Color.WHITE;
+            case "H":
+                return getResources().getColor(R.color.lable);
+            case "Y":
+                return Color.YELLOW;
+            case "G":
+                return Color.GREEN;
+            case "V":
+                return getResources().getColor(R.color.color_6);
+            case "B":
+                return Color.BLUE;
+            case "P":
+                return getResources().getColor(R.color.color_10);
+            case "R":
+                return Color.RED;
+            case "K":
+                return Color.BLACK;
+            default:
+                return getResources().getColor(R.color.lable);
+        }
+    }
 
     @Override
     public void onDestroy() {

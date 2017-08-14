@@ -38,4 +38,7 @@ dependencies {
     compile 'com.joanzapata.pdfview:android-pdfview:1.0.4@aar'
     compile 'com.github.bumptech.glide:glide:3.5.2'
     testCompile 'junit:junit:4.12'
+    compile files('libs/commons-validator-1.6-javadoc.jar')
+    compile files('libs/commons-validator-1.6-tests.jar')
+    compile files('libs/commons-validator-1.6.jar')
 }

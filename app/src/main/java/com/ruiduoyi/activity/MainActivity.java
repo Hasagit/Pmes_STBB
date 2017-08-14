@@ -474,7 +474,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         unregisterReceiver(returnToInfoReceiver);
         unregisterReceiver(gpioSignalReceiver);
         unregisterReceiver(countdownReceiver);
-        timer_gpio.cancel();
         timer_time.cancel();
         if (dialog!=null){
             if (dialog.isShow()){

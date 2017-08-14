@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.ruiduoyi.utils.AppUtils;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -37,6 +38,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -151,11 +153,30 @@ public class NetHelper {
         return false;
     }
 
+
+    //判断url是否合法
+    public static boolean isUrl(String url){
+        String[] schemas={"http","https"};
+        UrlValidator urlValidator=new UrlValidator(schemas);
+        return urlValidator.isValid(url);
+    }
+
+
     //判断服务器是否开启
     public static boolean isServerConnected(String cHttpAddress){
         List<List<String>>list=getQuerysqlResult("select getDate()");
         if (list!=null){
-            return true;
+            if (list.size()>0){
+                try {
+                    Date date=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(list.get(0).get(0));
+                    return true;
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }else {
+                return false;
+            }
         }else {
             return false;
         }
@@ -463,7 +484,7 @@ public class NetHelper {
         HttpEntity entity = response.getEntity();
         String result=EntityUtils.toString(entity);
         Log.e("result",result);
-        if (AppUtils.calculate(result,"\n")>100){
+        if (AppUtils.calculate(result,"\n")>200){
             return null;
         }
         String[] str_line=result.split("\n");

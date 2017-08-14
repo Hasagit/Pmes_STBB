@@ -46,6 +46,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
         public void onReceive(Context context, Intent intent) {
             num=intent.getStringExtra("num");
             num_edit.setText(num);
+
             if (title.equals("品管巡机")){
                 readEles();
             }else {
