@@ -375,206 +375,129 @@ public class FirstActivity extends BaseActivity{
 
 
     private void getNetData(final int type){
-        if (type==0){
             new Thread(new Runnable() {//服务器是否开启
                 @Override
                 public void run() {
-                    if (type==0){
-                        int i=0;
-                      if(NetHelper.isUrl(NetHelper.URL)){
-                          while (!NetHelper.isServerConnected(NetHelper.URL)){
-                              Message msg=handler.obtainMessage();
-                              msg.what=0x101;
-                              i=i+1;
-                              if(i>1) {
-                                  handler.sendEmptyMessage(0x110);
-                                  break;
-                              };
-                              msg.arg1=i;
-                              handler.sendMessage(msg);
-                              try {
-                                  Thread.currentThread().sleep(10000);
-                              } catch (InterruptedException e) {
-                                  e.printStackTrace();
-                              }
-                          }
-                          if (NetHelper.isServerConnected(NetHelper.URL)){
-                              handler.sendEmptyMessage(0x100);
-                          }else {
-                              handler.sendEmptyMessage(0x111);
-                          }
-                      }else {
-                          handler.sendEmptyMessage(0x110);
-                          return;
-                      }
-
-                    }
-
-                    //获取机台编号
-                    String mac = "";
-                    WifiManager wifiManager=((WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE));
-                    String mac_temp=wifiManager.getConnectionInfo().getMacAddress();
-                    //mac_temp="c0:21:0d:94:26:f4";
-                    if(mac_temp==null&&sharedPreferences.getString("mac","").equals("")) {
-                        // Toast.makeText(FirstActivity.this,"获取网卡物理地址失败，请连接wifi",Toast.LENGTH_LONG).show();
-                    }else {
-                        String[] mac_sz = mac_temp.split(":");
-                        for (int i = 0; i < mac_sz.length; i++) {
-                            mac = mac + mac_sz[i];
-                        }
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
-                        editor.putString("mac",mac);
-                        editor.commit();
-                        JSONArray array=NetHelper.getQuerysqlResultJsonArray("Select * from jtm_mstr where jtm_flag=1 and jtm_wgip='"+mac+"'");
-                        Message msg=handler.obtainMessage();
-                        if(array!=null){
-                            if (array.length()>0){
-                                msg.what=0x103;
-                                msg.obj=array;
+                    if(NetHelper.isUrl(NetHelper.URL)){
+                        if (type==0){
+                            int i=0;
+                            while (!NetHelper.isServerConnected(NetHelper.URL)){
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x101;
+                                i=i+1;
+                                if(i>1) {
+                                    handler.sendEmptyMessage(0x110);
+                                    break;
+                                };
+                                msg.arg1=i;
                                 handler.sendMessage(msg);
-                            }else {
-
+                                try {
+                                    Thread.currentThread().sleep(10000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }else {
-                            AppUtils.uploadNetworkError("获取机台编号 NetWordError",
-                                    jtbh,sharedPreferences.getString("mac",""));
-                            msg.what=0x104;
-                            handler.sendMessage(msg);
+                            if (NetHelper.isServerConnected(NetHelper.URL)){
+                                handler.sendEmptyMessage(0x100);
+                            }else {
+                                handler.sendEmptyMessage(0x111);
+                                return;
+                            }
+
                         }
-                    }
+
+                        //获取机台编号
+                        String mac = "";
+                        WifiManager wifiManager=((WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE));
+                        String mac_temp=wifiManager.getConnectionInfo().getMacAddress();
+                        //mac_temp="c0:21:0d:94:26:f4";
+                        if(mac_temp==null&&sharedPreferences.getString("mac","").equals("")) {
+                            // Toast.makeText(FirstActivity.this,"获取网卡物理地址失败，请连接wifi",Toast.LENGTH_LONG).show();
+                        }else {
+                            String[] mac_sz = mac_temp.split(":");
+                            for (int i = 0; i < mac_sz.length; i++) {
+                                mac = mac + mac_sz[i];
+                            }
+                            SharedPreferences.Editor editor=sharedPreferences.edit();
+                            editor.putString("mac",mac);
+                            editor.commit();
+                            JSONArray array=NetHelper.getQuerysqlResultJsonArray("Select * from jtm_mstr where jtm_flag=1 and jtm_wgip='"+mac+"'");
+                            Message msg=handler.obtainMessage();
+                            if(array!=null){
+                                if (array.length()>0){
+                                    msg.what=0x103;
+                                    msg.obj=array;
+                                    handler.sendMessage(msg);
+                                }else {
+
+                                }
+                            }else {
+                                AppUtils.uploadNetworkError("获取机台编号 NetWordError",
+                                        jtbh,sharedPreferences.getString("mac",""));
+                                msg.what=0x104;
+                                handler.sendMessage(msg);
+                            }
+                        }
 
 
-                    //发送重启信号
-                    //mac_temp="c0:21:0d:94:26:f4";
+                        //发送重启信号
+                        //mac_temp="c0:21:0d:94:26:f4";
                    /* String[] mac_sz = mac_temp.split(":");
                     for (int i = 0; i < mac_sz.length; i++) {
                         mac = mac + mac_sz[i];
                     }*/
-                    AppUtils.uploadErrorMsg("重启","",mac,"5");
+                        AppUtils.uploadErrorMsg("重启","",mac,"5");
 
-
-                    //获取系统时间
-                    JSONArray array=NetHelper.getQuerysqlResultJsonArray("select GETDATE()");
-                    Message msg=handler.obtainMessage();
-                    if(array!=null){
-                        msg.obj=array;
-                        msg.what=0x106;
-                        handler.sendMessage(msg);
-                    }else {
-                        AppUtils.uploadNetworkError("select GETDATE() NetWordError",
-                                jtbh,sharedPreferences.getString("mac",""));
-                        //msg.what=0x104;
-                    }
-
-
-                    //获取版本信息
-                    try {
-                        JSONArray array_info=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_WebAddr");
-                        if (array_info!=null){
-                            if (array_info.length()>0){
-                                String oldVersionName= AppUtils.getAppVersionName(FirstActivity.this);
-                                String newVersionName=array_info.getJSONObject(0).getString("v_WebAppVer");
-                                SharedPreferences.Editor editor=sharedPreferences.edit();
-                                editor.putString("countdownNum",array_info.getJSONObject(0).getString("v_WebAppMin"));
-                                editor.commit();
-                                if (!oldVersionName.equals(newVersionName)){
-                                    handler.sendEmptyMessage(0x107);
-                                    AppUtils.DownLoadFileByUrl(array_info.getJSONObject(0).getString("v_WebAppPath"),
-                                            Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
-                                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                                    intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/RdyPmes.apk")),
-                                            "application/vnd.android.package-archive");
-                                    startActivity(intent);
-                                    handler.sendEmptyMessage(0x109);
-                                }else {
-                                    handler.sendEmptyMessage(0x108);
-                                }
-                            }
-                        } else {
-                            AppUtils.uploadNetworkError("PAD_Get_WebAddr NetWordError",
+                        //获取系统时间
+                        JSONArray array=NetHelper.getQuerysqlResultJsonArray("select GETDATE()");
+                        Message msg=handler.obtainMessage();
+                        if(array!=null){
+                            msg.obj=array;
+                            msg.what=0x106;
+                            handler.sendMessage(msg);
+                        }else {
+                            AppUtils.uploadNetworkError("select GETDATE() NetWordError",
                                     jtbh,sharedPreferences.getString("mac",""));
+                            //msg.what=0x104;
                         }
-                    }catch (JSONException e){
-                        e.printStackTrace();
-                    }
 
+
+                        //获取版本信息
+                        try {
+                            JSONArray array_info=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_WebAddr");
+                            if (array_info!=null){
+                                if (array_info.length()>0){
+                                    String oldVersionName= AppUtils.getAppVersionName(FirstActivity.this);
+                                    String newVersionName=array_info.getJSONObject(0).getString("v_WebAppVer");
+                                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                                    editor.putString("countdownNum",array_info.getJSONObject(0).getString("v_WebAppMin"));
+                                    editor.commit();
+                                    if (!oldVersionName.equals(newVersionName)){
+                                        handler.sendEmptyMessage(0x107);
+                                        AppUtils.DownLoadFileByUrl(array_info.getJSONObject(0).getString("v_WebAppPath"),
+                                                Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
+                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                        intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/RdyPmes.apk")),
+                                                "application/vnd.android.package-archive");
+                                        startActivity(intent);
+                                        handler.sendEmptyMessage(0x109);
+                                    }else {
+                                        handler.sendEmptyMessage(0x108);
+                                    }
+                                }
+                            } else {
+                                AppUtils.uploadNetworkError("PAD_Get_WebAddr NetWordError",
+                                        jtbh,sharedPreferences.getString("mac",""));
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+
+                    }else {
+                        handler.sendEmptyMessage(0x110);
+                    }
                 }
             }).start();
-        }
-
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }).start();
-
-
-
-        new Thread(new Runnable() {//获取系统时间
-            @Override
-            public void run() {
-
-
-               /* List<List<String>>list= NetHelper.getQuerysqlResult("select GETDATE()");
-                Message msg=handler.obtainMessage();
-                if(list!=null){
-                    msg.obj=list;
-                    msg.what=0x106;
-                    handler.sendMessage(msg);
-                }else {
-                    AppUtils.uploadNetworkError("select GETDATE() NetWordError",
-                            jtbh,sharedPreferences.getString("mac",""));
-                    //msg.what=0x104;
-                }*/
-            }
-        }).start();
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-
-                /*
-                List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_WebAddr");
-                if (list!=null){
-                    if (list.size()>0){
-                       if (list.get(0).size()>4){
-                           Message msg=handler.obtainMessage();
-                           String oldVersionName= AppUtils.getAppVersionName(FirstActivity.this);
-                           String newVersionName=list.get(0).get(3);
-                           SharedPreferences.Editor editor=sharedPreferences.edit();
-                           editor.putString("countdownNum",list.get(0).get(4));
-                           editor.commit();
-                           if (!oldVersionName.equals(newVersionName)){
-                               handler.sendEmptyMessage(0x107);
-                               AppUtils.DownLoadFileByUrl(list.get(0).get(2),
-                                       Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
-                               Intent intent = new Intent(Intent.ACTION_VIEW);
-                               intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/RdyPmes.apk")),
-                                       "application/vnd.android.package-archive");
-                               startActivity(intent);
-                               handler.sendEmptyMessage(0x109);
-                           }else {
-                               handler.sendEmptyMessage(0x108);
-                           }
-                       }
-
-                       *//*Message msg=handler.obtainMessage();
-                        msg.what=0x107;
-                        msg.obj=list;
-                        handler.sendMessage(msg);*//*
-                    }
-                }else {
-                    AppUtils.uploadNetworkError("PAD_Get_WebAddr NetWordError",
-                            jtbh,sharedPreferences.getString("mac",""));
-                }*/
-            }
-        }).start();
-
 
     }
 

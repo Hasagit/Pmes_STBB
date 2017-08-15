@@ -155,10 +155,14 @@ public class NetHelper {
 
 
     //判断url是否合法
-    public static boolean isUrl(String url){
-        String[] schemas={"http","https"};
-        UrlValidator urlValidator=new UrlValidator(schemas);
-        return urlValidator.isValid(url);
+    public static boolean isUrl(String url_str){
+        try {
+            URL url=new URL(url_str);
+            return true;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
