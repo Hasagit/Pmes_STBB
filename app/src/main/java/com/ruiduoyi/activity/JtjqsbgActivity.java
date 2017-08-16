@@ -24,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ruiduoyi.R;
+import com.ruiduoyi.activity.Dialog.DialogJtbgActivity;
+import com.ruiduoyi.activity.Dialog.DialogMxbgActivity;
 import com.ruiduoyi.adapter.Jtqsbg1Adapter;
 import com.ruiduoyi.adapter.SigleSelectJtjqsbg;
 import com.ruiduoyi.adapter.WorkOrderAdapter;
@@ -38,13 +40,11 @@ import java.util.Map;
 
 public class JtjqsbgActivity extends BaseActivity implements View.OnClickListener{
     private ListView listView_1,listView_2;
-    private String jtbh,sub_num,zzdh;
+    private String jtbh,zzdh;
     private Handler handler;
-    private TextView mjbh_text,mjmc_text,mjqs_text,cpbh_text,pmgg_text,sjqs_text,jtbh_text;
     private Button cancle_btn;
     private Animation anim;
     private PopupDialog tipDialog;
-    private LinearLayout qs_bg,jtbh_bg;
     private Animation anim2;
     private Button begin_btn;
     private String wkno;
@@ -61,22 +61,8 @@ public class JtjqsbgActivity extends BaseActivity implements View.OnClickListene
 
     private void initView(){
         listView_1=(ListView)findViewById(R.id.list_jtjqsbg_1);
-        listView_2=(ListView)findViewById(R.id.list_jtjqsbg_2);
-        mjbh_text=(TextView)findViewById(R.id.mjbh);
-        mjmc_text=(TextView)findViewById(R.id.mjmc);
-        mjqs_text=(TextView)findViewById(R.id.mjqs);
-        cpbh_text=(TextView)findViewById(R.id.cpbh);
-        pmgg_text=(TextView)findViewById(R.id.pmgg);
-        sjqs_text=(TextView)findViewById(R.id.sjqs);
-        jtbh_text=(TextView)findViewById(R.id.jtbh);
-        begin_btn=(Button)findViewById(R.id.begin_btn);
         cancle_btn=(Button)findViewById(R.id.cancle_btn);
-
-        jtbh_bg=(LinearLayout)findViewById(R.id.jtbh_bg);
-        qs_bg=(LinearLayout)findViewById(R.id.qs_bg);
         cancle_btn.setOnClickListener(this);
-        begin_btn.setOnClickListener(this);
-        jtbh_text.setText(jtbh);
 
 
 
@@ -99,7 +85,7 @@ public class JtjqsbgActivity extends BaseActivity implements View.OnClickListene
         jtbh=sharedPreferences.getString("jtbh","");
         anim= AnimationUtils.loadAnimation(this,R.anim.sub_num_anim);
         anim2=AnimationUtils.loadAnimation(this,R.anim.scale_anim);
-        Intent intent_from=getIntent();
+        final Intent intent_from=getIntent();
         wkno=intent_from.getStringExtra("wkno");
         handler=new Handler(){
             @Override
@@ -128,22 +114,25 @@ public class JtjqsbgActivity extends BaseActivity implements View.OnClickListene
                                 new int[]{R.id.lab_1,R.id.lab_2,R.id.lab_3,R.id.lab_4,R.id.lab_5,R.id.lab_6});
                         listView_2.setAdapter(adapter_dt);
                         break;
-                    case 0x104:
-                        Map<String,String>map= (Map<String, String>) msg.obj;
-                        mjbh_text.setText(map.get("mjbh"));
-                        mjmc_text.setText(map.get("mjmc"));
-                        mjqs_text.setText(map.get("mjqs"));
-                        cpbh_text.setText(map.get("wldm"));
-                        pmgg_text.setText(map.get("pmgg"));
-                        sjqs_text.setText(map.get("cpqs"));
-                        zzdh=map.get("zzdh");
-                        getDutouListData(zzdh);
-                        jtbh_text.setText(jtbh);
-                        if (mjqs_text.getText().toString().equals(sjqs_text.getText().toString())){
-                            sjqs_text.setBackgroundColor(Color.WHITE);
-                        }else {
-                            sjqs_text.setBackgroundColor(Color.RED);
-                        }
+                    case 0x104://模穴变更
+                        Map<String,String>mo_map= (Map<String, String>) msg.obj;
+                        Intent intent_mxbg=new Intent(JtjqsbgActivity.this, DialogMxbgActivity.class);
+                        intent_mxbg.putExtra("sodh",mo_map.get("sodh"));
+                        intent_mxbg.putExtra("wkno",wkno);
+                        intent_mxbg.putExtra("mjmc",mo_map.get("mjmc"));
+                        intent_mxbg.putExtra("mjbh",mo_map.get("mjbh"));
+                        intent_mxbg.putExtra("pmgg",mo_map.get("pmgg"));
+                        intent_mxbg.putExtra("bzxs",mo_map.get("mjqs"));
+                        intent_mxbg.putExtra("zzdh",mo_map.get("zzdh"));
+                        startActivityForResult(intent_mxbg,1);
+                        //zzdh=mo_map.get("zzdh");
+                        break;
+                    case 0x105://机台变更
+                        Map<String,String>jt_map= (Map<String, String>) msg.obj;
+                        Intent intent_jt=new Intent(JtjqsbgActivity.this, DialogJtbgActivity.class);
+                        intent_jt.putExtra("zzdh",jt_map.get("zzdh"));
+                        intent_jt.putExtra("wkno",wkno);
+                        startActivityForResult(intent_jt,1);
                         break;
                     default:
                         break;
@@ -209,60 +198,15 @@ public class JtjqsbgActivity extends BaseActivity implements View.OnClickListene
         }).start();
     }
 
-
-    private void getDutouListData(final String zzdh){
-        //堵头信息表
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<List<String>>list_dt=NetHelper.getQuerysqlResult("Exec PAD_Get_MoeJtxsInf 'A','"+zzdh+"'");
-                if (list_dt!=null){
-                    if (list_dt.size()>0){
-                        if (list_dt.get(0).size()>5){
-                            Message msg=handler.obtainMessage();
-                            msg.what=0x101;
-                            msg.obj=list_dt;
-                            handler.sendMessage(msg);
-                        }
-                    }
-                }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_MoeJtxsInf 'A'",jtbh,sharedPreferences.getString("mac",""));
-                }
-            }
-        }).start();
-    }
-
-
-
-
-
-    private boolean isReady(){
-        if (mjbh_text.getText().toString().equals("")){
-            tipDialog.setMessage("请先选择工单信息");
-            tipDialog.show();
-            return false;
-        }
-        return true;
-    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==1){
-            getNetData();
-            if (data!=null&&adapter_dt!=null){
-                data_dt.clear();
-                adapter_dt.notifyDataSetChanged();
-            }
-            mjbh_text.setText("");
-            mjmc_text.setText("");
-            mjqs_text.setText("");
-            cpbh_text.setText("");
-            pmgg_text.setText("");
-            sjqs_text.setText("");
-            jtbh_text.setText("");
-            sjqs_text.setBackgroundColor(Color.WHITE);
+        switch (resultCode){
+            case 1://机台变更
+                getNetData();
+                break;
+            case 2://穴数变更
+                break;
         }
     }
 
@@ -272,19 +216,6 @@ public class JtjqsbgActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()){
             case R.id.cancle_btn:
                 finish();
-                break;
-            case R.id.begin_btn:
-                begin_btn.startAnimation(anim2);
-                if (isReady()){
-                    Intent intent=new Intent(JtjqsbgActivity.this,Jtjqsbg2Activity.class);
-                    intent.putExtra("wkno",wkno);
-                    intent.putExtra("zzdh",zzdh);
-                    intent.putExtra("mjbh",mjbh_text.getText().toString());
-                    intent.putExtra("mjmc",mjmc_text.getText().toString());
-                    intent.putExtra("mjqs",mjqs_text.getText().toString());
-                    intent.putExtra("cpqs",sjqs_text.getText().toString());
-                    startActivityForResult(intent,1);
-                }
                 break;
             default:
                 break;

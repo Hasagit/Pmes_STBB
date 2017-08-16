@@ -410,7 +410,7 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                 jc_select_data.add(jc_data.get(i));
             }
         }
-        if (jc_select_data.size()==0){
+        if ((jc_select_data.size()==0)&&bhg_radio.isChecked()){
             dialog.setMessage("至少选择一个检查项目且缺陷数量至少有一种需要填写");
             dialog.setMessageTextColor(Color.RED);
             dialog.show();
@@ -422,7 +422,7 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                 gs_select_data.add(gs_data.get(i));
             }
         }
-        if (gs_select_data.size()==0){
+        if ((gs_select_data.size()==0)&&bhg_radio.isChecked()){
             dialog.setMessage("改善措施至少选择一种");
             dialog.setMessageTextColor(Color.RED);
             dialog.show();
@@ -449,8 +449,12 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                         gs_dm=gs_dm+gs_select_data.get(i).get("lab_1")+";";
                         gs_mc=gs_mc+gs_select_data.get(i).get("lab_2")+";";
                     }
-                    gs_dm=gs_dm.substring(0,gs_dm.length()-1);
-                    gs_mc=gs_mc.substring(0,gs_mc.length()-1);
+                    if (gs_dm.length()>0){
+                        gs_dm=gs_dm.substring(0,gs_dm.length()-1);
+                    }
+                    if (gs_mc.length()>0){
+                        gs_mc=gs_mc.substring(0,gs_mc.length()-1);
+                    }
                     JSONArray array=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Qcxj_Create "+gdid+","+scqs_edit.getText().toString()+"," +
                             jcsl_edit.getText().toString()+", '"+pd_result+"', '"+wkno+"','"+bz_edit.getText().toString()+"','"+gs_dm+"','"+gs_mc+"'");
                     if (array!=null){

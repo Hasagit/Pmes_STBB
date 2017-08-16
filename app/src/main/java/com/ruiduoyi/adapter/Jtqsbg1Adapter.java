@@ -55,15 +55,25 @@ public class Jtqsbg1Adapter extends ArrayAdapter{
         TextView lab_16=(TextView)view.findViewById(R.id.lab_16);
         TextView lab_17=(TextView)view.findViewById(R.id.lab_17);
         LinearLayout backgroup=(LinearLayout)view.findViewById(R.id.bg);
-        final Button on_btn=(Button)view.findViewById(R.id.on_btn);
-        final Button off_btn=(Button)view.findViewById(R.id.off_btn);
+        final Button mxbg_btn=(Button)view.findViewById(R.id.mxbg_btn);
+        final Button jtbg_btn=(Button)view.findViewById(R.id.jtbg_btn);
         final int index=position+1;
-        on_btn.setOnClickListener(new View.OnClickListener() {
+        mxbg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppUtils.sendCountdownReceiver(getContext());
                 Message msg=handler.obtainMessage();
                 msg.what=0x104;
+                msg.obj=map;
+                handler.sendMessage(msg);
+            }
+        });
+        jtbg_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppUtils.sendCountdownReceiver(getContext());
+                Message msg=handler.obtainMessage();
+                msg.what=0x105;
                 msg.obj=map;
                 handler.sendMessage(msg);
             }

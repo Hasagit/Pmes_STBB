@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="900dp"
+    android:layout_height="700dp"
+    android:orientation="vertical"
+    android:background="@color/lable"
+    tools:context="com.ruiduoyi.activity.Dialog.DialogJtbgActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/blue_sl_false">
+
+        <Button
+            android:id="@+id/cancle_btn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/cmdclose_sl" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="机台变更"
+            android:textColor="@android:color/white"
+            android:textSize="30dp" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="将工单从机台"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/jtbh_text"
+            android:textColor="@android:color/black"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/text_bg"
+            android:gravity="center"
+            android:textSize="20dp" />
+
+        <TextView
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="移到机台"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+    <ListView
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:divider="@color/touming"></ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:textColor="@android:color/black"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="将同模的其他工单同步转移"
+            android:textSize="20dp"/>
+    </LinearLayout>
+</LinearLayout>

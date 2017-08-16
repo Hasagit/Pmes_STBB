@@ -323,6 +323,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void  initData(){
         sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
         jtbh=sharedPreferences.getString("jtbh","");
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putInt("auto_updata_num",0);
+        editor.commit();
         WifiManager wifiManager=((WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE));
         String mac_temp=wifiManager.getConnectionInfo().getMacAddress();
         //mac_temp="c0:21:0d:94:26:fb";
