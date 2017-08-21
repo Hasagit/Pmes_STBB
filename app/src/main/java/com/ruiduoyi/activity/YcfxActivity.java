@@ -91,7 +91,7 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
         wkno=intent_from.getStringExtra("wkno");
         sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
         jtbh=sharedPreferences.getString("jtbh","");
-        thread_1.start();
+        getYcfxListData(1);
     }
 
     private void initListView(List<List<String>>list){
@@ -147,40 +147,14 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                     getYylb(zldm);
                     break;
                 case 0x108:
-                    final List<List<String>>list= (List<List<String>>) msg.obj;
-                    final List<String>data=new ArrayList<>();
-                    for (int i=0;i<list.size();i++){
-                        data.add(list.get(i).get(0)+"\t\t"+list.get(i).get(1));
-                    }
-                    if (data.size()>0){
-                        getListData(list,0,data);
-                    }
-                    spinner_list=new PopupWindowSpinner(YcfxActivity.this,data,R.layout.spinner_list_yyfx,
-                            R.id.lab_1,445);
-                    spinner_list.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                            AppUtils.sendCountdownReceiver(YcfxActivity.this);
-                            getListData(list,position,data);
-                            spinner_list.dismiss();
-                        }
-                    });
+                   initYylbListView((List<List<String>>) msg.obj);
                     break;
                 case 0x109:
-                    List<List<String>>list1= (List<List<String>>) msg.obj;
-                    List<Map<String,String>>data1=new ArrayList<>();
-                    for (int i=0;i<list1.size();i++){
-                        Map<String,String>map=new HashMap<>();
-                        map.put("lab_1",list1.get(i).get(0));
-                        map.put("lab_2",list1.get(i).get(1));
-                        data1.add(map);
-                    }
-                    adapter=new YyfxAdapter(YcfxActivity.this,R.layout.list_item_ycfx,data1);
-                    blmsList.setAdapter(adapter);
+                    initYymsListView((List<List<String>>) msg.obj);
                     break;
                 case 0x110:
                     //AppUtils.sendUpdateInfoFragmentReceiver(YcfxActivity.this);
-                    dialog.setMessage("提交成功");
+                   /* dialog.setMessage("提交成功");
                     dialog.setMessageTextColor(Color.BLACK);
                     dialog.getOkbtn().setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -189,9 +163,11 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                             dialog.dismiss();
                         }
                     });
-                    dialog.show();
+                    dialog.show();*/
+                    afterUploadsuccess();
                     break;
                 case 0x111:
+                    sub_btn.setEnabled(true);
                     dialog.setMessageTextColor(Color.RED);
                     dialog.setMessage("提交失败");
                     dialog.getOkbtn().setOnClickListener(new View.OnClickListener() {
@@ -203,6 +179,23 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                     });
                     dialog.show();
                     break;
+                case 0x112:
+                    sub_btn.setEnabled(true);
+                    dialog_tip.setMessage("请先选择原因描述");
+                    dialog_tip.setMessageTextColor(Color.RED);
+                    dialog_tip.show();
+                    break;
+                case 0x113:
+                    dialog_tip.setMessage((String) msg.obj);
+                    dialog_tip.setMessageTextColor(Color.RED);
+                    dialog_tip.show();
+                    sub_btn.setEnabled(true);
+                    break;
+                case 0x114:
+                    sub_btn.setEnabled(true);
+                    break;
+
+
 
 
             }
@@ -234,12 +227,43 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
         }).start();
     }
 
+    private void initYylbListView(final List<List<String>>list){
+        final List<String>data=new ArrayList<>();
+        for (int i=0;i<list.size();i++){
+            data.add(list.get(i).get(0)+"\t\t"+list.get(i).get(1));
+        }
+        if (data.size()>0){
+            getListData(list,0,data);
+        }
+        spinner_list=new PopupWindowSpinner(YcfxActivity.this,data,R.layout.spinner_list_yyfx,
+                R.id.lab_1,445);
+        spinner_list.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                AppUtils.sendCountdownReceiver(YcfxActivity.this);
+                getListData(list,position,data);
+                spinner_list.dismiss();
+            }
+        });
+    }
 
-
+    private void initYymsListView(List<List<String>>list1){
+        List<Map<String,String>>data1=new ArrayList<>();
+        for (int i=0;i<list1.size();i++){
+            Map<String,String>map=new HashMap<>();
+            map.put("lab_1",list1.get(i).get(0));
+            map.put("lab_2",list1.get(i).get(1));
+            map.put("isCheck","0");
+            data1.add(map);
+        }
+        adapter=new YyfxAdapter(YcfxActivity.this,R.layout.list_item_ycfx,data1);
+        blmsList.setAdapter(adapter);
+    }
 
 
     //请求表格数据
-    Thread thread_1=new Thread(new Runnable() {
+    private void getYcfxListData(final int type){
+        new Thread(new Runnable() {
         @Override
         public void run() {
             List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_YcmInf '"+jtbh+"'");
@@ -251,14 +275,41 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                         msg.obj=list;
                     }
                 }else {
-                    msg.what=0x100;
-                    msg.obj=list;
+                    if (type==1){
+                        msg.what=0x100;
+                        msg.obj=list;
+                    }else {
+                        finish();
+                    }
                 }
             }
             handler.sendMessage(msg);
         }
-    });
+    }).start();
 
+    }
+
+
+    //执行上传数据成功之后
+    private void afterUploadsuccess(){
+        sub_btn.setEnabled(true);
+        getYcfxListData(2);
+        text_1.setText("");
+        text_2.setText("");
+        text_3.setText("");
+        text_4.setText("");
+        text_5.setText("");
+        text_6.setText("");
+        text_7.setText("");
+        text_8.setText("");
+        text_9.setText("");
+        text_10.setText("");
+        text_11.setText("");
+        text_key.setText("");
+        spinner_1.setText("");
+        initYymsListView(new ArrayList<List<String>>());
+        initYylbListView(new ArrayList<List<String>>());
+    }
 
     private boolean isReady(){
         if (text_1.getText().toString().equals("")){
@@ -274,13 +325,13 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
             dialog_tip.show();
             return false;
         }
-        final List<Map<String,String>>select_data=adapter.getSelectData();
+       /* final List<Map<String,String>>select_data=adapter.getSelectData();
         if (!(select_data.size()>0)){
             dialog_tip.setMessageTextColor(Color.RED);
             dialog_tip.setMessage("请先选取原因描述");
             dialog_tip.show();
             return false;
-        }
+        }*/
         return true;
     }
 
@@ -299,31 +350,7 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case R.id.sub_btn:
                 if (isReady()){
-                    final List<Map<String,String>>select_data=adapter.getSelectData();
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String select_str="";
-                            for (int i=0;i<select_data.size();i++){
-                                Map<String,String>uplaod_data=select_data.get(i);
-                                select_str=select_str+uplaod_data.get("lab_1")+";";
-                                //upLoadOneData(uplaod_data,wkno);
-                            }
-                            List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Upd_YclInfo " +
-                                    "'"+jtbh+"','"+text_2.getText().toString()+"','"+lbdm+"'," + "'"+select_str+"',"+keyid+",'"+wkno+"'");
-                            if (list!=null){
-                                if (list.size()>0){
-                                    if (list.get(0).size()>0){
-                                        if (list.get(0).get(0).equals("OK")){
-                                            handler.sendEmptyMessage(0x110);
-                                        }
-                                    }
-                                }
-                            }else {
-                                handler.sendEmptyMessage(0x111);
-                            }
-                        }
-                    }).start();
+                   upLoaData();
                 }
                 break;
             default:
@@ -360,21 +387,53 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
     }
 
 
-    private void upLoadOneData(Map<String,String>selectData,String wkno){
-        List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Upd_YclInfo " +
-                "'"+jtbh+"','"+text_2.getText().toString()+"','"+lbdm+"'," + "'"+selectData.get("lab_1")+"',"+keyid+",'"+wkno+"'");
-        if (list!=null){
-            if (list.size()>0){
-                if (list.get(0).size()>0){
-                    if (list.get(0).get(0).equals("OK")){
-                        handler.sendEmptyMessage(0x110);
+    private void upLoaData(){
+        sub_btn.setEnabled(false);
+        final List<Map<String,String>>select_data=adapter.getSelectData();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String select_str="";
+                List<Map<String,String>>data=adapter.getData();
+                for (int i=0;i<data.size();i++){
+                    if (data.get(i).get("isCheck").equals("1")){
+                        select_str=data.get(i).get("lab_1");
                     }
+                    //Map<String,String>uplaod_data=select_data.get(i);
+                    //select_str=select_str+uplaod_data.get("lab_1")+";";
+                    //upLoadOneData(uplaod_data,wkno);
+                }
+                if (select_str.equals("")){
+                    handler.sendEmptyMessage(0x112);
+                    return;
+                }
+                List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Upd_YclInfo " +
+                        "'"+jtbh+"','"+text_2.getText().toString()+"','"+lbdm+"'," + "'"+select_str+"',"+keyid+",'"+wkno+"'");
+                if (list!=null){
+                    if (list.size()>0){
+                        if (list.get(0).size()>0){
+                            if (list.get(0).get(0).equals("OK")){
+                                handler.sendEmptyMessage(0x110);
+                            }else {
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x113;
+                                msg.obj=list.get(0).get(0);
+                                handler.sendMessage(msg);
+                            }
+                        }else {
+                            handler.sendEmptyMessage(0x114);
+                        }
+                    }else {
+                        handler.sendEmptyMessage(0x114);
+                    }
+                }else {
+                    handler.sendEmptyMessage(0x111);
                 }
             }
-        }else {
-            handler.sendEmptyMessage(0x111);
-        }
+        }).start();
     }
+
+
 
 
     @Override

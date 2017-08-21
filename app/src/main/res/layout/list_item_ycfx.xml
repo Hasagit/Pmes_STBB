@@ -34,7 +34,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/text_bg"
                 android:gravity="center">
-                <CheckBox
+                <RadioButton
                     android:layout_marginLeft="50dp"
                     android:layout_width="80dp"
                     android:layout_height="match_parent"

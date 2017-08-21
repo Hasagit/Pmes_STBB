@@ -85,9 +85,9 @@ public class FirstActivity extends BaseActivity{
         }
         sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
         if (sharedPreferences.getString("service_ip","").equals("")){
-            NetHelper.URL=getString(R.string.service_ip)+"/Service1.asmx";
+            NetHelper.URL=getString(R.string.service_ip)+":8080/Service1.asmx";
         }else {
-            NetHelper.URL=sharedPreferences.getString("service_ip","")+"/Service1.asmx";
+            NetHelper.URL=sharedPreferences.getString("service_ip","")+":8080/Service1.asmx";
         }
 
 
@@ -152,7 +152,7 @@ public class FirstActivity extends BaseActivity{
                                             @Override
                                             public void run() {
                                                 boolean result=NetHelper.getRunsqlResult("Exec PAD_Set_JtmJtbh '"+
-                                                        sharedPreferences.getString("mac","")+"','"+spiner_btn.getText().toString()+"'");
+                                                        sharedPreferences.getString("mac","")+"','"+spiner_btn.getText().toString()+"',"+"'"+NetHelper.URL+"'");
                                                 if (result){
                                                     getNetData(1);
                                                 }
@@ -406,7 +406,7 @@ public class FirstActivity extends BaseActivity{
                         String mac = "";
                         WifiManager wifiManager=((WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE));
                         String mac_temp=wifiManager.getConnectionInfo().getMacAddress();
-                        //mac_temp="c0:21:0d:94:26:f4";
+                        //mac_temp="c0:21:0d:94:26:f1";
                         if(mac_temp==null&&sharedPreferences.getString("mac","").equals("")) {
                             // Toast.makeText(FirstActivity.this,"获取网卡物理地址失败，请连接wifi",Toast.LENGTH_LONG).show();
                         }else {

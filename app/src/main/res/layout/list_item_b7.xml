@@ -14,7 +14,7 @@
             >
             <Button
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:id="@+id/btn_1"
                 android:text="选取"/>
         </LinearLayout>

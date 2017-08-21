@@ -34,4 +34,5 @@
     <color name="gdgl_3">#d5d5d5</color>
     <color name="g_true">#99ccff</color>
     <color name="g_false">#8899ccff</color>
+    <color name="fragment_bg">#cfcfcf</color>
 </resources>

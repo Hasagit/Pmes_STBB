@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.ruiduoyi.R;
 import com.ruiduoyi.activity.BlYyfxActivity;
 import com.ruiduoyi.adapter.YyfxAdapter;
+import com.ruiduoyi.adapter.YyfxAdapter2;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 import com.ruiduoyi.view.PopupDialog;
@@ -34,7 +35,7 @@ public class YyfxFragment extends Fragment implements View.OnClickListener{
     private ListView listView;
     private SharedPreferences sharedPreferences;
     private PopupWindowSpinner spinner_list;
-    private YyfxAdapter adapter;
+    private YyfxAdapter2 adapter;
     private String lbdm,jtbh;
     private PopupDialog isReadyDialog;
 
@@ -100,7 +101,7 @@ public class YyfxFragment extends Fragment implements View.OnClickListener{
                         map.put("lab_2",list1.get(i).get(1));
                         data1.add(map);
                     }
-                    adapter=new YyfxAdapter(getContext(),R.layout.list_item_yyfx,data1);
+                    adapter=new YyfxAdapter2(getContext(),R.layout.list_item_yyfx,data1);
                     listView.setAdapter(adapter);
                     break;
             }

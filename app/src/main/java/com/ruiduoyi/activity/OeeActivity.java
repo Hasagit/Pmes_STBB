@@ -1,5 +1,9 @@
 package com.ruiduoyi.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
@@ -41,6 +45,8 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
     private String jtbh;
     private ListView listView;
     private Animation animation;
+    private Handler handler;
+    private BroadcastReceiver receiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,50 +68,60 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
     private void initData(){
         sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
         jtbh=sharedPreferences.getString("jtbh","");
-        thread_oee1.start();
-        thread_oee2.start();
-        thread_oee3.start();
         animation= AnimationUtils.loadAnimation(this,R.anim.apha_anim);
-    }
+        receiver=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getNetData();
+            }
+        };
 
-    Handler handler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case 0x100:
-                    List<List<String>>list=(List<List<String>>)msg.obj;
-                    if(list.size()<1){
-                        Toast.makeText(OeeActivity.this,"数据异常",Toast.LENGTH_SHORT).show();
-                    }else {
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("com.ruiduoyi.updateOee");
+        registerReceiver(receiver,intentFilter);
+
+        handler=new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case 0x100:
+                        List<List<String>>list=(List<List<String>>)msg.obj;
                         initHorizontalBarChat(h_char,list);
                         h_char.startAnimation(animation);
-                    }
-                    break;
-                case 0x101:
-                    break;
-                case 0x102:
-                    List<List<String>>list2=(List<List<String>>)msg.obj;
-                    if(list2.size()<1){
-                        Toast.makeText(OeeActivity.this,"数据异常",Toast.LENGTH_SHORT).show();
-                    }else {
+                        break;
+                    case 0x101:
+                        break;
+                    case 0x102:
+                        List<List<String>>list2=(List<List<String>>)msg.obj;
                         initPieChat(p_chart,list2);
                         p_chart.startAnimation(animation);
-                    }
-                    break;
-                case 0x103:
-                    List<List<String>>list3=(List<List<String>>)msg.obj;
-                    if(list3.size()<1){
-                        Toast.makeText(OeeActivity.this,"数据异常",Toast.LENGTH_SHORT).show();
-                    }else {
-                        initListView(list3);
-                        listView.startAnimation(animation);
-                    }
-                    break;
-                default:
-                    break;
+
+                        break;
+                    case 0x103:
+                        List<List<String>>list3=(List<List<String>>)msg.obj;
+                        if(list3.size()<1){
+                            //Toast.makeText(OeeActivity.this,"数据异常",Toast.LENGTH_SHORT).show();
+                        }else {
+                            initListView(list3);
+                            listView.startAnimation(animation);
+                        }
+                        break;
+                    case 0x104:
+                        p_chart.clear();
+                        break;
+                    case 0x105:
+                        h_char.clear();
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
-    };
+        };
+
+        getNetData();
+
+    }
+
 
     //初始化水平柱形图
     private void initHorizontalBarChat(HorizontalBarChart mHorizontalBarChart,List<List<String>>list){
@@ -114,11 +130,13 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
         //mHorizontalBarChart.setOnChartValueSelectedListener(this);
         // 扩展现在只能分别在x轴和y轴
         mHorizontalBarChart.setPinchZoom(false);
-        mHorizontalBarChart.setBackgroundColor(getResources().getColor(R.color.color_9));
+        //mHorizontalBarChart.setBackgroundColor(getResources().getColor(R.color.color_9));
         mHorizontalBarChart.setTouchEnabled(false);
         mHorizontalBarChart.setDrawBarShadow(false);
         mHorizontalBarChart.setDrawValueAboveBar(false);
         mHorizontalBarChart.setHighlightFullBarEnabled(false);
+        mHorizontalBarChart.getDescription().setEnabled(false);
+        mHorizontalBarChart.getLegend().setEnabled(false);
 
         mHorizontalBarChart.getAxisLeft().setEnabled(true);
         mHorizontalBarChart.getAxisLeft().setAxisMaximum(25f);
@@ -133,14 +151,14 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
 
         XAxis xAxis = mHorizontalBarChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setLabelCount(1);
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(false);
-        xAxis.setTextSize(20f);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if(value==1.5){
-                    return "A02";
+                if (value==1){
+                    return jtbh;
                 }
                 return "";
             }
@@ -150,13 +168,11 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
                 return 0;
             }
         });
-        xAxis.setTextSize(9f);
-        xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(3);
+        xAxis.setTextSize(15f);
+        //xAxis.setAxisMinimum(0);
+        //xAxis.setAxisMaximum(2);
         xAxis.setCenterAxisLabels(false);
         xAxis.setAxisLineColor(Color.WHITE);
-
-        // 重要:当使用负值在堆叠酒吧,总是确保-值数组中的第一个
         ArrayList<BarEntry> yValues = new ArrayList<BarEntry>();
         float[] floats=new float[list.size()];
         String[] color=new String[list.size()];
@@ -165,17 +181,17 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
             floats[i]=Float.parseFloat(item.get(5));
             color[i]=item.get(6);
         }
-        yValues.add(new BarEntry(2, floats));
+        yValues.add(new BarEntry(1, floats));
 
         BarDataSet set = new BarDataSet(yValues, "时间片分析");
         //set.setValueFormatter(new CustomFormatter());
-        set.setValueTextSize(7f);
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColors(traToColor(color));
         set.setStackLabels(new String[color.length]);
         set.setFormLineWidth(10f);
+        set.setValueTextColor(getResources().getColor(R.color.touming));
         BarData data = new BarData(set);
-        data.setBarWidth(2.5f);
+        data.setValueTextSize(15f);
         mHorizontalBarChart.setData(data);
         mHorizontalBarChart.animateY(2500, Easing.EasingOption.EaseInOutQuad);
         //mHorizontalBarChart.invalidate();
@@ -236,12 +252,13 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
 
         dataSet.setValueLinePart1OffsetPercentage(80.f);
         dataSet.setValueLinePart1Length(0.2f);
-        dataSet.setValueLinePart2Length(0.4f);
+        dataSet.setValueLinePart2Length(0.5f);
+        dataSet.setValueTextSize(15f);
         dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
 
         PieData data = new PieData(dataSet);
         //data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
+        data.setValueTextSize(15f);
         data.setValueTextColor(Color.BLACK);
         mPieChart.setData(data);
 
@@ -287,19 +304,117 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
         int[] color=new int[str.length];
         for (int i=0;i<str.length;i++){
             String temp=str[i];
-            if(temp.trim().equals("W")){
-                color[i]=Color.WHITE;
-            }else if (temp.trim().equals("G")){
-                color[i]=Color.GREEN;
-            }
-            else if (temp.trim().equals("Y")){
-                color[i]=Color.YELLOW;
-            }else if (temp.trim().equals("N")){
-                color[i]=getResources().getColor(R.color.N);
-            }
+            color[i]=getColorByKey(str[i]);
         }
         return color;
     }
+
+
+    private int getColorByKey(String color){
+         /*
+            W	白色
+            H	灰色
+            Y	黄色
+            G	绿色
+            V	紫色
+            B	蓝色
+            P	粉色
+            R	红色
+            K	黑色
+             */
+        switch (color)
+        {
+            case "W":
+                return Color.WHITE;
+            case "H":
+                return getResources().getColor(R.color.lable);
+            case "Y":
+                return Color.YELLOW;
+            case "G":
+                return Color.GREEN;
+            case "V":
+                return getResources().getColor(R.color.color_6);
+            case "B":
+                return Color.BLUE;
+            case "P":
+                return getResources().getColor(R.color.color_10);
+            case "R":
+                return Color.RED;
+            case "K":
+                return Color.BLACK;
+            default:
+                return getResources().getColor(R.color.lable);
+        }
+    }
+
+
+
+    private void getNetData(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //柱状图
+                List<List<String>>list1= NetHelper.getQuerysqlResult("Exec PAD_Get_JtxlInf 'B','"+jtbh+"'");
+                Message msg1=handler.obtainMessage();
+                if(list1!=null){
+                    if (list1.size()>0){
+                        if (list1.get(0).size()>6){
+                            msg1.what=0x100;
+                            msg1.obj=list1;
+                        }
+                    }else {
+                        handler.sendEmptyMessage(0x105);
+                    }
+                }else {
+                    msg1.what=0x101;
+                }
+                handler.sendMessage(msg1);
+
+
+                //饼图
+                List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtxlInf 'A','"+jtbh+"'");
+                Message msg2=handler.obtainMessage();
+                if(list2!=null){
+                    if (list2.size()>0){
+                        if (list2.get(0).size()>3){
+                            msg2.what=0x102;
+                            msg2.obj=list2;
+                        }
+                    }else {
+                        handler.sendEmptyMessage(0x104);
+                    }
+                }else {
+                    msg2.what=0x101;
+                }
+                handler.sendMessage(msg2);
+
+
+                //表
+                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_JtxlInf 'C','"+jtbh+"'");
+                Message msg=handler.obtainMessage();
+                if(list!=null){
+                    if (list.size()>0){
+                        if (list.get(0).size()>6){
+                            msg.what=0x103;
+                            msg.obj=list;
+                        }
+                    }else {
+                        msg.what=0x103;
+                        msg.obj=list;
+                    }
+                }else {
+                    msg.what=0x101;
+                }
+                handler.sendMessage(msg);
+
+
+            }
+        }).start();
+    }
+
+
+
+
 
     //按键点击事件
     @Override
@@ -313,52 +428,11 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 
-    //柱状图数据请求
-    Thread thread_oee1=new Thread(new Runnable() {
-        @Override
-        public void run() {
-            List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_bod202p1New '"+jtbh+"',1");
-            Message msg=handler.obtainMessage();
-            if(list!=null){
-                msg.what=0x100;
-                msg.obj=list;
-            }else {
-                msg.what=0x101;
-            }
-            handler.sendMessage(msg);
-        }
-    });
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
 
-    //饼图数据请求
-    Thread thread_oee2=new Thread(new Runnable() {
-        @Override
-        public void run() {
-            List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_bod202p1New '"+jtbh+"',2");
-            Message msg=handler.obtainMessage();
-            if(list!=null){
-                msg.what=0x102;
-                msg.obj=list;
-            }else {
-                msg.what=0x101;
-            }
-            handler.sendMessage(msg);
-        }
-    });
-
-    //表格数据请求
-    Thread thread_oee3=new Thread(new Runnable() {
-        @Override
-        public void run() {
-            List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_bod202p1New '"+jtbh+"',3");
-            Message msg=handler.obtainMessage();
-            if(list!=null){
-                msg.what=0x103;
-                msg.obj=list;
-            }else {
-                msg.what=0x101;
-            }
-            handler.sendMessage(msg);
-        }
-    });
 
 }

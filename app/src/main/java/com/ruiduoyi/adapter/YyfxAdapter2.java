@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.ruiduoyi.R;
@@ -26,13 +25,13 @@ import java.util.Map;
  * Created by DengJf on 2017/7/12.
  */
 
-public class YyfxAdapter extends ArrayAdapter{
+public class YyfxAdapter2 extends ArrayAdapter{
     private List<Map<String,String>>data;
     private List<Map<String,String>>selectData=new ArrayList<>();
     private int resorce;
 
 
-    public YyfxAdapter(Context context, int resource, List<Map<String,String>>data) {
+    public YyfxAdapter2(Context context, int resource, List<Map<String,String>>data) {
         super(context, resource, data);
         this.data=data;
         this.resorce=resource;
@@ -49,11 +48,11 @@ public class YyfxAdapter extends ArrayAdapter{
         }
         TextView lab_1=(TextView) view.findViewById(R.id.lab_1);
         TextView lab_2=(TextView)view.findViewById(R.id.lab_2);
-        final RadioButton radio=(RadioButton) view.findViewById(R.id.select_btn);
+        CheckBox checkBox=(CheckBox)view.findViewById(R.id.select_btn);
         final LinearLayout bg=(LinearLayout)view.findViewById(R.id.backgrounp);
         lab_1.setText(data.get(position).get("lab_1"));
         lab_2.setText(data.get(position).get("lab_2"));
-        /*checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
@@ -65,34 +64,7 @@ public class YyfxAdapter extends ArrayAdapter{
                 }
                 Log.w("YyfxAdapter",selectData.toString());
             }
-        });*/
-        bg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i=0;i<data.size();i++){
-                    data.get(i).put("isCheck","0");
-                }
-                data.get(position).put("isCheck","1");
-                notifyDataSetChanged();
-            }
         });
-
-        radio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i=0;i<data.size();i++){
-                    data.get(i).put("isCheck","0");
-                }
-                data.get(position).put("isCheck","1");
-                notifyDataSetChanged();
-            }
-        });
-        if (data.get(position).get("isCheck").equals("0")){
-            radio.setChecked(false);
-        }else {
-            radio.setChecked(true);
-        }
-
         return view;
     }
     private void removeSelectData(Map<String,String>map){
@@ -111,7 +83,4 @@ public class YyfxAdapter extends ArrayAdapter{
         return selectData;
     }
 
-    public List<Map<String, String>> getData() {
-        return data;
-    }
 }

@@ -127,6 +127,10 @@ public abstract class SigleSelectAdapter extends BaseAdapter {
         RadioButton rdBtn;
     }
 
-    public abstract void onRadioSelectListener(int position,Map<String,String>map);
+    public List<Map<String, String>> getUserList() {
+        return userList;
+    }
+
+    public abstract void onRadioSelectListener(int position, Map<String,String>map);
 
 }

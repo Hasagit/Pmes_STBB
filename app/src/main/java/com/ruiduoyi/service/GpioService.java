@@ -55,9 +55,9 @@ public class GpioService extends Service {
             jtbh=sharedPreferences.getString("jtbh","");
             mac=sharedPreferences.getString("mac","");
             if (sharedPreferences.getString("service_ip","").equals("")){
-                NetHelper.URL=getString(R.string.service_ip)+"/Service1.asmx";
+                NetHelper.URL=getString(R.string.service_ip)+":8080/Service1.asmx";
             }else {
-                NetHelper.URL=sharedPreferences.getString("service_ip","")+"/Service1.asmx";
+                NetHelper.URL=sharedPreferences.getString("service_ip","")+":8080/Service1.asmx";
             }
         }
         Log.w("starCommand",jtbh+"   "+mac);
