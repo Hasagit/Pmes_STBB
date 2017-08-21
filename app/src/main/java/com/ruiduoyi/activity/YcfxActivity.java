@@ -376,4 +376,11 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppUtils.sendUpdateInfoFragmentReceiver(this);
+        dialog_tip.dismiss();
+    }
 }

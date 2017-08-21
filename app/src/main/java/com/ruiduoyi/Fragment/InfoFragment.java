@@ -837,11 +837,13 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     List<List<String>>list4= NetHelper.getQuerysqlResult("Exec PAD_Get_PhotoInfo '"+jtbh+"'");
                     if(list4!=null){
                         handler.sendEmptyMessage(0x111);
-                        if (list4.get(0).size()>6){
-                            Message msg=handler.obtainMessage();
-                            msg.what=0x105;
-                            msg.obj=list4;
-                            handler.sendMessage(msg);
+                        if (list4.size()>0){
+                            if (list4.get(0).size()>6){
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x105;
+                                msg.obj=list4;
+                                handler.sendMessage(msg);
+                            }
                         }
                     }else {
                         AppUtils.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);

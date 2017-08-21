@@ -164,9 +164,10 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                                             getNetData(0x101);
                                         }else {//从statusFragment启动来的
                                             AppUtils.sendUpdateInfoFragmentReceiver(DialogGActivity.this);
-                                            if (!title.equals("人员上岗")|title.equals("品管巡机")){
+                                            AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
+                                           /* if (!title.equals("人员上岗")|title.equals("品管巡机")){
                                                 AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
-                                            }
+                                            }*/
                                             finish();
                                         }
                                     }else {

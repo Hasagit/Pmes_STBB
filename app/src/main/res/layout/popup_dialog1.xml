@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/dialog_bg">
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/title"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"

@@ -41,7 +41,6 @@ public class GdglActivity extends BaseActivity implements View.OnClickListener{
                     initListView(list);
                     break;
                 case 0x101:
-                    AppUtils.sendUpdateInfoFragmentReceiver(GdglActivity.this);
                     getNetData();
                     String result=(String) msg.obj;
                     if (!result.equals("OK")){
@@ -143,5 +142,6 @@ public class GdglActivity extends BaseActivity implements View.OnClickListener{
         if (dialog.isShow()){
             dialog.dismiss();
         }
+        AppUtils.sendUpdateInfoFragmentReceiver(GdglActivity.this);
     }
 }

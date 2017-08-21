@@ -369,11 +369,7 @@ public class FirstActivity extends BaseActivity{
 
 
     }
-
-
-
-
-
+    
     private void getNetData(final int type){
             new Thread(new Runnable() {//服务器是否开启
                 @Override
@@ -385,7 +381,7 @@ public class FirstActivity extends BaseActivity{
                                 Message msg=handler.obtainMessage();
                                 msg.what=0x101;
                                 i=i+1;
-                                if(i>1) {
+                                if(i>9) {
                                     handler.sendEmptyMessage(0x110);
                                     break;
                                 };

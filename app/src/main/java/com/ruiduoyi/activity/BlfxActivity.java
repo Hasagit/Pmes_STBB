@@ -1,6 +1,7 @@
 package com.ruiduoyi.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.ruiduoyi.adapter.FailureAnalysisAdapter;
 import com.ruiduoyi.adapter.SigleSelectAdapter;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
+import com.ruiduoyi.view.PopupDialog;
 import com.ruiduoyi.view.PopupWindowSpinner;
 
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
     private PopupWindowSpinner popupWindowSpinner;
     private List<String>zzdh_list=new ArrayList<>();
     private int zzdh_position;
+    private PopupDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +193,18 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
         btn_del.setOnClickListener(this);
         btn_submit.setOnClickListener(this);
         btn_clear.setOnClickListener(this);
+
+        dialog=new PopupDialog(this,450,350);
+        dialog.setTitle("提示");
+        dialog.getCancle_btn().setVisibility(View.GONE);
+        dialog.getOkbtn().setText("确定");
+        dialog.getOkbtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
     }
 
     private void initListView(List<List<String>>lists){
@@ -427,20 +442,35 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
 
 
     private boolean isReady(){
-        if (spinner.getText().toString().equals("")){
-            Toast.makeText(this,"请先选取产品",Toast.LENGTH_SHORT).show();
+        if (sub_text.getText().toString().length()>9){
+            dialog.setMessage("数值已经超过允许范围");
+            dialog.setMessageTextColor(Color.RED);
+            dialog.show();
             return false;
         }
+        if (spinner.getText().toString().equals("")){
+            dialog.setMessage("请先选取产品");
+            dialog.setMessageTextColor(Color.RED);
+            dialog.show();
+            return false;
+
+        }
         if (bldm_text.getText().toString().equals("")){
-            Toast.makeText(this,"请先选取不良描述",Toast.LENGTH_SHORT).show();
+            dialog.setMessage("请先选取不良描述");
+            dialog.setMessageTextColor(Color.RED);
+            dialog.show();
             return false;
         }
         if (sub_text.getText().toString().equals("0")){
-            Toast.makeText(this,"请先输入不良数",Toast.LENGTH_SHORT).show();
+            dialog.setMessage("请先输入不良数");
+            dialog.setMessageTextColor(Color.RED);
+            dialog.show();
             return false;
         }
         if (Integer.parseInt(lpsl_str)<Integer.parseInt(blpsl_str)+Integer.parseInt(sub_text.getText().toString().trim())){
-            Toast.makeText(this,"不良品总数量不能大于良品数量",Toast.LENGTH_SHORT).show();
+            dialog.setMessage("不良品总数量不能大于良品数量");
+            dialog.setMessageTextColor(Color.RED);
+            dialog.show();
             return false;
         }
         return true;
@@ -482,7 +512,8 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        AppUtils.sendUpdateInfoFragmentReceiver(this);
+        dialog.dismiss();
     }
 
 

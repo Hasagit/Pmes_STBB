@@ -379,7 +379,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void AutoUpdateApp(){
         int auto_updata_num=sharedPreferences.getInt("auto_updata_num",0);
         Log.e("auto_updata_num",auto_updata_num+"");
-        if (auto_updata_num<720){
+        String delay_time=getResources().getString(R.string.update_app_delay_time);
+        if (auto_updata_num<Integer.parseInt(delay_time)){
             SharedPreferences.Editor editor=sharedPreferences.edit();
             editor.putInt("auto_updata_num",auto_updata_num+1);
             editor.commit();
