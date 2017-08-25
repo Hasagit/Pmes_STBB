@@ -85,9 +85,9 @@ public class FirstActivity extends BaseActivity{
         }
         sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
         if (sharedPreferences.getString("service_ip","").equals("")){
-            NetHelper.URL=getString(R.string.service_ip)+":8080/Service1.asmx";
+            NetHelper.URL="http://"+getString(R.string.service_ip)+":8080/Service1.asmx";
         }else {
-            NetHelper.URL=sharedPreferences.getString("service_ip","")+":8080/Service1.asmx";
+            NetHelper.URL="http://"+sharedPreferences.getString("service_ip","")+":8080/Service1.asmx";
         }
 
 
@@ -151,8 +151,14 @@ public class FirstActivity extends BaseActivity{
                                         new Thread(new Runnable() {//设置机台编号
                                             @Override
                                             public void run() {
+                                                String service_ip="";
+                                                if (sharedPreferences.getString("service_ip","").equals("")){
+                                                    service_ip=getResources().getString(R.string.service_ip);
+                                                }else {
+                                                    service_ip=sharedPreferences.getString("service_ip","");
+                                                }
                                                 boolean result=NetHelper.getRunsqlResult("Exec PAD_Set_JtmJtbh '"+
-                                                        sharedPreferences.getString("mac","")+"','"+spiner_btn.getText().toString()+"',"+"'"+NetHelper.URL+"'");
+                                                        sharedPreferences.getString("mac","")+"','"+spiner_btn.getText().toString()+"',"+"'"+service_ip+"'");
                                                 if (result){
                                                     getNetData(1);
                                                 }
@@ -180,16 +186,6 @@ public class FirstActivity extends BaseActivity{
                                         AppUtils.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",
                                                 jtbh,sharedPreferences.getString("mac",""));
                                     }
-                                /*List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_JtmMstr ''");
-                                if (list!=null){
-                                    Message msg=handler.obtainMessage();
-                                    msg.what=0x105;
-                                    msg.obj=list;
-                                    handler.sendMessage(msg);
-                                }else {
-                                    AppUtils.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",
-                                            jtbh,sharedPreferences.getString("mac",""));
-                                }*/
                                 }
                             }).start();
 
@@ -208,14 +204,6 @@ public class FirstActivity extends BaseActivity{
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
-                    /*List<List<String>>list=(List<List<String>>)msg.obj;
-                    if (list.size()>0){
-                        jtbh=list.get(0).get(0);
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
-                        editor.putString("jtbh",jtbh);
-                        editor.commit();
-                        isJtbh=true;
-                    }*/
                         break;
                     case 0x105:
                         try {
@@ -249,32 +237,6 @@ public class FirstActivity extends BaseActivity{
                             e.printStackTrace();
                         }
 
-                    /*List<List<String>>list1=(List<List<String>>)msg.obj;
-                    if (list1.size()>0){
-                        final List<String>data=new ArrayList<>();
-                        for (int i=0;i<list1.size();i++){
-                            data.add(list1.get(i).get(0));
-                        }
-                        spiner_btn.setVisibility(View.VISIBLE);
-                        jtbh_tip.setVisibility(View.VISIBLE);
-                        spiner_btn.setText("选择机台号");
-                        spiner_btn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                final PopupWindowSpinner spinner=new PopupWindowSpinner(FirstActivity.this,data,R.layout.spinner_list_b7,R.id.lab_1,200);
-                                spinner.showUpOn(spiner_btn);
-                                spinner.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        spiner_btn.setText(data.get(position));
-                                        spinner.dismiss();
-                                        //dialog2.dismiss();
-                                    }
-                                });
-                            }
-                        });
-
-                    }*/
                         break;
                     case 0x106://服务器时间
                         try {
@@ -288,15 +250,7 @@ public class FirstActivity extends BaseActivity{
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
-                   /* List<List<String>>list2=(List<List<String>>)msg.obj;
-                    if(list2.size()>0){
-                        String time=list2.get(0).get(0);
-                        String ymd_hm=time.substring(0,4)+time.substring(5,7)+time.substring(8,10)
-                                +"."+time.substring(11,13)+time.substring(14,16)+time.substring(17,19);
-                        AppUtils.setSystemTime(FirstActivity.this,ymd_hm);
-                    }else {
-                        //Toast.makeText(MainActivity.this,"获取服务器时间失败",Toast.LENGTH_SHORT).show();
-                    }*/
+
                         break;
                     case 0x107:
                         isNewVersion=false;
@@ -381,7 +335,7 @@ public class FirstActivity extends BaseActivity{
                                 Message msg=handler.obtainMessage();
                                 msg.what=0x101;
                                 i=i+1;
-                                if(i>9) {
+                                if(i>1) {
                                     handler.sendEmptyMessage(0x110);
                                     break;
                                 };
@@ -406,7 +360,7 @@ public class FirstActivity extends BaseActivity{
                         String mac = "";
                         WifiManager wifiManager=((WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE));
                         String mac_temp=wifiManager.getConnectionInfo().getMacAddress();
-                        //mac_temp="c0:21:0d:94:26:f1";
+                        mac_temp="c0:21:0d:94:26:f7";
                         if(mac_temp==null&&sharedPreferences.getString("mac","").equals("")) {
                             // Toast.makeText(FirstActivity.this,"获取网卡物理地址失败，请连接wifi",Toast.LENGTH_LONG).show();
                         }else {
@@ -502,7 +456,7 @@ public class FirstActivity extends BaseActivity{
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode){
             case 1:
-                NetHelper.URL=sharedPreferences.getString("service_ip","")+"/Service1.asmx";
+                NetHelper.URL="http://"+sharedPreferences.getString("service_ip","")+":8080/Service1.asmx";
                 getNetData(0);
                 break;
             case 2:

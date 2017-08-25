@@ -110,7 +110,7 @@ public class DialogB5Activty extends BaseActivity implements View.OnClickListene
                     public void run() {
                         try {
                             handler.sendEmptyMessage(0x103);
-                            URL url=new URL(getString(R.string.service_ip)+"/Pdf/"+fileName);
+                            URL url=new URL("http://"+getString(R.string.service_ip)+"/Pdf/"+fileName);
                             HttpURLConnection urlConnection= (HttpURLConnection) url.openConnection();
                             urlConnection.setDoInput(true);
                             urlConnection.setUseCaches(false);

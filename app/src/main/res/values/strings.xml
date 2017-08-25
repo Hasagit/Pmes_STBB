@@ -45,7 +45,7 @@
     <string name="zlmc_64">计划停机</string>
     <string name="zlmc_65">工单暂停</string>
     <string name="zlmc_66">待送首件</string>
-    <string name="zlmc_67"></string>
+    <string name="zlmc_67">调色</string>
     <string name="zlmc_68"></string>
     <string name="zlmc_69"></string>
     <string name="zlmc_70"></string>
@@ -72,7 +72,7 @@
     <!--多久更新一次主页面数据（毫秒）-->
     <string name="base_info_update_time">60000</string>
     <!--<string name="service_ip">http://192.168.2.121</string>-->
-    <string name="service_ip">http://192.168.0.201</string>
+    <string name="service_ip">192.168.0.201</string>
 
     <string name="cust_cmp_name">广东邦宝益智玩具股份有限公司</string>
     <string name="main_btn_01">生产信息</string>
