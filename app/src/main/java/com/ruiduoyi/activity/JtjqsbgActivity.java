@@ -191,7 +191,7 @@ public class JtjqsbgActivity extends BaseActivity implements View.OnClickListene
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_MoeDet",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec PAD_Get_MoeDet",jtbh,sharedPreferences.getString("mac",""));
                 }
 
             }

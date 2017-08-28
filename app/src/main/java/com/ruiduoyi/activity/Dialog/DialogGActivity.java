@@ -141,7 +141,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("PAD_Read_CardID",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("PAD_Read_CardID",jtbh,sharedPreferences.getString("mac",""));
                 }
             }
         }).start();
@@ -155,6 +155,8 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                     @Override
                     public void run() {
                         List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_SrvCon '"+jtbh+"','"+zldm+"','"+num+"',''");
+                        AppUtils.sendUpdateInfoFragmentReceiver(DialogGActivity.this);
+                        AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
                         if (list!=null){
                             if (list.size()>0){
                                 if (list.get(0).size()>0){
@@ -163,8 +165,6 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                                             type="DOC";
                                             getNetData(0x101);
                                         }else {//从statusFragment启动来的
-                                            AppUtils.sendUpdateInfoFragmentReceiver(DialogGActivity.this);
-                                            AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
                                            /* if (!title.equals("人员上岗")|title.equals("品管巡机")){
                                                 AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
                                             }*/
@@ -216,7 +216,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
             public void run() {
                try {
                    JSONArray array=NetHelper.getQuerysqlResultJsonArray(" Exec PAD_Check_Usr_Prg '"
-                           +num_edit.getText().toString()+"','mom107p1'");
+                           +num_edit.getText().toString()+"','MOM104D6'");
                    if (array!=null){
                        if (array.length()>0){
                            JSONObject json=array.getJSONObject(0);
@@ -234,7 +234,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                            }
                        }
                    }else {
-                       AppUtils.uploadNetworkError("Exec PAD_Check_Usr_Prg",jtbh,sharedPreferences.getString("mac",""));
+                       NetHelper.uploadNetworkError("Exec PAD_Check_Usr_Prg",jtbh,sharedPreferences.getString("mac",""));
                    }
                }catch (JSONException e){
                    e.printStackTrace();

@@ -171,7 +171,7 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                         e.printStackTrace();
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_OrderInfo2",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo2",jtbh,sharedPreferences.getString("mac",""));
                 }
             }
         }).start();
@@ -201,7 +201,7 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                         msg.obj=data;
                         handler.sendMessage(msg);
                     }else {
-                        AppUtils.uploadNetworkError("PAD_GetQcItem",jtbh,sharedPreferences.getString("mac",""));
+                        NetHelper.uploadNetworkError("PAD_GetQcItem",jtbh,sharedPreferences.getString("mac",""));
                     }
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -334,7 +334,7 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                         msg.obj=data;
                         handler.sendMessage(msg);
                     }else {
-                        AppUtils.uploadNetworkError("Exec PAD_GetQcImproveList",jtbh,"");
+                        NetHelper.uploadNetworkError("Exec PAD_GetQcImproveList",jtbh,"");
                     }
                 }catch (JSONException e){
                     e.printStackTrace();

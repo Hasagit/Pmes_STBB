@@ -135,7 +135,7 @@ public class SbxxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_JtmMstr NetWorkError",jtbh,mac);
+                    NetHelper.uploadNetworkError("Exec PAD_Get_JtmMstr NetWorkError",jtbh,mac);
                 }
             }
         }).start();
@@ -155,7 +155,7 @@ public class SbxxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_SbmHgl NetWorkError",jtbh,mac);
+                    NetHelper.uploadNetworkError("Exec PAD_Get_SbmHgl NetWorkError",jtbh,mac);
                 }
             }
         }).start();

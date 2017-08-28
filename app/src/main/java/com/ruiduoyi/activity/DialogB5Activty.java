@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.joanzapata.pdfview.PDFView;
+import com.github.barteksc.pdfviewer.PDFView;
 import com.ruiduoyi.R;
 import com.ruiduoyi.model.NetHelper;
 
@@ -53,7 +53,7 @@ public class DialogB5Activty extends BaseActivity implements View.OnClickListene
                 case 0x102:
                     String fileName=(String)msg.obj;
                     File file=new File(path+"/pdf/"+type+"_"+fileName);
-                    pdfView.fromFile(file).defaultPage(1).swipeVertical(true).load();
+                    pdfView.fromFile(file).defaultPage(1).load();
                     //dialog.dismiss();
                     break;
                 case 0x103:
@@ -103,7 +103,7 @@ public class DialogB5Activty extends BaseActivity implements View.OnClickListene
             final String fileName=temp[temp.length-1];
             File file=new File(path+"/pdf/"+type+"_"+fileName);
             if (file.exists()){
-                pdfView.fromFile(file).defaultPage(1).swipeVertical(true).load();
+                pdfView.fromFile(file).defaultPage(1).load();
             }else {
                 new Thread(new Runnable() {
                     @Override

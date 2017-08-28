@@ -171,7 +171,7 @@ public class GpioService extends Service {
                                 break;
                             }
                         }else {
-                            AppUtils.uploadNetworkError("exec PAD_SrvDataUp NetWorkError",jtbh,mac);
+                            NetHelper.uploadNetworkError("exec PAD_SrvDataUp NetWorkError",jtbh,mac);
                             break;
                         }
                     }

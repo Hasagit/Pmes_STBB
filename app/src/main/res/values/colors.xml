@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="lable">#dcdcdc</color>
+    <color name="hui">#77dcdcdc</color>
     <color name="dialog_bg">#cfcdcd</color>
     <color name="bottom_sl">#81a6d7</color>
     <color name="bottom_bt_sl">#898686</color>
@@ -35,4 +36,5 @@
     <color name="g_true">#99ccff</color>
     <color name="g_false">#8899ccff</color>
     <color name="fragment_bg">#cfcfcf</color>
+    <color name="pdf_drawer">#066af1</color>
 </resources>

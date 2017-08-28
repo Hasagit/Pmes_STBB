@@ -205,7 +205,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_ZlmYywh 'D'",sharedPreferences.getString("jtnh",""),
+                    NetHelper.uploadNetworkError("Exec PAD_Get_ZlmYywh 'D'",sharedPreferences.getString("jtnh",""),
                             sharedPreferences.getString("mac",""));
                 }
 
@@ -221,7 +221,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_Blllist",sharedPreferences.getString("jtbh",""),
+                    NetHelper.uploadNetworkError("Exec PAD_Get_Blllist",sharedPreferences.getString("jtbh",""),
                             sharedPreferences.getString("mac",""));
                 }
 

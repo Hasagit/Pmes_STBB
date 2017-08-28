@@ -792,7 +792,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                             }
                         }
                     }else {
-                        AppUtils.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,mac);
+                        NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,mac);
                         handler.sendEmptyMessage(0x110);
                     }
 
@@ -811,7 +811,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                             }
                         }
                     }else {
-                        AppUtils.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",jtbh,mac);
+                        NetHelper.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",jtbh,mac);
                         //handler.sendEmptyMessage(0x101);
                         handler.sendEmptyMessage(0x110);
                     }
@@ -829,7 +829,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                             }
                         }
                     }else {
-                        AppUtils.uploadNetworkError("Exec PAD_Get_FhChartInfo NetWordError",jtbh,mac);
+                        NetHelper.uploadNetworkError("Exec PAD_Get_FhChartInfo NetWordError",jtbh,mac);
                         handler.sendEmptyMessage(0x110);
                     }
 
@@ -846,7 +846,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                             }
                         }
                     }else {
-                        AppUtils.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);
+                        NetHelper.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);
                         handler.sendEmptyMessage(0x110);
                     }
 

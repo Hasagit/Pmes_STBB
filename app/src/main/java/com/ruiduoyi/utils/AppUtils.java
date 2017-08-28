@@ -90,7 +90,7 @@ public class AppUtils {
     }
 
 
-    public static void DownLoadFileByUrl(String url_str,String filePath,String fileName){
+    /*public static void DownLoadFileByUrl(String url_str,String filePath,String fileName){
         URL url= null;
         try {
             File file=new File(filePath);
@@ -120,7 +120,7 @@ public class AppUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
     public static void setSystemTime(final Context cxt, String datetimes) {
@@ -151,7 +151,7 @@ public class AppUtils {
     }
 
 
-    public static void uploadNetworkError(String errms,String jtbh,String mac){
+    /*public static void uploadNetworkError(String errms,String jtbh,String mac){
         NetHelper.getRunsqlResult("Exec PAD_Add_PadLogInfo '7','"+errms+"','"+jtbh+"','"+mac+"'");
     }
 
@@ -160,7 +160,7 @@ public class AppUtils {
         boolean result=NetHelper.getRunsqlResult(sql);
         Log.e("","");
         return result;
-    }
+    }*/
 
     public static void sendCountdownReceiver(Context context){
         Intent intent=new Intent();
@@ -186,6 +186,11 @@ public class AppUtils {
         context.sendBroadcast(intent2);
     }
 
+    public static void sendUpdatePdfReceiver(Context context){
+        Intent intent=new Intent();
+        intent.setAction("com.Ruiduoyi.UpdataPdfList");
+        context.sendBroadcast(intent);
+    }
 
     public static int calculate(String str,String substr){
         if (str.length()>0){

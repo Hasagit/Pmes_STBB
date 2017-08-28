@@ -652,7 +652,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec  PAD_Get_PzmInf",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf",jtbh,sharedPreferences.getString("mac",""));
                 }
 
 
@@ -668,7 +668,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec  PAD_Get_PzmInf 'B01'",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf 'B01'",jtbh,sharedPreferences.getString("mac",""));
                 }
 
                 /*//质量检测
@@ -698,7 +698,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec  PAD_Get_PzmInf 'B02'",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf 'B02'",jtbh,sharedPreferences.getString("mac",""));
                 }
 
                 //巡查记录
@@ -713,7 +713,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec  PAD_Get_PzmInf 'B03'",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf 'B03'",jtbh,sharedPreferences.getString("mac",""));
                 }
 
                 //从工单信息
@@ -728,7 +728,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec  PAD_Get_PzmInf 'G'",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf 'G'",jtbh,sharedPreferences.getString("mac",""));
                 }
 
 

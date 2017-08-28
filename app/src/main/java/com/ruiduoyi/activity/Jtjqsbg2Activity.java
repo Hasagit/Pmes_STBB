@@ -286,7 +286,7 @@ public class Jtjqsbg2Activity extends BaseActivity implements View.OnClickListen
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_MoeJtxsInf 'C'",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec PAD_Get_MoeJtxsInf 'C'",jtbh,sharedPreferences.getString("mac",""));
                 }
             }
         }).start();
@@ -314,7 +314,7 @@ public class Jtjqsbg2Activity extends BaseActivity implements View.OnClickListen
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_MoeDet",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec PAD_Get_MoeDet",jtbh,sharedPreferences.getString("mac",""));
                 }
 
             }
@@ -338,7 +338,7 @@ public class Jtjqsbg2Activity extends BaseActivity implements View.OnClickListen
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_MoeJtXs  'B'",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec PAD_Get_MoeJtXs  'B'",jtbh,sharedPreferences.getString("mac",""));
                 }
 
             }
@@ -363,7 +363,7 @@ public class Jtjqsbg2Activity extends BaseActivity implements View.OnClickListen
                        }
                    }
                }else {
-                   AppUtils.uploadNetworkError("Exec PAD_Get_MoeJtxsInf 'A'",jtbh,sharedPreferences.getString("mac",""));
+                   NetHelper.uploadNetworkError("Exec PAD_Get_MoeJtxsInf 'A'",jtbh,sharedPreferences.getString("mac",""));
                }
            }
        }).start();
@@ -420,7 +420,7 @@ public class Jtjqsbg2Activity extends BaseActivity implements View.OnClickListen
                                     msg.arg1=position;
                                     msg.obj=upload;
                                     handler.sendMessage(msg);
-                                    AppUtils.uploadNetworkError("Exec PAD_Upd_MoeJtXs  'C'",jtbh,sharedPreferences.getString("mac",""));
+                                    NetHelper.uploadNetworkError("Exec PAD_Upd_MoeJtXs  'C'",jtbh,sharedPreferences.getString("mac",""));
                                 }
                             }
                         }).start();
@@ -454,7 +454,7 @@ public class Jtjqsbg2Activity extends BaseActivity implements View.OnClickListen
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Upd_MoeJtXs  'B'",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec PAD_Upd_MoeJtXs  'B'",jtbh,sharedPreferences.getString("mac",""));
                 }
             }
         }).start();

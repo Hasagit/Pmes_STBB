@@ -502,7 +502,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",sharedPreferences.getString("jtbh","")
+                    NetHelper.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",sharedPreferences.getString("jtbh","")
                             ,sharedPreferences.getString("mac",""));
                     //handler.sendEmptyMessage(0x101);
                     handler.sendEmptyMessage(0x110);

@@ -127,7 +127,7 @@ public class DialogJtbgActivity extends BaseDialogActivity{
                     msg.obj=array;
                     handler.sendMessage(msg);
                 }else {
-                    AppUtils.uploadNetworkError("sql",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("sql",jtbh,sharedPreferences.getString("mac",""));
                 }
             }
         }).start();
@@ -229,7 +229,7 @@ public class DialogJtbgActivity extends BaseDialogActivity{
                            }
                        }
                    }else {
-                       AppUtils.uploadNetworkError(sql,jtbh,sharedPreferences.getString("mac",""));
+                       NetHelper.uploadNetworkError(sql,jtbh,sharedPreferences.getString("mac",""));
                    }
                }catch (JSONException e){
                    e.printStackTrace();

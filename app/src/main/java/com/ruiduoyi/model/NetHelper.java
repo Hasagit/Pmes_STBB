@@ -29,12 +29,17 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -548,7 +553,41 @@ public class NetHelper {
     }
 
 
+    //上传网络错误log
+    public static void uploadNetworkError(String errms,String jtbh,String mac){
+        NetHelper.getRunsqlResult("Exec PAD_Add_PadLogInfo '7','"+errms+"','"+jtbh+"','"+mac+"'");
+    }
 
+    //上传异常崩溃信息
+    public static boolean uploadErrorMsg(String errms,String jtbh,String mac,String code){
+        String sql="Exec PAD_Add_PadLogInfo '"+code+"','"+errms+"','"+jtbh+"','"+mac+"'";
+        boolean result=NetHelper.getRunsqlResult(sql);
+        Log.e("","");
+        return result;
+    }
+
+    //根据url地址下载文件
+    public static void downLoadFileByUrl(String url_str,String filePath,String fileName) throws IOException {
+        URL url= null;
+        File file=new File(filePath);
+        if (!file.exists()){
+            file.mkdir();
+        }
+        url = new URL(url_str);
+        HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();
+        urlConnection.setDoInput(true);
+        urlConnection.setUseCaches(false);
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setConnectTimeout(5000);
+        urlConnection.connect();
+        InputStream in=urlConnection.getInputStream();
+        OutputStream out=new FileOutputStream(filePath+"/"+fileName,false);
+        byte[] buff=new byte[1024];
+        int size;
+        while ((size = in.read(buff)) != -1) {
+            out.write(buff, 0, size);
+        }
+    }
 
 }
 

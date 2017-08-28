@@ -183,7 +183,7 @@ public class FirstActivity extends BaseActivity{
                                         msg.obj=array;
                                         handler.sendMessage(msg);
                                     }else {
-                                        AppUtils.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",
+                                        NetHelper.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",
                                                 jtbh,sharedPreferences.getString("mac",""));
                                     }
                                 }
@@ -335,7 +335,7 @@ public class FirstActivity extends BaseActivity{
                                 Message msg=handler.obtainMessage();
                                 msg.what=0x101;
                                 i=i+1;
-                                if(i>1) {
+                                if(i>5) {
                                     handler.sendEmptyMessage(0x110);
                                     break;
                                 };
@@ -360,7 +360,7 @@ public class FirstActivity extends BaseActivity{
                         String mac = "";
                         WifiManager wifiManager=((WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE));
                         String mac_temp=wifiManager.getConnectionInfo().getMacAddress();
-                        mac_temp="c0:21:0d:94:26:f7";
+                        //mac_temp="c0:21:0d:94:26:f7";
                         if(mac_temp==null&&sharedPreferences.getString("mac","").equals("")) {
                             // Toast.makeText(FirstActivity.this,"获取网卡物理地址失败，请连接wifi",Toast.LENGTH_LONG).show();
                         }else {
@@ -382,7 +382,7 @@ public class FirstActivity extends BaseActivity{
 
                                 }
                             }else {
-                                AppUtils.uploadNetworkError("获取机台编号 NetWordError",
+                                NetHelper.uploadNetworkError("获取机台编号 NetWordError",
                                         jtbh,sharedPreferences.getString("mac",""));
                                 msg.what=0x104;
                                 handler.sendMessage(msg);
@@ -396,7 +396,7 @@ public class FirstActivity extends BaseActivity{
                     for (int i = 0; i < mac_sz.length; i++) {
                         mac = mac + mac_sz[i];
                     }*/
-                        AppUtils.uploadErrorMsg("重启","",mac,"5");
+                        NetHelper.uploadErrorMsg("重启","",mac,"5");
 
                         //获取系统时间
                         JSONArray array=NetHelper.getQuerysqlResultJsonArray("select GETDATE()");
@@ -406,7 +406,7 @@ public class FirstActivity extends BaseActivity{
                             msg.what=0x106;
                             handler.sendMessage(msg);
                         }else {
-                            AppUtils.uploadNetworkError("select GETDATE() NetWordError",
+                            NetHelper.uploadNetworkError("select GETDATE() NetWordError",
                                     jtbh,sharedPreferences.getString("mac",""));
                             //msg.what=0x104;
                         }
@@ -424,7 +424,7 @@ public class FirstActivity extends BaseActivity{
                                     editor.commit();
                                     if (!oldVersionName.equals(newVersionName)){
                                         handler.sendEmptyMessage(0x107);
-                                        AppUtils.DownLoadFileByUrl(array_info.getJSONObject(0).getString("v_WebAppPath"),
+                                        NetHelper.downLoadFileByUrl(array_info.getJSONObject(0).getString("v_WebAppPath"),
                                                 Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
                                         Intent intent = new Intent(Intent.ACTION_VIEW);
                                         intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/RdyPmes.apk")),
@@ -436,10 +436,12 @@ public class FirstActivity extends BaseActivity{
                                     }
                                 }
                             } else {
-                                AppUtils.uploadNetworkError("PAD_Get_WebAddr NetWordError",
+                                NetHelper.uploadNetworkError("PAD_Get_WebAddr NetWordError",
                                         jtbh,sharedPreferences.getString("mac",""));
                             }
                         }catch (JSONException e){
+                            e.printStackTrace();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
 

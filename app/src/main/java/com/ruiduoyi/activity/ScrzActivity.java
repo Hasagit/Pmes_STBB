@@ -125,7 +125,7 @@ public class ScrzActivity extends BaseActivity implements View.OnClickListener{
                        }
                    }
                }else {
-                   AppUtils.uploadNetworkError("Exec PAD_Get_SdmMstr",jtbh,sharedPreferences.getString("mac",""));
+                   NetHelper.uploadNetworkError("Exec PAD_Get_SdmMstr",jtbh,sharedPreferences.getString("mac",""));
                }
            }
        }).start();

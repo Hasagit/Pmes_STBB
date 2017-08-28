@@ -259,6 +259,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
         sub_text.startAnimation(anim);
         bldm_text.setText("");
         blms_text.setText("");
+        btn_submit.setEnabled(true);
     }
 
     @Override
@@ -357,6 +358,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                 break;
             case R.id.btn_submit:
                 if (isReady()){
+                    btn_submit.setEnabled(false);
                     upLoadData(wkno);
                 }
                 break;
@@ -393,7 +395,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_ZlmYywh 'D'"+jtbh+"','",sharedPreferences.getString("jtnh",""),
+                    NetHelper.uploadNetworkError("Exec PAD_Get_ZlmYywh 'D'"+jtbh+"','",sharedPreferences.getString("jtnh",""),
                             sharedPreferences.getString("mac",""));
                 }
 
@@ -410,7 +412,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_Blllist",sharedPreferences.getString("jtbh",""),
+                    NetHelper.uploadNetworkError("Exec PAD_Get_Blllist",sharedPreferences.getString("jtbh",""),
                             sharedPreferences.getString("mac",""));
                 }
 
@@ -495,7 +497,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,sharedPreferences.getString("mac",""));
                     handler.sendEmptyMessage(0x110);
                 }
             }

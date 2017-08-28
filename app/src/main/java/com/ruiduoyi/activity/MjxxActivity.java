@@ -313,7 +313,7 @@ public class MjxxActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_MjmMstr",jtbh,
+                    NetHelper.uploadNetworkError("Exec PAD_Get_MjmMstr",jtbh,
                             sharedPreferences.getString("mac",""));
                 }
 
@@ -329,7 +329,7 @@ public class MjxxActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_MjmRzm",jtbh,
+                    NetHelper.uploadNetworkError("Exec PAD_Get_MjmRzm",jtbh,
                             sharedPreferences.getString("mac",""));
                 }
 
@@ -346,7 +346,7 @@ public class MjxxActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("PAD_Get_MjmHml",jtbh,sharedPreferences.getString("mac",""));
+                    NetHelper.uploadNetworkError("PAD_Get_MjmHml",jtbh,sharedPreferences.getString("mac",""));
                 }
 
 

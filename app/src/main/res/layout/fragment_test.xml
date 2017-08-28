@@ -3,49 +3,67 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lable"
     tools:context="com.ruiduoyi.Fragment.TestFragment">
-    <LinearLayout
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <android.support.v7.widget.CardView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:id="@+id/card_1"
-            app:cardBackgroundColor="#7ec3da"
-            app:cardElevation="5dp"
-            app:cardCornerRadius="5dp"
+    <android.support.v4.widget.DrawerLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/zy_drawer">
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             >
-            <TextView
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
+            <com.github.barteksc.pdfviewer.PDFView
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="工艺参数"
-                android:ems="2"
-                android:textColor="@android:color/white"
-                android:textSize="40dp"/>
-        </android.support.v7.widget.CardView>
-        <android.support.v7.widget.CardView
-            android:layout_marginLeft="100dp"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:id="@+id/card_2"
-            app:cardBackgroundColor="#a2c466"
-            app:cardElevation="5dp"
-            app:cardCornerRadius="5dp"
+                android:id="@+id/pdfview"></com.github.barteksc.pdfviewer.PDFView>
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:id="@+id/waitingView">
+                <ProgressBar
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="25dp"
+                    android:text="下载中..."
+                    />
+            </LinearLayout>
+            <Button
+                android:id="@+id/open_btn"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/open_drawer_btn"
+                android:layout_width="55dp"
+                android:layout_height="130dp" />
+        </FrameLayout>
+        <FrameLayout
+            android:clickable="true"
+            android:background="@color/lable"
+            android:layout_gravity="right"
+            android:layout_width="400dp"
+            android:layout_height="match_parent"
             >
-            <TextView
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
+            <ListView
+                android:layout_marginLeft="50dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:ems="2"
-                android:text="作业标准"
-                android:textColor="@android:color/white"
-                android:textSize="40dp"/>
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
+                android:id="@+id/pdf_list"
+                android:divider="@color/touming"></ListView>
+            <Button
+                android:clickable="true"
+                android:id="@+id/close_btn"
+                android:layout_gravity="center_vertical|left"
+                android:background="@drawable/close_drawer_btn"
+                android:layout_width="55dp"
+                android:layout_height="130dp" />
+        </FrameLayout>
+    </android.support.v4.widget.DrawerLayout>
 </FrameLayout>

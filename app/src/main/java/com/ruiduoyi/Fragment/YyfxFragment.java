@@ -139,7 +139,7 @@ public class YyfxFragment extends Fragment implements View.OnClickListener{
                         }
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_ZlmYywh 'B'",
+                    NetHelper.uploadNetworkError("Exec PAD_Get_ZlmYywh 'B'",
                             sharedPreferences.getString("jtbh",""),
                             sharedPreferences.getString("mac",""));
                 }

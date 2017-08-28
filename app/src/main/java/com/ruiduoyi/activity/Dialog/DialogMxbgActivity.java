@@ -117,7 +117,7 @@ public class DialogMxbgActivity extends BaseDialogActivity implements View.OnCli
                             }
                         }
                     }else {
-                        AppUtils.uploadNetworkError(sql,sharedPreferences.getString("jtbh",""),sharedPreferences.getString("mac",""));
+                        NetHelper.uploadNetworkError(sql,sharedPreferences.getString("jtbh",""),sharedPreferences.getString("mac",""));
                     }
                 }catch (JSONException e){
                     e.printStackTrace();

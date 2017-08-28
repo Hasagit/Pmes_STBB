@@ -41,6 +41,7 @@ import com.ruiduoyi.view.AppDialog;
 import com.ruiduoyi.view.PopupDialog;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -221,6 +222,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         break;
                     case 2:
                         AppUtils.sendCountdownReceiver(MainActivity.this);
+                        AppUtils.sendUpdatePdfReceiver(MainActivity.this);
                         bottom_text1.setTextColor(getResources().getColor(R.color.bottom_bt_sl));
                         bottom_text2.setTextColor(getResources().getColor(R.color.bottom_bt_sl));
                         bottom_text3.setTextColor(getResources().getColor(R.color.white));
@@ -495,15 +497,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         if (type==1){
                             if (!oldVersionName.equals(newVersionName)){
                                 handler.sendEmptyMessage(0x107);
-                                AppUtils.DownLoadFileByUrl(list.get(0).get(2),
-                                        Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
+                                try {
+                                    NetHelper.downLoadFileByUrl(list.get(0).get(2),
+                                            Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
                                 intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/RdyPmes.apk")),
                                         "application/vnd.android.package-archive");
                                 startActivity(intent);
                                 handler.sendEmptyMessage(0x109);
                             }else {
-                                AppUtils.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",jtbh,mac);
+                                NetHelper.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",jtbh,mac);
                                 handler.sendEmptyMessage(0x108);
                             }
                         }else if (type==2){
@@ -523,8 +529,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                         }
                                     }else {
                                         handler.sendEmptyMessage(0x111);
-                                        AppUtils.DownLoadFileByUrl(list.get(0).get(2),
-                                                Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
+                                        try {
+                                            NetHelper.downLoadFileByUrl(list.get(0).get(2),
+                                                    Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
                                         Intent intent = new Intent(Intent.ACTION_VIEW);
                                         intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/RdyPmes.apk")),
                                                 "application/vnd.android.package-archive");
@@ -546,7 +556,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         handler.sendMessage(msg);*/
                     }
                 }else {
-                    AppUtils.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",jtbh,mac);
+                    NetHelper.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",jtbh,mac);
                 }
             }
         }).start();
