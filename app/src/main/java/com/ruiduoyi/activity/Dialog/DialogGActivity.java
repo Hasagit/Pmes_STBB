@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ruiduoyi.R;
 import com.ruiduoyi.activity.BlfxActivity;
@@ -85,6 +86,9 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                     tip_text.setText(tip_str);
                     tip_text.setTextColor(Color.RED);
                     break;
+                case 0x103:
+                    Toast.makeText(DialogGActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                    break;
                 default:
                     break;
             }
@@ -141,6 +145,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x103);
                     NetHelper.uploadNetworkError("PAD_Read_CardID",jtbh,sharedPreferences.getString("mac",""));
                 }
             }
@@ -178,6 +183,8 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                                     }
                                 }
                             }
+                        }else {
+                            handler.sendEmptyMessage(0x103);
                         }
                     }
                 }).start();
@@ -234,6 +241,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                            }
                        }
                    }else {
+                       handler.sendEmptyMessage(0x103);
                        NetHelper.uploadNetworkError("Exec PAD_Check_Usr_Prg",jtbh,sharedPreferences.getString("mac",""));
                    }
                }catch (JSONException e){

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.ruiduoyi.R;
 import com.ruiduoyi.model.NetHelper;
@@ -38,6 +39,9 @@ public class ScrzActivity extends BaseActivity implements View.OnClickListener{
                 case 0x100:
                     List<List<String>>list=(List<List<String>>)msg.obj;
                     initListView(list);
+                    break;
+                case 0x101:
+                    Toast.makeText(ScrzActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -125,6 +129,7 @@ public class ScrzActivity extends BaseActivity implements View.OnClickListener{
                        }
                    }
                }else {
+                   handler.sendEmptyMessage(0x101);
                    NetHelper.uploadNetworkError("Exec PAD_Get_SdmMstr",jtbh,sharedPreferences.getString("mac",""));
                }
            }

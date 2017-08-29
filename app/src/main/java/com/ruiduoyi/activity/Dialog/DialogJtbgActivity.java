@@ -1,5 +1,6 @@
 package com.ruiduoyi.activity.Dialog;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
@@ -78,6 +79,9 @@ public class DialogJtbgActivity extends BaseDialogActivity{
                         dialog.setMessage((String) msg.obj);
                         dialog.show();
                         break;
+                    case 0x102:
+                        Toast.makeText(DialogJtbgActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         };
@@ -127,6 +131,7 @@ public class DialogJtbgActivity extends BaseDialogActivity{
                     msg.obj=array;
                     handler.sendMessage(msg);
                 }else {
+                    handler.sendEmptyMessage(0x102);
                     NetHelper.uploadNetworkError("sql",jtbh,sharedPreferences.getString("mac",""));
                 }
             }
@@ -229,6 +234,7 @@ public class DialogJtbgActivity extends BaseDialogActivity{
                            }
                        }
                    }else {
+                       handler.sendEmptyMessage(0x102);
                        NetHelper.uploadNetworkError(sql,jtbh,sharedPreferences.getString("mac",""));
                    }
                }catch (JSONException e){

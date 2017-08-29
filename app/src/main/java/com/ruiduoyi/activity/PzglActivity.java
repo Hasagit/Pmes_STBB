@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -85,6 +86,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                     bzxx_text.setText(item.get(20));
                     break;
                 case 0x101:
+                    Toast.makeText(PzglActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
                     break;
                 case 0x102:
                     List<List<String>>list1=(List<List<String>>)msg.obj;
@@ -553,89 +555,6 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
         getNetData();
     }
 
-    private void a(){
-        /*//获取文本框的值
-        Thread thread_1=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_PzmInfNew 'A','"+jtbh+"','"+moeid+"'");
-                Message msg=handler.obtainMessage();
-                if (list!=null){
-                    msg.what=0x100;
-                    msg.obj=list;
-                }else {
-                    msg.what=0x101;
-                }
-                handler.sendMessage(msg);
-            }
-        });
-
-        //获取质量检测的值
-        Thread thread_2=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_PzmInfNew 'B01','"+jtbh+"','"+moeid+"'");
-                Message msg=handler.obtainMessage();
-                if (list!=null){
-                    msg.what=0x102;
-                    msg.obj=list;
-                }else {
-                    msg.what=0x101;
-                }
-                handler.sendMessage(msg);
-            }
-        });
-
-        //获取不良统计的值
-        Thread thread_3=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_PzmInfNew 'B02','"+jtbh+"','"+moeid+"'");
-                Message msg=handler.obtainMessage();
-                if (list!=null){
-                    msg.what=0x103;
-                    msg.obj=list;
-                }else {
-                    msg.what=0x101;
-                }
-                handler.sendMessage(msg);
-            }
-        });
-
-        //获取巡查记录的值
-        Thread thread_4=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_PzmInfNew 'B03','"+jtbh+"','"+moeid+"'");
-                Message msg=handler.obtainMessage();
-                if (list!=null){
-                    msg.what=0x104;
-                    msg.obj=list;
-                }else {
-                    msg.what=0x101;
-                }
-                handler.sendMessage(msg);
-            }
-        });
-
-        //获取质量检测右边表的值
-        Thread thread_5=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_PzmInfNew 'A01','"+jtbh+"','"+moeid+"'");
-                Message msg=handler.obtainMessage();
-                if (list!=null){
-                    msg.what=0x105;
-                    msg.obj=list;
-                }else {
-                    msg.what=0x101;
-                }
-                handler.sendMessage(msg);
-            }
-        });*/
-    }
-
-
     private void getNetData(){
         new Thread(new Runnable() {
             @Override
@@ -652,6 +571,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x101);
                     NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf",jtbh,sharedPreferences.getString("mac",""));
                 }
 
@@ -668,23 +588,11 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x101);
                     NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf 'B01'",jtbh,sharedPreferences.getString("mac",""));
                 }
 
-                /*//质量检测
-                List<List<String>>list3= NetHelper.getQuerysqlResult("Exec  PAD_Get_PzmInf 'B01','"+zzdh+"','"+jtbh+"'");
-                if (list3!=null){
-                    if (list3.size()>0){
-                        if (list2.get(0).size()>1){
-                            Message msg=handler.obtainMessage();
-                            msg.obj=list2;
-                            msg.what=0x102;
-                            handler.sendMessage(msg);
-                        }
-                    }
-                }else {
-                    AppUtils.uploadNetworkError("Exec  PAD_Get_PzmInf 'B01'",jtbh,sharedPreferences.getString("mac",""));
-                }*/
+
 
                 //不良统计
                 List<List<String>>list4= NetHelper.getQuerysqlResult("Exec  PAD_Get_PzmInf 'B02','"+zzdh+"','"+jtbh+"'");
@@ -698,6 +606,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x101);
                     NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf 'B02'",jtbh,sharedPreferences.getString("mac",""));
                 }
 
@@ -713,6 +622,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x101);
                     NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf 'B03'",jtbh,sharedPreferences.getString("mac",""));
                 }
 
@@ -728,6 +638,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x101);
                     NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf 'G'",jtbh,sharedPreferences.getString("mac",""));
                 }
 

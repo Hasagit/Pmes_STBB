@@ -104,6 +104,9 @@ public class YyfxFragment extends Fragment implements View.OnClickListener{
                     adapter=new YyfxAdapter2(getContext(),R.layout.list_item_yyfx,data1);
                     listView.setAdapter(adapter);
                     break;
+                case 0x102:
+                    Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     };
@@ -137,8 +140,10 @@ public class YyfxFragment extends Fragment implements View.OnClickListener{
                             msg.obj=list;
                             handler.sendMessage(msg);
                         }
+                    }else {
                     }
                 }else {
+                    handler.sendEmptyMessage(0x102);
                     NetHelper.uploadNetworkError("Exec PAD_Get_ZlmYywh 'B'",
                             sharedPreferences.getString("jtbh",""),
                             sharedPreferences.getString("mac",""));
@@ -174,7 +179,7 @@ public class YyfxFragment extends Fragment implements View.OnClickListener{
                 }
             }
         }else {
-
+            handler.sendEmptyMessage(0x102);
         }
     }
 
@@ -199,6 +204,8 @@ public class YyfxFragment extends Fragment implements View.OnClickListener{
                         msg.obj=list1;
                         handler.sendMessage(msg);
                     }
+                }else {
+                    handler.sendEmptyMessage(0x102);
                 }
             }
         }).start();

@@ -78,31 +78,7 @@ public class Jtqsbg1Adapter extends ArrayAdapter{
                 handler.sendMessage(msg);
             }
         });
-        /*off_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //事件关
-                AppUtils.sendCountdownReceiver(getContext());
-                off_btn.setEnabled(false);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<List<String>>list= NetHelper.getQuerysqlResult("Exec  PAD_Start_MoeInfo 'Stop','"
-                                +map.get("moeid")+"','"+wkno+"'");
-                        if (list!=null){
-                            if (list.size()>0){
-                                if (list.get(0).size()>0){
-                                    Message msg=handler.obtainMessage();
-                                    msg.what=0x101;
-                                    msg.obj=list.get(0).get(0);
-                                    handler.sendMessage(msg);
-                                }
-                            }
-                        }
-                    }
-                }).start();
-            }
-        });*/
+
         lab_4.setText(map.get("scrq"));
         lab_5.setText(map.get("scxh"));
         lab_6.setText(map.get("zzdh"));
@@ -117,20 +93,6 @@ public class Jtqsbg1Adapter extends ArrayAdapter{
         lab_15.setText(map.get("lpsl"));
         lab_16.setText(map.get("mjqs"));
         lab_17.setText(map.get("cpqs"));
-        /*switch (map.get("ztbz")){
-            case "1":
-                backgroup.setBackgroundColor(getContext().getResources().getColor(R.color.gdgl_1));
-                break;
-            case "2":
-                backgroup.setBackgroundColor(getContext().getResources().getColor(R.color.gdgl_2));
-                break;
-            case "3":
-                backgroup.setBackgroundColor(getContext().getResources().getColor(R.color.gdgl_3));
-                break;
-            default:
-                backgroup.setBackgroundColor(Color.WHITE);
-                break;
-        }*/
         return view;
     }
 }

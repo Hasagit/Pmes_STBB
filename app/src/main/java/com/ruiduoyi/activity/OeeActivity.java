@@ -112,6 +112,9 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
                     case 0x105:
                         h_char.clear();
                         break;
+                    case 0x106:
+                        Toast.makeText(OeeActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                        break;
                     default:
                         break;
                 }
@@ -366,7 +369,7 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
                         handler.sendEmptyMessage(0x105);
                     }
                 }else {
-                    msg1.what=0x101;
+                    handler.sendEmptyMessage(0x106);
                 }
                 handler.sendMessage(msg1);
 
@@ -384,7 +387,7 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
                         handler.sendEmptyMessage(0x104);
                     }
                 }else {
-                    msg2.what=0x101;
+                    handler.sendEmptyMessage(0x106);
                 }
                 handler.sendMessage(msg2);
 
@@ -403,7 +406,7 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
                         msg.obj=list;
                     }
                 }else {
-                    msg.what=0x101;
+                    handler.sendEmptyMessage(0x106);
                 }
                 handler.sendMessage(msg);
 

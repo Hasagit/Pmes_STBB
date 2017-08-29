@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ruiduoyi.R;
 import com.ruiduoyi.model.NetHelper;
@@ -91,6 +92,9 @@ public class DialogMxbgActivity extends BaseDialogActivity implements View.OnCli
                         setResult(1);
                         finish();
                         break;
+                    case 0x102:
+                        Toast.makeText(DialogMxbgActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         };
@@ -117,6 +121,7 @@ public class DialogMxbgActivity extends BaseDialogActivity implements View.OnCli
                             }
                         }
                     }else {
+                        handler.sendEmptyMessage(0x102);
                         NetHelper.uploadNetworkError(sql,sharedPreferences.getString("jtbh",""),sharedPreferences.getString("mac",""));
                     }
                 }catch (JSONException e){

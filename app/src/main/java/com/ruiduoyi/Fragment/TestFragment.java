@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
 import com.ruiduoyi.R;
@@ -177,6 +178,9 @@ public class TestFragment extends Fragment implements View.OnClickListener{
                         dialog.setMessage("文件下载失败，请重试");
                         dialog.show();
                         break;
+                    case 0x103:
+                        Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         };
@@ -207,6 +211,7 @@ public class TestFragment extends Fragment implements View.OnClickListener{
                         msg.obj=data;
                         handler.sendMessage(msg);
                     }else {
+                        handler.sendEmptyMessage(0x103);
                         NetHelper.uploadNetworkError("Exec PAD_Get_DocList",jtbh,sharedPreferences.getString("mac",""));
                     }
                 }catch (JSONException e){

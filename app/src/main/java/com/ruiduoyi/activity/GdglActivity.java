@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.ruiduoyi.R;
 import com.ruiduoyi.adapter.WorkOrderAdapter;
@@ -47,6 +48,9 @@ public class GdglActivity extends BaseActivity implements View.OnClickListener{
                         dialog.setMessage(result);
                         dialog.show();
                     }
+                    break;
+                case 0x102:
+                    Toast.makeText(GdglActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -129,6 +133,7 @@ public class GdglActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x102);
                     NetHelper.uploadNetworkError("Exec PAD_Get_MoeDet",jtbh,sharedPreferences.getString("mac",""));
                 }
             }

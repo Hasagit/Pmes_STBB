@@ -134,6 +134,9 @@ public class JtjqsbgActivity extends BaseActivity implements View.OnClickListene
                         intent_jt.putExtra("wkno",wkno);
                         startActivityForResult(intent_jt,1);
                         break;
+                    case 0x106:
+                        Toast.makeText(JtjqsbgActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                        break;
                     default:
                         break;
                 }
@@ -191,6 +194,7 @@ public class JtjqsbgActivity extends BaseActivity implements View.OnClickListene
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x106);
                     NetHelper.uploadNetworkError("Exec PAD_Get_MoeDet",jtbh,sharedPreferences.getString("mac",""));
                 }
 

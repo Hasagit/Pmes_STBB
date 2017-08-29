@@ -83,6 +83,8 @@ public class WorkOrderAdapter extends ArrayAdapter{
                                     handler.sendMessage(msg);
                                 }
                             }
+                        }else {
+                            handler.sendEmptyMessage(0x102);
                         }
                     }
                 }).start();
@@ -108,6 +110,8 @@ public class WorkOrderAdapter extends ArrayAdapter{
                                     handler.sendMessage(msg);
                                 }
                             }
+                        }else {
+                            handler.sendEmptyMessage(0x102);
                         }
                     }
                 }).start();

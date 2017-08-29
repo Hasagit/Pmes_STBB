@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -85,6 +86,9 @@ public class MjxxActivity extends BaseActivity implements View.OnClickListener{
                     List<List<String>>list_scdt=(List<List<String>>)msg.obj;
                     initLineChar(list_scdt);
                     mDoubleLineChar.startAnimation(anim);
+                    break;
+                case 0x104:
+                    Toast.makeText(MjxxActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -313,6 +317,7 @@ public class MjxxActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x104);
                     NetHelper.uploadNetworkError("Exec PAD_Get_MjmMstr",jtbh,
                             sharedPreferences.getString("mac",""));
                 }
@@ -329,6 +334,7 @@ public class MjxxActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x104);
                     NetHelper.uploadNetworkError("Exec PAD_Get_MjmRzm",jtbh,
                             sharedPreferences.getString("mac",""));
                 }
@@ -346,6 +352,7 @@ public class MjxxActivity extends BaseActivity implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x104);
                     NetHelper.uploadNetworkError("PAD_Get_MjmHml",jtbh,sharedPreferences.getString("mac",""));
                 }
 

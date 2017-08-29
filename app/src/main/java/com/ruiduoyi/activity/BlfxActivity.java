@@ -121,6 +121,9 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                 case 0x104:
                     afterConmmit();
                     break;
+                case 0x105:
+                    Toast.makeText(BlfxActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                    break;
                 default:
                     break;
             }
@@ -395,6 +398,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x105);
                     NetHelper.uploadNetworkError("Exec PAD_Get_ZlmYywh 'D'"+jtbh+"','",sharedPreferences.getString("jtnh",""),
                             sharedPreferences.getString("mac",""));
                 }
@@ -412,6 +416,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x105);
                     NetHelper.uploadNetworkError("Exec PAD_Get_Blllist",sharedPreferences.getString("jtbh",""),
                             sharedPreferences.getString("mac",""));
                 }
@@ -427,6 +432,8 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                             handler.sendMessage(msg);
                         }
                     }
+                }else {
+                    handler.sendEmptyMessage(0x105);
                 }
 
 
@@ -497,8 +504,9 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x105);
                     NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,sharedPreferences.getString("mac",""));
-                    handler.sendEmptyMessage(0x110);
+                    //handler.sendEmptyMessage(0x110);
                 }
             }
         }).start();
@@ -524,12 +532,15 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                                     handler.sendMessage(msg);
                                 }
                             }
+                        }else {
+                            handler.sendEmptyMessage(0x105);
                         }
                         return ;
                     }
                 }
             }
         }else {
+            handler.sendEmptyMessage(0x105);
             upLoadOneData(wkno);
         }
 

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ruiduoyi.R;
 import com.ruiduoyi.model.NetHelper;
@@ -53,6 +54,10 @@ public class SbxxActivity extends BaseDialogActivity implements View.OnClickList
                 case 0x101:
                     List<List<String>>list=(List<List<String>>)msg.obj;
                     initList(list);
+                    break;
+                case 0x102:
+                    Toast.makeText(SbxxActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                    break;
                 default:
                     break;
             }
@@ -135,6 +140,7 @@ public class SbxxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x102);
                     NetHelper.uploadNetworkError("Exec PAD_Get_JtmMstr NetWorkError",jtbh,mac);
                 }
             }
@@ -155,6 +161,7 @@ public class SbxxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x102);
                     NetHelper.uploadNetworkError("Exec PAD_Get_SbmHgl NetWorkError",jtbh,mac);
                 }
             }

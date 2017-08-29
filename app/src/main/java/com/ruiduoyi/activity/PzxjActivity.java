@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ruiduoyi.R;
 import com.ruiduoyi.activity.Dialog.DialogGdSelectActivity;
@@ -139,6 +140,9 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                         dialog.setMessageTextColor(Color.RED);
                         dialog.show();
                         break;
+                    case 0x105:
+                        Toast.makeText(PzxjActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         };
@@ -171,6 +175,7 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                         e.printStackTrace();
                     }
                 }else {
+                    handler.sendEmptyMessage(0x105);
                     NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo2",jtbh,sharedPreferences.getString("mac",""));
                 }
             }
@@ -201,6 +206,7 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                         msg.obj=data;
                         handler.sendMessage(msg);
                     }else {
+                        handler.sendEmptyMessage(0x105);
                         NetHelper.uploadNetworkError("PAD_GetQcItem",jtbh,sharedPreferences.getString("mac",""));
                     }
                 }catch (JSONException e){
@@ -216,11 +222,6 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
             @Override
             public View getEasyView(final int position, View convertView, ViewGroup parent) {
                 View view= LayoutInflater.from(getContext()).inflate(R.layout.list_item_pzxj_jc,null);
-                /*if (convertView!=null){
-                    view=convertView;
-                }else {
-                    view= LayoutInflater.from(getContext()).inflate(R.layout.list_item_pzxj_jc,null);
-                }*/
                 TextView lab_1=(TextView) view.findViewById(R.id.lab_1);
                 TextView lab_2=(TextView) view.findViewById(R.id.lab_2);
                 EditText lab_3=(EditText)view.findViewById(R.id.lab_3);
@@ -334,6 +335,7 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                         msg.obj=data;
                         handler.sendMessage(msg);
                     }else {
+                        handler.sendEmptyMessage(0x105);
                         NetHelper.uploadNetworkError("Exec PAD_GetQcImproveList",jtbh,"");
                     }
                 }catch (JSONException e){
@@ -503,6 +505,8 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                                 //执行失败
                             }
                         }
+                    }else {
+                        handler.sendEmptyMessage(0x105);
                     }
                 }catch (JSONException e){
                     e.printStackTrace();

@@ -140,6 +140,9 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                     List<List<String>>list_1=(List<List<String>>)msg.obj;
                     initListView(list_1);
                     break;
+                case 0x101:
+                    Toast.makeText(YcfxActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                    break;
                 case 0x107:
                     Map<String,String>map_select= (Map<String, String>) msg.obj;
                     String zldm= map_select.get("lab_12");
@@ -153,17 +156,6 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                     initYymsListView((List<List<String>>) msg.obj);
                     break;
                 case 0x110:
-                    //AppUtils.sendUpdateInfoFragmentReceiver(YcfxActivity.this);
-                   /* dialog.setMessage("提交成功");
-                    dialog.setMessageTextColor(Color.BLACK);
-                    dialog.getOkbtn().setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            AppUtils.sendCountdownReceiver(YcfxActivity.this);
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();*/
                     afterUploadsuccess();
                     break;
                 case 0x111:
@@ -222,6 +214,8 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                         msg.obj=list;
                         handler.sendMessage(msg);
                     }
+                }else {
+                    handler.sendEmptyMessage(0x101);
                 }
             }
         }).start();
@@ -282,6 +276,8 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                         finish();
                     }
                 }
+            }else {
+                handler.sendEmptyMessage(0x101);
             }
             handler.sendMessage(msg);
         }
@@ -379,6 +375,8 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                         msg.obj=list1;
                         handler.sendMessage(msg);
                     }
+                }else {
+                    handler.sendEmptyMessage(0x101);
                 }
             }
         }).start();

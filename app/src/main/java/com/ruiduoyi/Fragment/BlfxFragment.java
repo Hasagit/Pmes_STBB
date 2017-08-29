@@ -132,6 +132,9 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                         };
                         listView.setAdapter(adapter2);
                         break;
+                    case 0x102:
+                        Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         };
@@ -205,6 +208,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x102);
                     NetHelper.uploadNetworkError("Exec PAD_Get_ZlmYywh 'D'",sharedPreferences.getString("jtnh",""),
                             sharedPreferences.getString("mac",""));
                 }
@@ -221,6 +225,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                         }
                     }
                 }else {
+                    handler.sendEmptyMessage(0x102);
                     NetHelper.uploadNetworkError("Exec PAD_Get_Blllist",sharedPreferences.getString("jtbh",""),
                             sharedPreferences.getString("mac",""));
                 }
@@ -257,6 +262,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                 }
             }
         }else {
+            handler.sendEmptyMessage(0x102);
             upLoadOneData(map,wkno);
         }
     }

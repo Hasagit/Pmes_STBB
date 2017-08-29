@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.ruiduoyi.R;
 import com.ruiduoyi.activity.BlYyfxActivity;
@@ -76,6 +77,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                     startZlmc=list.get(1);
                     break;
                 case 0x101:
+                    Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -256,6 +258,8 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                             }
                         }
                     }
+                }else {
+                    handler.sendEmptyMessage(0x101);
                 }
             }
         }).start();
@@ -504,8 +508,8 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                 }else {
                     NetHelper.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",sharedPreferences.getString("jtbh","")
                             ,sharedPreferences.getString("mac",""));
-                    //handler.sendEmptyMessage(0x101);
-                    handler.sendEmptyMessage(0x110);
+                    handler.sendEmptyMessage(0x101);
+                    //handler.sendEmptyMessage(0x110);
                 }
             }
         }).start();

@@ -366,6 +366,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     break;
                 case 0x110://网络异常
                     tip_layout.setBackgroundColor(getResources().getColor(R.color.color_7_33));
+                    Toast.makeText(getContext(),"服务器异常",Toast.LENGTH_SHORT).show();
                     break;
                 case 0x111:
                     tip_layout.setBackgroundColor(Color.WHITE);
