@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -30,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
@@ -166,7 +168,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         cardView=(CardView)view.findViewById(R.id.cardView);
         cardView.setOnClickListener(this);
         tip_layout=(ScrollView)view.findViewById(R.id.tip_bg);
-        filePhath=getContext().getCacheDir().getPath();
+        filePhath= Environment.getExternalStorageDirectory().getPath()+"/RdyPmes";
         getNetDate();
         updateDataOntime();
         initBarChart(mBarChart);
@@ -339,10 +341,22 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     initPhoto(list_phonto);
                     break;
                 case 0x106:
-                    Glide.with(getContext()).load((String)msg.obj).into(img_pho1);
+                    Glide.with(getContext())
+                            .load((String) msg.obj)
+                            .asBitmap()
+                            .centerCrop()
+                            .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
+                            .skipMemoryCache(true)//跳过内存缓存
+                            .into(img_pho1);
                     break;
                 case 0x107:
-                    Glide.with(getContext()).load((String)msg.obj).into(img_pho2);
+                    Glide.with(getContext())
+                            .load((String) msg.obj)
+                            .asBitmap()
+                            .centerCrop()
+                            .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
+                            .skipMemoryCache(true)//跳过内存缓存
+                            .into(img_pho2);
                     break;
                 case 0x108:
                     img_pho1.setImageResource(R.drawable.a_img);
@@ -645,57 +659,34 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             //下载图片
             for (int i=0;i<list.size();i++){
                 final List<String>item=list.get(i);
+
+                String[] str=item.get(6).split("&lt;br&gt;");
+                String rym="";
+                for (int j=0;j<str.length;j++){
+                    rym=rym+str[j]+"\n";
+                }
+                labRym.setText(rym);
+
                 if(item.get(0).equals("A")){
                     if (!item.get(1).equals("")){
                         File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
                         caozuo_text.setText(item.get(3));
                         cao_name_text.setText(item.get(2));
-                        String[] str=item.get(6).split("&lt;br&gt;");
-                        String rym="";
-                        for (int j=0;j<str.length;j++){
-                            rym=rym+str[j]+"\n";
-                        }
-                        labRym.setText(rym);
-
-
-                        //文件缓存
-                        if(file.exists()){
-                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG").into(img_pho1);
-                        }else {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        File dir=new File(filePhath+"/Photos/");
-                                        if (!dir.exists()){
-                                            dir.mkdir();
-                                        }
-                                        URL url=new URL(item.get(4));
-                                        HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();
-                                        urlConnection.setDoInput(true);
-                                        urlConnection.setUseCaches(false);
-                                        urlConnection.setRequestMethod("GET");
-                                        urlConnection.setConnectTimeout(5000);
-                                        urlConnection.connect();
-                                        InputStream in=urlConnection.getInputStream();
-                                        OutputStream out=new FileOutputStream(filePhath+"/Photos/"+item.get(1)+".JPG",false);
-                                        byte[] buff=new byte[1024];
-                                        int size;
-                                        while ((size = in.read(buff)) != -1) {
-                                            out.write(buff, 0, size);
-                                        }
-                                        Message msg=handler.obtainMessage();
-                                        msg.what=0x106;
-                                        msg.obj=filePhath+"/Photos/"+item.get(1)+".JPG";
-                                        handler.sendMessage(msg);
-                                    } catch (MalformedURLException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    NetHelper.downLoadFileByUrlCompareWithVer(item.get(4),filePhath+"/Photos/",item.get(1)+".JPG");
+                                    Message msg=handler.obtainMessage();
+                                    msg.what=0x106;
+                                    msg.obj=filePhath+"/Photos/"+item.get(1)+".JPG";
+                                    handler.sendMessage(msg);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    handler.sendEmptyMessage(0x108);
                                 }
-                            }).start();
-                        }
+                            }
+                        }).start();
                     }else {
                        handler.sendEmptyMessage(0x108);
                     }
@@ -705,44 +696,22 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                         jisu_text.setText(item.get(3));
                         ji_name_text.setText(item.get(2));
 
-                        //文件缓存
-                        if(file.exists()){
-                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG").into(img_pho2);
-                        }else {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        File dir=new File(filePhath+"/Photos/");
-                                        if (!dir.exists()){
-                                            dir.mkdir();
-                                        }
-                                        URL url=new URL(item.get(4));
-                                        HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();
-                                        urlConnection.setDoInput(true);
-                                        urlConnection.setUseCaches(false);
-                                        urlConnection.setRequestMethod("GET");
-                                        urlConnection.setConnectTimeout(15000);
-                                        urlConnection.connect();
-                                        InputStream in=urlConnection.getInputStream();
-                                        OutputStream out=new FileOutputStream(filePhath+"/Photos/"+item.get(1)+".JPG",false);
-                                        byte[] buff=new byte[1024];
-                                        int size;
-                                        while ((size = in.read(buff)) != -1) {
-                                            out.write(buff, 0, size);
-                                        }
-                                        Message msg=handler.obtainMessage();
-                                        msg.what=0x107;
-                                        msg.obj=filePhath+"/Photos/"+item.get(1)+".JPG";
-                                        handler.sendMessage(msg);
-                                    } catch (MalformedURLException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    NetHelper.downLoadFileByUrlCompareWithVer(item.get(4),filePhath+"/Photos/",item.get(1)+".JPG");
+                                    Message msg=handler.obtainMessage();
+                                    msg.what=0x107;
+                                    msg.obj=filePhath+"/Photos/"+item.get(1)+".JPG";
+                                    handler.sendMessage(msg);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    handler.sendEmptyMessage(0x109);
                                 }
-                            }).start();
-                        }
+                            }
+                        }).start();
                     }else {
                         handler.sendEmptyMessage(0x109);
                     }

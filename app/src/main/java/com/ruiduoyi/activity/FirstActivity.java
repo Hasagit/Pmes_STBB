@@ -83,6 +83,11 @@ public class FirstActivity extends BaseActivity{
         if(is){
             file.delete();
         }
+        File appDir=new File(Environment.getExternalStorageDirectory().getPath()+"/RdyPmes");
+        if(!appDir.exists()){
+            appDir.mkdir();
+        }
+        NetHelper.context=getApplicationContext();
         sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
         if (sharedPreferences.getString("service_ip","").equals("")){
             NetHelper.URL="http://"+getString(R.string.service_ip)+":8080/Service1.asmx";

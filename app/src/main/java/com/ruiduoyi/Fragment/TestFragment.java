@@ -14,6 +14,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.CardView;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +80,7 @@ public class TestFragment extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         anim= AnimationUtils.loadAnimation(getContext(),R.anim.scale_anim);
-        pdf_dir_str= Environment.getExternalStorageDirectory().getPath()+"/RdyPmes/pdf";
+        pdf_dir_str= Environment.getExternalStorageDirectory().getPath()+"/pdf";
     }
 
     @Override
@@ -132,6 +133,13 @@ public class TestFragment extends Fragment implements View.OnClickListener{
             }
         });
         dialog.getOkbtn().setText("确定");
+        pdfView.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                AppUtils.sendCountdownReceiver(getContext());
+                return false;
+            }
+        });
     }
 
     private void initData(){
@@ -142,6 +150,7 @@ public class TestFragment extends Fragment implements View.OnClickListener{
             public void onReceive(Context context, Intent intent) {
                 getPdfListData();
                 pdfView.fromAsset("default.pdf").defaultPage(0).load();
+                drawer.openDrawer(Gravity.RIGHT);
             }
         };
         IntentFilter intentFilter=new IntentFilter();
@@ -187,12 +196,10 @@ public class TestFragment extends Fragment implements View.OnClickListener{
                         if (array.length()>0){
                             for (int i=0;i<array.length();i++){
                                 JSONObject json=array.getJSONObject(i);
-                                if (!json.getString("doc_path").equals("")){
-                                    Map<String,String>map=new HashMap<String, String>();
-                                    map.put("lab_1",json.getString("doc_name"));
-                                    map.put("file_url",json.getString("doc_path"));
-                                    data.add(map);
-                                }
+                                Map<String,String>map=new HashMap<String, String>();
+                                map.put("lab_1",json.getString("doc_name"));
+                                map.put("file_url",json.getString("doc_path"));
+                                data.add(map);
                             }
                         }
                         Message msg=handler.obtainMessage();
@@ -223,6 +230,11 @@ public class TestFragment extends Fragment implements View.OnClickListener{
                 TextView lab_1=(TextView)view.findViewById(R.id.lab_1);
                 final CardView cardView=(CardView)view.findViewById(R.id.card);
                 lab_1.setText(data.get(position).get("lab_1"));
+                if (data.get(position).get("file_url").equals("")){
+                    cardView.setEnabled(false);
+                    cardView.setCardBackgroundColor(getResources().getColor(R.color.lable));
+                    lab_1.setTextColor(getResources().getColor(R.color.bottom_bt_sl));
+                }
                 cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

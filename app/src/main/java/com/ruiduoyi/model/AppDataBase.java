@@ -23,7 +23,7 @@ public  class AppDataBase {
 
     public AppDataBase(Context context) {
         this.context=context;
-        openHelper=new SQLiteOpenHelper(context,"Rdyapp.db",null,1) {
+        openHelper=new SQLiteOpenHelper(context,"Rdyapp.db",null,2) {
             @Override
             public void onCreate(SQLiteDatabase db) {
                 db.execSQL("create table if not exists gpio_info("
@@ -35,11 +35,27 @@ public  class AppDataBase {
                         +"PadTime datetime not null,"
                         +"PadVal int not null,"
                         +"PadDesc varchar not null)");
+
+                db.execSQL("create table if not exists file_info("
+                        +"file_name varchar primary key,"
+                        +"file_ver varchar not null)");
             }
 
             @Override
             public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+                db.execSQL("create table if not exists gpio_info("
+                        +"id integer primary key autoincrement,"
+                        +"PadID varchar not null,"
+                        +"PadJtbh varchar not null,"
+                        +"PadZlCode varchar not null,"
+                        +"PadSignalNO varchar not null,"
+                        +"PadTime datetime not null,"
+                        +"PadVal int not null,"
+                        +"PadDesc varchar not null)");
+                db.execSQL("create table if not exists file_info("
+                        +"file_name varchar primary key,"
+                        +"file_ver varchar not null)");
+                Log.e("sql_update","succes");
             }
         };
         database=openHelper.getReadableDatabase();
@@ -88,6 +104,36 @@ public  class AppDataBase {
                 Log.e("sql", item.toString());
             }
             return list;
+        }
+    }
+
+    public boolean comparedFileVer(String file_name,String new_ver){
+        synchronized(this) {
+            String old_ver="";
+            Cursor cursor = database.rawQuery("select file_ver from file_info where file_name='"+file_name+"'", null);
+            while (cursor.moveToNext()) {
+               old_ver=cursor.getString(0);
+            }
+            //Log.e("old&new",old_ver+"   "+new_ver);
+            if (old_ver.equals("")){
+                return false;
+            }else if (!old_ver.equals(new_ver)){
+                return false;
+            }else {
+                return true;
+            }
+        }
+    }
+
+    public void insertFile_info(String file_name,String file_ver){
+        synchronized(this) {
+            Cursor cursor=database.rawQuery("select file_name from file_info where file_name='"+file_name+"'",null);
+           if (cursor.moveToNext()){
+               database.execSQL("update file_info set file_ver='"+file_ver+"' where file_name='"+file_name+"'");
+               return;
+           }
+            database.execSQL("insert into file_info (file_name,file_ver)" +
+                    " values ('"+file_name+"','"+file_ver+"')");
         }
     }
 

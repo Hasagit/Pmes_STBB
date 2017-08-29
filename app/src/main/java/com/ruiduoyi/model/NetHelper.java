@@ -65,6 +65,8 @@ public class NetHelper {
     public static String URL = "";
     private static String METHOD_NAME = "runSqlCommand";
     private static String SOAP_ACTION = "http://zblog.vicp.net/runSqlCommand";
+    private static AppDataBase dataBase;
+    public static Context context;
 
     // 判断网络是否有连接
     public static boolean isNetworkConnected(Context context){
@@ -580,12 +582,47 @@ public class NetHelper {
         urlConnection.setRequestMethod("GET");
         urlConnection.setConnectTimeout(5000);
         urlConnection.connect();
+        Log.e("getLastModified()",urlConnection.getLastModified()+"");
         InputStream in=urlConnection.getInputStream();
         OutputStream out=new FileOutputStream(filePath+"/"+fileName,false);
         byte[] buff=new byte[1024];
         int size;
         while ((size = in.read(buff)) != -1) {
             out.write(buff, 0, size);
+        }
+    }
+
+    //先对比文件内容，再根据url地址下载文件
+    public static boolean downLoadFileByUrlCompareWithVer(String url_str,String filePath,String fileName) throws IOException {
+        URL url= null;
+        File file=new File(filePath);
+        if (!file.exists()){
+            file.mkdir();
+        }
+        if (dataBase==null){
+            dataBase=new AppDataBase(context);
+        }
+        url = new URL(url_str);
+        HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();
+        urlConnection.setDoInput(true);
+        urlConnection.setUseCaches(false);
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setConnectTimeout(5000);
+        urlConnection.connect();
+        //Log.e("getLastModified()",urlConnection.getLastModified()+"");
+       if (dataBase.comparedFileVer(fileName,urlConnection.getLastModified()+"")){
+            return true;
+        }else {
+            //Log.e("donwloadbeginning","donwloadbeginning");
+            InputStream in=urlConnection.getInputStream();
+            OutputStream out=new FileOutputStream(filePath+"/"+fileName,false);
+            byte[] buff=new byte[1024];
+            int size;
+            while ((size = in.read(buff)) != -1) {
+                out.write(buff, 0, size);
+            }
+            dataBase.insertFile_info(fileName,urlConnection.getLastModified()+"");
+           return false;
         }
     }
 
