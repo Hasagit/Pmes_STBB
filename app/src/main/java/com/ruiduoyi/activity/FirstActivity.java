@@ -365,7 +365,7 @@ public class FirstActivity extends BaseActivity{
                         String mac = "";
                         WifiManager wifiManager=((WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE));
                         String mac_temp=wifiManager.getConnectionInfo().getMacAddress();
-                        //mac_temp="c0:21:0d:94:26:f7";
+                        //mac_temp="c0:21:0d:94:26:11";
                         if(mac_temp==null&&sharedPreferences.getString("mac","").equals("")) {
                             // Toast.makeText(FirstActivity.this,"获取网卡物理地址失败，请连接wifi",Toast.LENGTH_LONG).show();
                         }else {

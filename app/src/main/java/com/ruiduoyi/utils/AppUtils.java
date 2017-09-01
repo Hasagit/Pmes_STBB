@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -206,6 +207,12 @@ public class AppUtils {
         }else {
             return 0;
         }
+    }
+
+    public static double nunFormat(String num,int wei) {
+        BigDecimal bg = new BigDecimal(num);
+        double f1 = bg.setScale(wei, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return f1;
     }
 
 

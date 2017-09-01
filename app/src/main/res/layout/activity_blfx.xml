@@ -42,7 +42,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -68,7 +68,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -94,7 +94,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -120,7 +120,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -151,7 +151,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -177,7 +177,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -203,7 +203,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -230,7 +230,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -251,6 +251,7 @@
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -264,7 +265,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -290,7 +291,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -316,7 +317,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
@@ -335,7 +336,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -344,15 +344,16 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="7dp"
-                android:text="品名规格"
+                android:text="净重(g)"
                 android:textColor="#000000"
                 android:textSize="15dp" />
 
             <TextView
+                android:id="@+id/jzzl"
                 android:layout_width="@dimen/blyyfx_text_width"
                 android:layout_height="36dp"
                 android:layout_margin="3dp"
@@ -362,8 +363,8 @@
         </LinearLayout>
 
 
-
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="20dp"
@@ -515,13 +516,33 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
-                        android:background="@color/lable"
-                        android:gravity="right|center_vertical">
-
+                        android:gravity="right|center_vertical"
+                        android:orientation="horizontal">
+                        <RadioGroup
+                            android:layout_width="200dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:id="@+id/radioGroup"
+                            android:orientation="horizontal">
+                            <RadioButton
+                                android:checked="true"
+                                android:id="@+id/radio_sl"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="按数量(个)"/>
+                            <RadioButton
+                                android:id="@+id/radio_zl"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="按重量(kg)"/>
+                        </RadioGroup>
                         <TextView
+                            android:layout_weight="1"
                             android:id="@+id/sub_text"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="60dp"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:background="@color/lable"
@@ -529,6 +550,13 @@
                             android:text="0"
                             android:textColor="@android:color/holo_red_dark"
                             android:textSize="35dp" />
+                        <Button
+                            android:id="@+id/btn_clear"
+                            android:layout_width="@dimen/blnum_width"
+                            android:layout_height="@dimen/blnum_height"
+                            android:layout_margin="5dp"
+                            android:text="清除"
+                            android:textSize="20dp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -660,19 +688,22 @@
                             android:textSize="20dp" />
 
                         <Button
+                            android:gravity="center"
+                            android:textStyle="bold"
                             android:id="@+id/btn_del"
                             android:layout_width="@dimen/blnum_width"
                             android:layout_height="@dimen/blnum_height"
                             android:layout_margin="5dp"
-                            android:text="-"
+                            android:text="▁▁"
                             android:textSize="20dp" />
 
                         <Button
-                            android:id="@+id/btn_clear"
+                            android:enabled="false"
+                            android:id="@+id/dian"
                             android:layout_width="@dimen/blnum_width"
                             android:layout_height="@dimen/blnum_height"
                             android:layout_margin="5dp"
-                            android:text="清除"
+                            android:text="."
                             android:textSize="20dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -684,13 +715,13 @@
 
                     <LinearLayout
                         android:layout_marginRight="10dp"
-                        android:layout_width="500dp"
+                        android:layout_width="530dp"
                         android:layout_height="35dp"
                         android:background="@color/blue_sl_false"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="80dp"
+                            android:layout_width="70dp"
                             android:layout_height="match_parent"
                             android:background="@drawable/text_bg"
                             android:gravity="center"
@@ -706,15 +737,21 @@
                             android:textColor="@android:color/black" />
 
                         <TextView
-                            android:layout_width="80dp"
+                            android:layout_width="70dp"
                             android:layout_height="match_parent"
                             android:background="@drawable/text_bg"
                             android:gravity="center"
                             android:text="数量"
                             android:textColor="@android:color/black" />
-
                         <TextView
-                            android:layout_width="160dp"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/text_bg"
+                            android:gravity="center"
+                            android:text="重量"
+                            android:textColor="@android:color/black" />
+                        <TextView
+                            android:layout_width="140dp"
                             android:layout_height="match_parent"
                             android:background="@drawable/text_bg"
                             android:gravity="center"
@@ -723,8 +760,9 @@
                     </LinearLayout>
 
                     <ListView
+                        android:layout_marginBottom="10dp"
                         android:id="@+id/list_b8_2"
-                        android:layout_width="match_parent"
+                        android:layout_width="530dp"
                         android:layout_height="match_parent"
                         android:layout_marginRight="10dp"
                         android:divider="@color/touming"></ListView>

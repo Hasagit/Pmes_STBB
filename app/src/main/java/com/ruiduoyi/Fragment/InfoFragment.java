@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -201,6 +202,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                         editor.putString("jhsl",item.get(21));
                         editor.putString("lpsl",item.get(23));
                         editor.putString("blsl",item.get(24));
+                        editor.putString("jzzl",item.get(27));
                         editor.commit();
                         dq_3.setText(item.get(2));
                         dq_4.setText(item.get(3));
@@ -366,7 +368,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     break;
                 case 0x110://网络异常
                     tip_layout.setBackgroundColor(getResources().getColor(R.color.color_7_33));
-                    Toast.makeText(getContext(),"服务器异常",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
                     break;
                 case 0x111:
                     tip_layout.setBackgroundColor(Color.WHITE);
@@ -475,11 +477,8 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             if (xtemp.size()<xVals.size()){
                 for (int j=0;j<xVals.size();j++){
                     String xtemp_str=xtemp.toString();
-                    //int num=xtemp_str.indexOf(xVals.get(j));
-                   /* if (xtemp.toString().indexOf(xVals.get(j))<1){
-                        needToAddxVal.add(xVals.get(j));
-                    }*/
-                    if (AppUtils.calculate(xtemp.toString(),xVals.get(j))<1){
+                    int num=xtemp_str.indexOf(xVals.get(j));
+                    if (xtemp.toString().indexOf(xVals.get(j))<1){
                         needToAddxVal.add(xVals.get(j));
                     }
                 }
@@ -569,7 +568,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         set1 = new BarDataSet(yVals1, "");
         int[]color=new int[]{R.color.color_1,R.color.color_2,R.color.color_3,R.color.color_4,
                 R.color.color_5,R.color.color_6,R.color.color_7,R.color.color_8,R.color.color_9,R.color.color_10,};
-       List<Integer>colors=new ArrayList<>();
+        List<Integer>colors=new ArrayList<>();
         for (int i=0;i<yVals.size();i++){
             if (yVals.get(i).equals("0")){
                 colors.add(getResources().getColor(R.color.touming));
@@ -670,9 +669,22 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
                 if(item.get(0).equals("A")){
                     if (!item.get(1).equals("")){
-                        File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
+                        //File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
                         caozuo_text.setText(item.get(3));
                         cao_name_text.setText(item.get(2));
+                        if (item.get(2).length()>5){
+                            cao_name_text.setSingleLine();
+                            cao_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                            cao_name_text.setHorizontallyScrolling(true);
+                            cao_name_text.setMarqueeRepeatLimit(-1);
+                            cao_name_text.setFocusable(true);
+                            cao_name_text.setFocusableInTouchMode(true);
+                            cao_name_text.requestFocus();
+                        }else {
+                            cao_name_text.setFocusable(false);
+                            cao_name_text.setFocusableInTouchMode(false);
+                            cao_name_text.requestFocus();
+                        }
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -693,10 +705,22 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     }
                 }else if(item.get(0).equals("B")){
                     if (!item.get(1).equals("")){
-                        File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
+                        //File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
                         jisu_text.setText(item.get(3));
                         ji_name_text.setText(item.get(2));
-
+                        if (item.get(2).length()>5){
+                            ji_name_text.setSingleLine();
+                            ji_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                            ji_name_text.setHorizontallyScrolling(true);
+                            ji_name_text.setMarqueeRepeatLimit(-1);
+                            ji_name_text.setFocusable(true);
+                            ji_name_text.setFocusableInTouchMode(true);
+                            ji_name_text.requestFocus();
+                        }else {
+                            ji_name_text.setFocusable(false);
+                            ji_name_text.setFocusableInTouchMode(false);
+                            ji_name_text.requestFocus();
+                        }
 
                         new Thread(new Runnable() {
                             @Override
@@ -906,6 +930,34 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             case R.id.cardView:
                 getNetDate();
                 break;
+        }
+    }
+
+
+
+    private class BarCharData{
+        private BarData data;
+        private List<String>xVals;
+
+        public BarCharData(BarData data, List<String> xVals) {
+            this.data = data;
+            this.xVals = xVals;
+        }
+
+        public BarData getData() {
+            return data;
+        }
+
+        public void setData(BarData data) {
+            this.data = data;
+        }
+
+        public List<String> getxVals() {
+            return xVals;
+        }
+
+        public void setxVals(List<String> xVals) {
+            this.xVals = xVals;
         }
     }
 

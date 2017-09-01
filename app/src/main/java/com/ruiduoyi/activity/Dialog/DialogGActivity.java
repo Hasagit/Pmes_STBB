@@ -161,7 +161,6 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                     public void run() {
                         List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_SrvCon '"+jtbh+"','"+zldm+"','"+num+"',''");
                         AppUtils.sendUpdateInfoFragmentReceiver(DialogGActivity.this);
-                        AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
                         if (list!=null){
                             if (list.size()>0){
                                 if (list.get(0).size()>0){
@@ -173,6 +172,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                                            /* if (!title.equals("人员上岗")|title.equals("品管巡机")){
                                                 AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
                                             }*/
+                                            AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
                                             finish();
                                         }
                                     }else {

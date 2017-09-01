@@ -81,7 +81,7 @@ public class TestFragment extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         anim= AnimationUtils.loadAnimation(getContext(),R.anim.scale_anim);
-        pdf_dir_str= Environment.getExternalStorageDirectory().getPath()+"/pdf";
+        pdf_dir_str= Environment.getExternalStorageDirectory().getPath()+"/RdyPmes/Pdf";
     }
 
     @Override

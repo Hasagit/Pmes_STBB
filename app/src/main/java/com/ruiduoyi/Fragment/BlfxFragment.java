@@ -2,10 +2,12 @@ package com.ruiduoyi.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +39,7 @@ import java.util.Map;
 
 public class BlfxFragment extends Fragment implements View.OnClickListener{
     private String zldm,zzdh,jtbh;
-    private Button btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7,btn_8,btn_9,btn_0,btn_clear,btn_submit,btn_del,spinner;
+    private Button btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7,btn_8,btn_9,btn_0,btn_clear,btn_submit,btn_del,spinner,btn_dian;
     private TextView sub_text,bldm_text,blms_text,blzs_text;
     private Animation anim;
     private String sub_num;
@@ -48,6 +52,9 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
     private int select_position;
     private BlYyfxActivity activity;
     private PopupDialog readyDialog;
+    private RadioGroup radioGroup;
+    private RadioButton radio_sl,radio_zl;
+    private PopupDialog dialog;
 
 
     public BlfxFragment() {
@@ -120,6 +127,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                             map.put("lab_1",list1.get(i).get(0));
                             map.put("lab_2",list1.get(i).get(1));
                             map.put("lab_3","0");
+                            map.put("zl","");
                             data1.add(map);
                         }
                         adapter2= new SigleSelectAdapter2(getContext(), R.layout.blfx_sigle_select_item, data1) {
@@ -132,9 +140,6 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                         };
                         listView.setAdapter(adapter2);
                         break;
-                    case 0x102:
-                        Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
-                        break;
                 }
             }
         };
@@ -143,6 +148,9 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
 
 
     private void initView(View view){
+        radioGroup=(RadioGroup)view.findViewById(R.id.radioGroup);
+        radio_sl=(RadioButton)view.findViewById(R.id.radio_sl);
+        radio_zl=(RadioButton)view.findViewById(R.id.radio_zl);
         btn_0=(Button)view.findViewById(R.id.btn_0);
         btn_1=(Button)view.findViewById(R.id.btn_1);
         btn_2=(Button)view.findViewById(R.id.btn_2);
@@ -153,6 +161,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
         btn_7=(Button)view.findViewById(R.id.btn_7);
         btn_8=(Button)view.findViewById(R.id.btn_8);
         btn_9=(Button)view.findViewById(R.id.btn_9);
+        btn_dian=(Button)view.findViewById(R.id.btn_dian);
         btn_del=(Button)view.findViewById(R.id.btn_del);
         btn_submit=(Button)view.findViewById(R.id.btn_submit);
         btn_clear=(Button)view.findViewById(R.id.btn_clear);
@@ -163,6 +172,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
         listView=(ListView)view.findViewById(R.id.list_blfx);
         spinner=(Button)view.findViewById(R.id.spinner);
 
+        btn_dian.setOnClickListener(this);
         spinner.setOnClickListener(this);
         btn_0.setOnClickListener(this);
         btn_1.setOnClickListener(this);
@@ -178,8 +188,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
         btn_submit.setOnClickListener(this);
         btn_clear.setOnClickListener(this);
 
-        readyDialog=new PopupDialog(getActivity(),400,300);
-        readyDialog=new PopupDialog(getActivity(),400,300);
+        readyDialog=new PopupDialog(getActivity(),400,360);
         readyDialog.setTitle("提示");
         readyDialog.getOkbtn().setText("确定");
         readyDialog.getCancle_btn().setVisibility(View.GONE);
@@ -187,6 +196,38 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View v) {
                 readyDialog.dismiss();
+            }
+        });
+
+        dialog=new PopupDialog(getActivity(),400,360);
+        dialog.setTitle("提示");
+        dialog.getCancle_btn().setVisibility(View.GONE);
+        dialog.getOkbtn().setText("确定");
+        dialog.getOkbtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        btn_dian.setEnabled(false);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId){
+                    case R.id.radio_sl:
+                        btn_dian.setEnabled(false);
+                        break;
+                    case R.id.radio_zl:
+                        btn_dian.setEnabled(true);
+                        if (sharedPreferences.getString("jzzl","").equals("")){
+                            dialog.setMessageTextColor(Color.RED);
+                            dialog.setMessage("没有维护净重重量的数据，只能按个数输入");
+                            dialog.show();
+                            radio_sl.setChecked(true);
+                        }
+                        break;
+                }
             }
         });
 
@@ -208,7 +249,6 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                         }
                     }
                 }else {
-                    handler.sendEmptyMessage(0x102);
                     NetHelper.uploadNetworkError("Exec PAD_Get_ZlmYywh 'D'",sharedPreferences.getString("jtnh",""),
                             sharedPreferences.getString("mac",""));
                 }
@@ -225,7 +265,6 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                         }
                     }
                 }else {
-                    handler.sendEmptyMessage(0x102);
                     NetHelper.uploadNetworkError("Exec PAD_Get_Blllist",sharedPreferences.getString("jtbh",""),
                             sharedPreferences.getString("mac",""));
                 }
@@ -252,7 +291,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
     private void upLoadOneData(Map<String,String>map,String wkno){
         List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Add_BlmInfo " +
                 "'A','"+zzdh+"','','','"+jtbh+"','"+zldm+"','"+map.get("lab_1")+"'," +
-                "'"+map.get("lab_3")+"','"+wkno+"'");
+                "'"+map.get("lab_3")+"','"+wkno+"','"+AppUtils.nunFormat(map.get("zl"),2)+"'");
         if (list!=null){
             if (list.size()>0){
                 if (list.get(0).size()>0){
@@ -262,7 +301,6 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                 }
             }
         }else {
-            handler.sendEmptyMessage(0x102);
             upLoadOneData(map,wkno);
         }
     }
@@ -283,6 +321,13 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         AppUtils.sendCountdownReceiver(getContext());
         switch (v.getId()) {
+            case R.id.btn_dian:
+                sub_text.startAnimation(anim);
+                sub_num=sub_text.getText().toString();
+                if(sub_num.indexOf(".")<1){
+                    sub_text.setText(sub_num+".");
+                }
+                break;
             case R.id.spinner:
                 if (spinner_list!=null){
                     spinner_list.showDownOn(spinner);
@@ -291,7 +336,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
             case R.id.btn_0:
                 sub_text.startAnimation(anim);
                 sub_num = sub_text.getText().toString();
-                if ((!sub_num.equals("0"))&(!sub_num.equals("-"))) {
+                if (!sub_num.equals("0")) {
                     sub_text.setText(sub_num + "0");
                 }
                 break;
@@ -385,14 +430,22 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                     readyDialog.setMessage("请先选取产品");
                     readyDialog.show();
                     //Toast.makeText(getContext(),"请先选取产品",Toast.LENGTH_SHORT).show();
-                }else if(Integer.parseInt(activity.getLpsl_str())<Integer.parseInt(blzs_text.getText().toString())+Integer.parseInt(activity.getBlpsl_str())+Integer.parseInt(sub_text.getText().toString())){
+                }else if(Double.parseDouble(activity.getLpsl_str())<Double.parseDouble(blzs_text.getText().toString())+Double.parseDouble(activity.getBlpsl_str())+Double.parseDouble(sub_text.getText().toString())){
                     //int sum=Integer.parseInt(blzs_text.getText().toString())+Integer.parseInt(activity.getBlpsl_str())+Integer.parseInt(sub_text.getText().toString());
                     readyDialog.setMessage("不良品数量不能超过良品数量");
                     readyDialog.show();
                     //Toast.makeText(getContext(),"不良品数量不能超过良品数量",Toast.LENGTH_SHORT).show();
                 }else {
                     try {
-                        data1.get(select_position).put("lab_3",sub_text.getText().toString());
+                        String num;
+                        if (radio_sl.isChecked()){
+                            num=sub_text.getText().toString();
+                            data1.get(select_position).put("zl",Double.parseDouble(num)*Double.parseDouble(sharedPreferences.getString("jzzl",""))/1000+"");
+                        }else {
+                            num=String.valueOf((int) (Double.parseDouble(sub_text.getText().toString()) *1000/Double.parseDouble(sharedPreferences.getString("jzzl",""))));
+                            data1.get(select_position).put("zl",sub_text.getText().toString());
+                        }
+                        data1.get(select_position).put("lab_3",num);
                         adapter2.notifyDataSetChanged();
                         long zongshu=0;
                         for (int i=0;i<data1.size();i++){

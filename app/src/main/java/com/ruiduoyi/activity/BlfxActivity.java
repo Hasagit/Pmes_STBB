@@ -5,12 +5,15 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +27,10 @@ import com.ruiduoyi.utils.AppUtils;
 import com.ruiduoyi.view.PopupDialog;
 import com.ruiduoyi.view.PopupWindowSpinner;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,8 +41,8 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
     private Button spinner;//不良产品下拉框
     private ListView listView,listView_register;
     private String jtbh;
-    private TextView sjsx_text,zzdh_text,gddh_text,scph_text,mjbh_text,cpbh_text,pmgg_text,mjmc_text,jhsl_text,lpsl_text,blpsl_text,bldm_text,blms_text;
-    private Button btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7,btn_8,btn_9,btn_0,btn_clear,btn_submit,btn_del;
+    private TextView sjsx_text,zzdh_text,gddh_text,scph_text,mjbh_text,cpbh_text,pmgg_text,mjmc_text,jhsl_text,lpsl_text,blpsl_text,bldm_text,blms_text,jzzl_text;
+    private Button btn_1,btn_2,btn_3,btn_4,btn_5,btn_6,btn_7,btn_8,btn_9,btn_0,btn_clear,btn_submit,btn_del,btn_dian;
     private TextView sub_text;
     private Animation anim;
     private String sub_num;
@@ -47,6 +54,8 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
     private List<String>zzdh_list=new ArrayList<>();
     private int zzdh_position;
     private PopupDialog dialog;
+    private RadioButton sl_radio,zl_radio;
+    private RadioGroup radioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,36 +96,45 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                     break;
                 case 0x102:
                     //blpsl_text.setText(Integer.parseInt(blpsl_text.getText().toString())+Integer.parseInt(sub_text.getText().toString())+"");
-                    List<List<String>>list2= (List<List<String>>) msg.obj;
-                    List<Map<String,String>>data=new ArrayList<>();
-                    for (int i=0;i<list2.size();i++){
-                        Map<String,String>map=new HashMap<>();
-                        List<String>item=list2.get(i);
-                        map.put("lab_1",item.get(0));
-                        map.put("lab_2",item.get(1));
-                        map.put("lab_3",item.get(2));
-                        map.put("lab_4",item.get(3));
-                        data.add(map);
-                    }
-                    SimpleAdapter adapter=new SimpleAdapter(BlfxActivity.this,data,R.layout.list_item_b8_2,
-                            new String[]{"lab_1","lab_2","lab_3","lab_4"},new int[]{R.id.lab_1,R.id.lab_2,
-                            R.id.lab_3,R.id.lab_4});
-                    listView_register.setAdapter(adapter);
-                    listView_register.startAnimation(anim);
+                   try {
+                       JSONArray list2= (JSONArray) msg.obj;
+                       List<Map<String,String>>data=new ArrayList<>();
+                       for (int i=0;i<list2.length();i++){
+                           Map<String,String>map=new HashMap<>();
+                           map.put("lab_1",list2.getJSONObject(i).getString("v_bldm"));
+                           map.put("lab_2",list2.getJSONObject(i).getString("v_blms"));
+                           map.put("lab_3",list2.getJSONObject(i).getString("v_blsl"));
+                           map.put("lab_4",list2.getJSONObject(i).getString("v_blzl"));
+                           map.put("lab_5",list2.getJSONObject(i).getString("v_jlrq"));
+                           data.add(map);
+                       }
+                       SimpleAdapter adapter=new SimpleAdapter(BlfxActivity.this,data,R.layout.list_item_b8_2,
+                               new String[]{"lab_1","lab_2","lab_3","lab_4","lab_5"},new int[]{R.id.lab_1,R.id.lab_2,
+                               R.id.lab_3,R.id.lab_4,R.id.lab_5});
+                       listView_register.setAdapter(adapter);
+                       listView_register.startAnimation(anim);
+                   } catch (JSONException e) {
+                       e.printStackTrace();
+                   }
                     break;
                 case 0x103:
-                    List<List<String>>list= (List<List<String>>) msg.obj;
-                    sjsx_text.setText(list.get(0).get(0));
-                    zzdh_text.setText(list.get(0).get(1));
-                    gddh_text.setText(list.get(0).get(2));
-                    scph_text.setText(list.get(0).get(3));
-                    mjbh_text.setText(list.get(0).get(4));
-                    cpbh_text.setText(list.get(0).get(5));
-                    pmgg_text.setText(list.get(0).get(6));
-                    mjmc_text.setText(list.get(0).get(16));
-                    jhsl_text.setText(list.get(0).get(21));
-                    lpsl_text.setText(list.get(0).get(23));
-                    blpsl_text.setText(list.get(0).get(24));
+                    try {
+                        JSONArray list= (JSONArray) msg.obj;
+                        sjsx_text.setText(list.getJSONObject(0).getString("kbm_sxrq"));
+                        zzdh_text.setText(list.getJSONObject(0).getString("kbm_zzdh"));
+                        gddh_text.setText(list.getJSONObject(0).getString("kbm_sodh"));
+                        scph_text.setText(list.getJSONObject(0).getString("kbm_ph"));
+                        mjbh_text.setText(list.getJSONObject(0).getString("kbm_mjbh"));
+                        cpbh_text.setText(list.getJSONObject(0).getString("kbm_wldm"));
+                        pmgg_text.setText(list.getJSONObject(0).getString("kbm_pmgg"));
+                        mjmc_text.setText(list.getJSONObject(0).getString("kbm_mjmc"));
+                        jhsl_text.setText(list.getJSONObject(0).getString("kbm_scsl"));
+                        lpsl_text.setText(list.getJSONObject(0).getString("kbm_lpsl"));
+                        blpsl_text.setText(list.getJSONObject(0).getString("kbm_blsl"));
+                        jzzl_text.setText(list.getJSONObject(0).getString("kbm_jzzl"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 0x104:
                     afterConmmit();
@@ -160,10 +178,13 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
         blpsl_text=(TextView)findViewById(R.id.dq_11);
         bldm_text=(TextView)findViewById(R.id.bldm_text);
         blms_text=(TextView)findViewById(R.id.blms_text);
+        jzzl_text=(TextView)findViewById(R.id.jzzl);
+        radioGroup=(RadioGroup)findViewById(R.id.radioGroup);
+        sl_radio=(RadioButton)findViewById(R.id.radio_sl);
+        zl_radio=(RadioButton)findViewById(R.id.radio_zl);
 
 
-
-
+        btn_dian=(Button)findViewById(R.id.dian);
         btn_0=(Button)findViewById(R.id.btn_0);
         btn_1=(Button)findViewById(R.id.btn_1);
         btn_2=(Button)findViewById(R.id.btn_2);
@@ -179,6 +200,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
         btn_clear=(Button)findViewById(R.id.btn_clear);
         listView_register=(ListView)findViewById(R.id.list_b8_2);
         cancle_btn.setOnClickListener(this);
+        btn_dian.setOnClickListener(this);
         btn_0.setOnClickListener(this);
         btn_1.setOnClickListener(this);
         btn_2.setOnClickListener(this);
@@ -204,6 +226,26 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
             }
         });
 
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId){
+                    case R.id.radio_sl:
+                        btn_dian.setEnabled(false);
+                        break;
+                    case R.id.radio_zl:
+                        if (jzzl_text.getText().toString().equals("0")|jzzl_text.getText().toString().equals("")){
+                            dialog.setMessage("没有维护净重重量的数据，只能按个数输入");
+                            dialog.show();
+                            sl_radio.setChecked(true);
+                            btn_dian.setEnabled(false);
+                        }else {
+                            btn_dian.setEnabled(true);
+                        }
+                        break;
+                }
+            }
+        });
     }
 
     private void initListView(List<List<String>>lists){
@@ -271,10 +313,17 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
             case R.id.cancle_btn:
                 finish();
                 break;
+            case R.id.dian:
+                sub_text.startAnimation(anim);
+                sub_num=sub_text.getText().toString();
+                if(sub_num.indexOf(".")<1){
+                    sub_text.setText(sub_num+".");
+                }
+                break;
             case R.id.btn_0:
                 sub_text.startAnimation(anim);
                 sub_num=sub_text.getText().toString();
-                if((!sub_num.equals("0"))&&(!sub_num.equals("-"))){
+                if(!sub_num.equals("0")){
                    sub_text.setText(sub_num+"0");
                 }
                 break;
@@ -422,15 +471,13 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                 }
 
 
-                List<List<String>>list2=NetHelper.getQuerysqlResult("Exec PAD_Get_BlmInfo '"+jtbh+"'");
+                JSONArray list2=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_BlmInfo '"+jtbh+"'");
                 if (list2!=null){
-                    if (list2.size()>0){
-                        if (list2.get(0).size()>3){
-                            Message msg=handler.obtainMessage();
-                            msg.what=0x102;
-                            msg.obj=list2;
-                            handler.sendMessage(msg);
-                        }
+                    if (list2.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x102;
+                        msg.obj=list2;
+                        handler.sendMessage(msg);
                     }
                 }else {
                     handler.sendEmptyMessage(0x105);
@@ -479,7 +526,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
             dialog.show();
             return false;
         }
-        if (Integer.parseInt(lpsl_text.getText().toString())<Integer.parseInt(sub_text.getText().toString().trim())){
+        if (Double.parseDouble(lpsl_text.getText().toString())<Double.parseDouble(sub_text.getText().toString().trim())){
             dialog.setMessage("输入的数量不能大于良品数量");
             dialog.setMessageTextColor(Color.RED);
             dialog.show();
@@ -492,7 +539,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
+                /*List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
                 if(list!=null){
                     handler.sendEmptyMessage(0x111);
                     if(list.size()>0){
@@ -507,30 +554,51 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                     handler.sendEmptyMessage(0x105);
                     NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,sharedPreferences.getString("mac",""));
                     //handler.sendEmptyMessage(0x110);
+                }*/
+                JSONArray list= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
+                if(list!=null){
+                    handler.sendEmptyMessage(0x111);
+                    if(list.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x103;
+                        msg.obj=list;
+                        handler.sendMessage(msg);
+                    }
+                }else {
+                    handler.sendEmptyMessage(0x105);
+                    NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,sharedPreferences.getString("mac",""));
+                    //handler.sendEmptyMessage(0x110);
                 }
             }
         }).start();
     }
 
     private void upLoadOneData(String wkno){
+        String blsl="0";
+        String zl="";
+        if (sl_radio.isChecked()){
+            blsl=sub_text.getText().toString();
+            zl=Integer.parseInt(sub_text.getText().toString())*Double.parseDouble(jzzl_text.getText().toString())/1000+"";
+        }else {
+            blsl=(int)(Double.parseDouble(sub_text.getText().toString())*1000/Double.parseDouble(jzzl_text.getText().toString()))+"";
+            zl=sub_text.getText().toString();
+        }
         List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Add_BlmInfo " +
                 "'A','"+zzdh_list.get(zzdh_position)+"','','','"+jtbh+"','','"+bldm_text.getText().toString()+"'," +
-                "'"+sub_text.getText().toString()+"','"+wkno+"'");
+                blsl+",'"+wkno+"','"+AppUtils.nunFormat(zl,2)+"'");
         handler.sendEmptyMessage(0x104);
         if (list!=null){
             if (list.size()>0){
                 if (list.get(0).size()>0){
                     if (list.get(0).get(0).equals("OK")){
                         getGdInfo();
-                        List<List<String>>list1=NetHelper.getQuerysqlResult("Exec PAD_Get_BlmInfo '"+jtbh+"'");
-                        if (list1!=null){
-                            if (list1.size()>0){
-                                if (list1.get(0).size()>3){
-                                    Message msg=handler.obtainMessage();
-                                    msg.what=0x102;
-                                    msg.obj=list1;
-                                    handler.sendMessage(msg);
-                                }
+                        JSONArray list2=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_BlmInfo '"+jtbh+"'");
+                        if (list2!=null){
+                            if (list2.length()>0){
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x102;
+                                msg.obj=list2;
+                                handler.sendMessage(msg);
                             }
                         }else {
                             handler.sendEmptyMessage(0x105);
@@ -554,6 +622,8 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
         AppUtils.sendUpdateInfoFragmentReceiver(this);
         dialog.dismiss();
     }
+
+
 
 
 

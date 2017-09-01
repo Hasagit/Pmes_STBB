@@ -3,12 +3,12 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
-        android:layout_width="500dp"
-        android:layout_height="35dp"
+        android:layout_width="530dp"
+        android:layout_height="45dp"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="80dp"
+            android:layout_width="70dp"
             android:layout_height="match_parent"
             android:background="@drawable/text_bg"
             android:gravity="center"
@@ -24,7 +24,7 @@
             android:textColor="@android:color/black" />
 
         <TextView
-            android:layout_width="80dp"
+            android:layout_width="70dp"
             android:layout_height="match_parent"
             android:background="@drawable/text_bg"
             android:gravity="center"
@@ -32,11 +32,19 @@
             android:textColor="@android:color/black" />
 
         <TextView
-            android:layout_width="160dp"
+            android:layout_width="70dp"
             android:layout_height="match_parent"
             android:background="@drawable/text_bg"
             android:gravity="center"
             android:id="@+id/lab_4"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/text_bg"
+            android:gravity="center"
+            android:id="@+id/lab_5"
             android:textColor="@android:color/black" />
     </LinearLayout>
 </LinearLayout>

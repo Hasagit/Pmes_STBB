@@ -14,10 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ruiduoyi.R;
 import com.ruiduoyi.activity.BlYyfxActivity;
+import com.ruiduoyi.activity.Dialog.DialogSgjlActivity;
 import com.ruiduoyi.activity.Dialog.SbxxActivity;
 import com.ruiduoyi.activity.MjxxActivity;
 import com.ruiduoyi.activity.PzglActivity;
@@ -34,12 +36,13 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
     private CardView cardView_hm,cardView_tiaoji,cardView_hs,cardView_sj,cardView_pzyc,cardView_xm,
             cardView_jtwx,cardView_tingji,cardView_dl,cardView_sm,cardView_hl,cardView_by,cardView_dr,
             cardView_jhtj,cardView_gdzt,cardView_rysg,cardView_pzxj,cardView_js,cardView_ts,
-            cardView_gdgl,cardView_blfx,cardView_ycfx,cardView_pzgl,cardView_gycs,cardView_zybz,cardView_xsbg,
+            cardView_gdgl,cardView_blfx,cardView_ycfx,cardView_pzgl,cardView_sgjl,cardView_xsbg,
             cardView_sbxx,cardView_mjxx,cardView_scrz,cardView_oee;
     private String startType,startZldm,startZlmc;
     private Animation anim;
     private SharedPreferences sharedPreferences;
     private PopupDialog dialog;
+    private ProgressBar wait_progress;
     public StatusFragment() {
 
     }
@@ -71,13 +74,18 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0x100:
+                    wait_progress.setVisibility(View.GONE);
                     List<String>list=(List<String>)msg.obj;
                     startType=list.get(2);
                     startZldm=list.get(0);
                     startZlmc=list.get(1);
                     break;
                 case 0x101:
+                    wait_progress.setVisibility(View.GONE);
                     Toast.makeText(getContext(),"网络异常",Toast.LENGTH_SHORT).show();
+                    break;
+                case 0x102:
+                    wait_progress.setVisibility(View.GONE);
                     break;
             }
         }
@@ -141,6 +149,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
         cardView_blfx=(CardView)view.findViewById(R.id.blfx);
         cardView_oee=(CardView)view.findViewById(R.id.oee);
         cardView_xsbg=(CardView)view.findViewById(R.id.jtjqsbg);
+        cardView_sgjl=(CardView)view.findViewById(R.id.sgjl);
 
         cardView_hm=(CardView)view.findViewById(R.id.hm);
         cardView_tiaoji=(CardView)view.findViewById(R.id.tiaoji);
@@ -162,6 +171,8 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
         cardView_ts=(CardView)view.findViewById(R.id.ts);
         cardView_js=(CardView)view.findViewById(R.id.js) ;
 
+        wait_progress=(ProgressBar)view.findViewById(R.id.wait_progress);
+
 
 
         cardView_sbxx.setOnClickListener(this);
@@ -173,6 +184,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
         cardView_blfx.setOnClickListener(this);
         cardView_oee.setOnClickListener(this);
         cardView_xsbg.setOnClickListener(this);
+        cardView_sgjl.setOnClickListener(this);
 
         cardView_hm.setOnClickListener(this);
         cardView_tiaoji.setOnClickListener(this);
@@ -216,6 +228,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
     }
 
     private void startActivityByNetResult(final String zldm, final String title, final String type){
+        wait_progress.setVisibility(View.VISIBLE);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -243,9 +256,14 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                                     startActivity(intent);
                                     break;
                                 case "C":
-                                    intent=new Intent(getContext(), BlYyfxActivity.class);
+                                    /*intent=new Intent(getContext(), BlYyfxActivity.class);
                                     intent.putExtra("title",title);
                                     intent.putExtra("zldm",zldm);
+                                    startActivity(intent);*/
+                                    intent=new Intent(getContext(), DialogGActivity.class);
+                                    intent.putExtra("title",title);
+                                    intent.putExtra("zldm",zldm);
+                                    intent.putExtra("type",type);
                                     startActivity(intent);
                                     break;
                                 default:
@@ -341,6 +359,14 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                 intent_10.putExtra("type","DOC");
                 startActivity(intent_10);
                 break;
+            case R.id.sgjl:
+                cardView_sgjl.startAnimation(anim);
+                Intent intent_sgjl=new Intent(getContext(), DialogSgjlActivity.class);
+                startActivity(intent_sgjl);
+                break;
+
+
+
             case  R.id.hm:
                 if (isReady()){
                     cardView_hm.startAnimation(anim);
@@ -454,11 +480,13 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
     }
 
     private void jsBtnEven(){
+        wait_progress.setVisibility(View.VISIBLE);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+sharedPreferences.getString("jtbh","")+"'");
                 if(list2!=null){
+                    handler.sendEmptyMessage(0x102);
                     if (list2.size()>0){
                         if (list2.get(0).size()>11){
                             String zldm_ss=list2.get(0).get(1);

@@ -20,9 +20,9 @@ import com.ruiduoyi.utils.AppUtils;
 
 public class BlYyfxActivity extends BaseActivity implements View.OnClickListener {
     private TextView sjsx_text,zzdh_text,gddh_text,scph_text,mjbh_text,cpbh_text,pmgg_text,mjmc_text,
-                blfx_text,yyfx_text,title_text,jhsl_text,lpsl_text,blpsl_text;
+                blfx_text,yyfx_text,title_text,jhsl_text,lpsl_text,blpsl_text,jzzl_text;
     private String sjsx_str,zzdh_str,gddh_str,scph_str,mjbh_str,cpbh_str,pmgg_str,jhsl_str,lpsl_str,
-            blpsl_str;
+            blpsl_str,jzzl_str;
     private Button cancle_btn,save_btn;
     private FrameLayout blfx_btn,yyfx_btn;
     private String type,zldm,zlmc,mjmc_str;
@@ -56,6 +56,7 @@ public class BlYyfxActivity extends BaseActivity implements View.OnClickListener
         blfx_text=(TextView)findViewById(R.id.blfx_text);
         yyfx_text=(TextView)findViewById(R.id.yyfx_text);
         title_text=(TextView)findViewById(R.id.title);
+        jzzl_text=(TextView)findViewById(R.id.jzzl);
         cancle_btn=(Button)findViewById(R.id.cancle_btn);
         save_btn=(Button)findViewById(R.id.save_btn);
         blfx_btn=(FrameLayout) findViewById(R.id.blfx_btn);
@@ -79,7 +80,7 @@ public class BlYyfxActivity extends BaseActivity implements View.OnClickListener
         lpsl_text.setText(lpsl_str);
         blpsl_text.setText(blpsl_str);
         title_text.setText(zlmc);
-
+        jzzl_text.setText(jzzl_str);
         initViewPager();
     }
 
@@ -136,6 +137,7 @@ public class BlYyfxActivity extends BaseActivity implements View.OnClickListener
         lpsl_str=sharedPreferences.getString("lpsl","");
         blpsl_str=sharedPreferences.getString("blsl","");
         zldming=sharedPreferences.getString("zldm_ss","");
+        jzzl_str=sharedPreferences.getString("jzzl","");
         Intent intent_from=getIntent();
         zldm=intent_from.getStringExtra("zldm");
         zlmc=intent_from.getStringExtra("title");

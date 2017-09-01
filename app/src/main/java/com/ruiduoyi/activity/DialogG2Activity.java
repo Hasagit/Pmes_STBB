@@ -106,7 +106,7 @@ public class DialogG2Activity extends BaseDialogActivity implements View.OnClick
                     finish();
                     break;
                 case 0x101://服务器异常
-                    Toast.makeText(DialogG2Activity.this,"服务器异常",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DialogG2Activity.this,"网络异常",Toast.LENGTH_SHORT).show();
                     break;
                 case 0x102://没有权限
 
