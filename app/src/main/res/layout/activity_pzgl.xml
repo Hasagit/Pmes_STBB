@@ -433,7 +433,7 @@
             >
 
             <LinearLayout
-                android:layout_width="1270dp"
+                android:layout_width="1215dp"
                 android:layout_height="35dp"
                 android:background="@color/blue_sl_false"
                 android:orientation="horizontal">
@@ -452,20 +452,6 @@
                     android:background="@drawable/text_bg"
                     android:gravity="center"
                     android:text="制造单号"
-                    android:textColor="@android:color/black" />
-                <TextView
-                    android:layout_width="@dimen/b4_lable"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/text_bg"
-                    android:gravity="center"
-                    android:text="工单单号"
-                    android:textColor="@android:color/black" />
-                <TextView
-                    android:layout_width="115dp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/text_bg"
-                    android:gravity="center"
-                    android:text="生产批号"
                     android:textColor="@android:color/black" />
 
                 <TextView
@@ -524,17 +510,24 @@
                     android:textColor="@android:color/black" />
 
                 <TextView
-                    android:layout_width="95dp"
+                    android:layout_width="135dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/text_bg"
                     android:gravity="center"
                     android:text="问题描述"
                     android:textColor="@android:color/black" />
+                <TextView
+                    android:layout_width="135dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/text_bg"
+                    android:gravity="center"
+                    android:text="改善方法"
+                    android:textColor="@android:color/black" />
             </LinearLayout>
 
             <ListView
                 android:id="@+id/xuncha_listView"
-                android:layout_width="1270dp"
+                android:layout_width="1215dp"
                 android:layout_height="match_parent"
                 android:divider="@color/touming"></ListView>
         </LinearLayout>

@@ -611,17 +611,17 @@ public class NetHelper {
         urlConnection.connect();
         //Log.e("getLastModified()",urlConnection.getLastModified()+"");
        if (dataBase.comparedFileVer(fileName,urlConnection.getLastModified()+"")){
-            return true;
+           return true;
         }else {
-            //Log.e("donwloadbeginning","donwloadbeginning");
-            InputStream in=urlConnection.getInputStream();
-            OutputStream out=new FileOutputStream(filePath+"/"+fileName,false);
-            byte[] buff=new byte[1024];
-            int size;
-            while ((size = in.read(buff)) != -1) {
-                out.write(buff, 0, size);
-            }
-            dataBase.insertFile_info(fileName,urlConnection.getLastModified()+"");
+            Log.w("donwloadbeginning","donwloadbeginning");
+           InputStream in=urlConnection.getInputStream();
+           OutputStream out=new FileOutputStream(filePath+"/"+fileName,false);
+           byte[] buff=new byte[1024];
+           int size;
+           while ((size = in.read(buff)) != -1) {
+               out.write(buff, 0, size);
+           }
+           dataBase.insertFile_info(fileName,urlConnection.getLastModified()+"");
            return false;
         }
     }

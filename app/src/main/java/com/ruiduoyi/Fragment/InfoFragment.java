@@ -340,7 +340,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     break;
                 case 0x105:
                     List<List<String>>list_phonto=(List<List<String>>)msg.obj;
-                    initPhoto(list_phonto);
+                    initPhotoByExistInStorage(list_phonto);
                     break;
                 case 0x106:
                     Glide.with(getContext())
@@ -376,6 +376,9 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             }
         }
     };
+
+
+
     private void initBarChart(BarChart mBarChart){
         //mBarChart.setOnChartValueSelectedListener(this);
         //mBarChart.getDescription().setEnabled(false);
@@ -462,7 +465,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
     }
 
 
-    //初始化
+    //初始化条形图
     private void setData(final List<String>xVals, final List<String>yVals, List<List<String>>list_jhfh) {
         //补全工单信息
         for (int i=0;i<yVals.size();i++){
@@ -654,7 +657,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
     }
 
     //初始化照片
-    private void initPhoto(List<List<String>>list){
+    private void initPhotoByFileVer(List<List<String>>list){
         if(list.size()>0){
             //下载图片
             for (int i=0;i<list.size();i++){
@@ -751,6 +754,158 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         }
     }
 
+    //初始化照片
+    private void initPhotoByExistInStorage(List<List<String>>list){
+        if(list.size()>0){
+            //下载图片
+            for (int i=0;i<list.size();i++){
+                final List<String>item=list.get(i);
+                if(item.get(0).equals("A")){
+                    if (!item.get(1).equals("")){
+                        File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
+                        caozuo_text.setText(item.get(3));
+                        cao_name_text.setText(item.get(2));
+                        if (item.get(2).length()>5){
+                            cao_name_text.setSingleLine();
+                            cao_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                            cao_name_text.setHorizontallyScrolling(true);
+                            cao_name_text.setMarqueeRepeatLimit(-1);
+                            cao_name_text.setFocusable(true);
+                            cao_name_text.setFocusableInTouchMode(true);
+                            cao_name_text.requestFocus();
+                        }else {
+                            cao_name_text.setFocusable(false);
+                            cao_name_text.setFocusableInTouchMode(false);
+                            cao_name_text.requestFocus();
+                        }
+                        String[] str=item.get(6).split("&lt;br&gt;");
+                        String rym="";
+                        for (int j=0;j<str.length;j++){
+                            rym=rym+str[j]+"\n";
+                        }
+                        labRym.setText(rym);
+
+
+                        //文件缓存
+                        if(file.exists()){
+                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
+                                    .asBitmap()
+                                    .centerCrop()
+                                    .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
+                                    .skipMemoryCache(true).
+                                    into(img_pho1);
+                        }else {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        File dir=new File(filePhath+"/Photos/");
+                                        if (!dir.exists()){
+                                            dir.mkdir();
+                                        }
+                                        URL url=new URL(item.get(4));
+                                        HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();
+                                        urlConnection.setDoInput(true);
+                                        urlConnection.setUseCaches(false);
+                                        urlConnection.setRequestMethod("GET");
+                                        urlConnection.setConnectTimeout(5000);
+                                        urlConnection.connect();
+                                        InputStream in=urlConnection.getInputStream();
+                                        OutputStream out=new FileOutputStream(filePhath+"/Photos/"+item.get(1)+".JPG",false);
+                                        byte[] buff=new byte[1024];
+                                        int size;
+                                        while ((size = in.read(buff)) != -1) {
+                                            out.write(buff, 0, size);
+                                        }
+                                        Message msg=handler.obtainMessage();
+                                        msg.what=0x106;
+                                        msg.obj=filePhath+"/Photos/"+item.get(1)+".JPG";
+                                        handler.sendMessage(msg);
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                        }
+                    }else {
+                        handler.sendEmptyMessage(0x108);
+                    }
+                }else if(item.get(0).equals("B")){
+                    if (!item.get(1).equals("")){
+                        File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
+                        if (item.get(2).length()>5){
+                            ji_name_text.setSingleLine();
+                            ji_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                            ji_name_text.setHorizontallyScrolling(true);
+                            ji_name_text.setMarqueeRepeatLimit(-1);
+                            ji_name_text.setFocusable(true);
+                            ji_name_text.setFocusableInTouchMode(true);
+                            ji_name_text.requestFocus();
+                        }else {
+                            ji_name_text.setFocusable(false);
+                            ji_name_text.setFocusableInTouchMode(false);
+                            ji_name_text.requestFocus();
+                        }
+
+                        //文件缓存
+                        if(file.exists()){
+                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
+                                    .asBitmap()
+                                    .centerCrop()
+                                    .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
+                                    .skipMemoryCache(true).
+                                    into(img_pho2);
+                        }else {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        File dir=new File(filePhath+"/Photos/");
+                                        if (!dir.exists()){
+                                            dir.mkdir();
+                                        }
+                                        URL url=new URL(item.get(4));
+                                        HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();
+                                        urlConnection.setDoInput(true);
+                                        urlConnection.setUseCaches(false);
+                                        urlConnection.setRequestMethod("GET");
+                                        urlConnection.setConnectTimeout(15000);
+                                        urlConnection.connect();
+                                        InputStream in=urlConnection.getInputStream();
+                                        OutputStream out=new FileOutputStream(filePhath+"/Photos/"+item.get(1)+".JPG",false);
+                                        byte[] buff=new byte[1024];
+                                        int size;
+                                        while ((size = in.read(buff)) != -1) {
+                                            out.write(buff, 0, size);
+                                        }
+                                        Message msg=handler.obtainMessage();
+                                        msg.what=0x107;
+                                        msg.obj=filePhath+"/Photos/"+item.get(1)+".JPG";
+                                        handler.sendMessage(msg);
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                        }
+                    }else {
+                        handler.sendEmptyMessage(0x109);
+                    }
+                }
+            }
+        }else {
+            jisu_text.setText("【技术员】");
+            ji_name_text.setText("技术员");
+            caozuo_text.setText("【操作员】");
+            cao_name_text.setText("操作员");
+            labRym.setText("");
+        }
+    }
+
     //定时刷新
     private void updateDataOntime(){
         updateTimer=new Timer();
@@ -767,90 +922,118 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
     private void getNetDate(){
         //工单信息
 
-        if (sharedPreferences.getString("isBaseInfoFinish","OK").equals("OK")){
+       /*if (sharedPreferences.getString("isBaseInfoFinish","OK").equals("OK")){
             SharedPreferences.Editor editor=sharedPreferences.edit();
             editor.putString("isBaseInfoFinish","NO");
             editor.commit();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
-                    if(list!=null){
-                        handler.sendEmptyMessage(0x111);
-                        if(list.size()>0){
-                            if (list.get(0).size()>26){
-                                Message msg=handler.obtainMessage();
-                                msg.what=0x100;
-                                msg.obj=list;
-                                handler.sendMessage(msg);
-                            }
-                        }
-                    }else {
-                        NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,mac);
-                        handler.sendEmptyMessage(0x110);
-                    }
 
+        }*/
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getInfo();
+            }
+        }).start();
+    }
 
-
-
-                    List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
-                    if(list2!=null){
-                        handler.sendEmptyMessage(0x111);
-                        if (list2.size()>0){
-                            if (list2.get(0).size()>11){
-                                Message msg=handler.obtainMessage();
-                                msg.what=0x104;
-                                msg.obj=list2;
-                                handler.sendMessage(msg);
-                            }
-                        }
-                    }else {
-                        NetHelper.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",jtbh,mac);
-                        //handler.sendEmptyMessage(0x101);
-                        handler.sendEmptyMessage(0x110);
-                    }
-
-
-                    List<List<String>>list3= NetHelper.getQuerysqlResult("Exec PAD_Get_FhChartInfo '"+jtbh+"'");
-                    if(list3!=null){
-                        handler.sendEmptyMessage(0x111);
-                        if (list3.size()>0){
-                            if (list3.get(0).size()>2){
-                                Message msg=handler.obtainMessage();
-                                msg.what=0x103;
-                                msg.obj=list3;
-                                handler.sendMessage(msg);
-                            }
-                        }
-                    }else {
-                        NetHelper.uploadNetworkError("Exec PAD_Get_FhChartInfo NetWordError",jtbh,mac);
-                        handler.sendEmptyMessage(0x110);
-                    }
-
-
-                    List<List<String>>list4= NetHelper.getQuerysqlResult("Exec PAD_Get_PhotoInfo '"+jtbh+"'");
-                    if(list4!=null){
-                        handler.sendEmptyMessage(0x111);
-                        if (list4.size()>0){
-                            if (list4.get(0).size()>6){
-                                Message msg=handler.obtainMessage();
-                                msg.what=0x105;
-                                msg.obj=list4;
-                                handler.sendMessage(msg);
-                            }
-                        }
-                    }else {
-                        NetHelper.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);
-                        handler.sendEmptyMessage(0x110);
-                    }
-
-                    SharedPreferences.Editor editor=sharedPreferences.edit();
-                    editor.putString("isBaseInfoFinish","OK");
-                    editor.commit();
+    private synchronized void getInfo(){
+        List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
+        if(list!=null){
+            handler.sendEmptyMessage(0x111);
+            if(list.size()>0){
+                if (list.get(0).size()>26){
+                    Message msg=handler.obtainMessage();
+                    msg.what=0x100;
+                    msg.obj=list;
+                    handler.sendMessage(msg);
                 }
-            }).start();
+            }
+        }else {
+            NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,mac);
+            handler.sendEmptyMessage(0x110);
+            try {
+                Thread.currentThread().sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getNetDate();
+            return;
         }
 
+
+
+
+        List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
+        if(list2!=null){
+            handler.sendEmptyMessage(0x111);
+            if (list2.size()>0){
+                if (list2.get(0).size()>11){
+                    Message msg=handler.obtainMessage();
+                    msg.what=0x104;
+                    msg.obj=list2;
+                    handler.sendMessage(msg);
+                }
+            }
+        }else {
+            NetHelper.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",jtbh,mac);
+            //handler.sendEmptyMessage(0x101);
+            handler.sendEmptyMessage(0x110);
+            try {
+                Thread.currentThread().sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getNetDate();
+            return;
+        }
+
+
+        List<List<String>>list3= NetHelper.getQuerysqlResult("Exec PAD_Get_FhChartInfo '"+jtbh+"'");
+        if(list3!=null){
+            handler.sendEmptyMessage(0x111);
+            if (list3.size()>0){
+                if (list3.get(0).size()>2){
+                    Message msg=handler.obtainMessage();
+                    msg.what=0x103;
+                    msg.obj=list3;
+                    handler.sendMessage(msg);
+                }
+            }
+        }else {
+            NetHelper.uploadNetworkError("Exec PAD_Get_FhChartInfo NetWordError",jtbh,mac);
+            handler.sendEmptyMessage(0x110);
+            try {
+                Thread.currentThread().sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getNetDate();
+            return;
+        }
+
+
+        List<List<String>>list4= NetHelper.getQuerysqlResult("Exec PAD_Get_PhotoInfo '"+jtbh+"'");
+        if(list4!=null){
+            handler.sendEmptyMessage(0x111);
+            if (list4.size()>0){
+                if (list4.get(0).size()>6){
+                    Message msg=handler.obtainMessage();
+                    msg.what=0x105;
+                    msg.obj=list4;
+                    handler.sendMessage(msg);
+                }
+            }
+        }else {
+            NetHelper.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);
+            handler.sendEmptyMessage(0x110);
+            try {
+                Thread.currentThread().sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getNetDate();
+            return;
+        }
     }
 
     private void umSetColor(String fcColor){

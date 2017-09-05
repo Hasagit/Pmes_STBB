@@ -62,15 +62,13 @@ public class GpioService extends Service {
         }
         Log.w("starCommand",jtbh+"   "+mac);
         //initGpio();
+        //initData();
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void initData(){
         dataBase=new AppDataBase(this);
         sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
-        SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putString("isUploadFinish","OK");
-        editor.commit();
         initGpio();
         updateGpio();
     }
@@ -141,47 +139,45 @@ public class GpioService extends Service {
         TimerTask timerTask=new TimerTask() {
             @Override
             public void run() {
-                String sql="";
-                List<Map<String,String>> list=dataBase.selectGpio();
-                String isUploadFinish=sharedPreferences.getString("isUploadFinish","No");
-                if (isUploadFinish.equals("OK")){
-                    SharedPreferences.Editor editor1=sharedPreferences.edit();
-                    editor1.putString("isUploadFinish","NO");
-                    editor1.commit();
-                    for (int i=0;i<list.size();i++){
-                        Map<String,String>map=list.get(i);
-                        String mac=map.get("mac");
-                        String jtbh=map.get("jtbh");
-                        String zldm=map.get("zldm");
-                        String gpio=map.get("gpio");
-                        String time=map.get("time");
-                        String num=map.get("num");
-                        String desc=map.get("desc");
-                        sql="exec PAD_SrvDataUp '"+mac+"','"+jtbh+"','"+zldm+"','"+gpio+"','"+time+"',"+num+",'"+desc+"'\n";
-                        List<List<String>>list_result= NetHelper.getQuerysqlResult(sql);
-                        if (list_result!=null){
-                            if (list_result.size()>0){
-                                if (list_result.get(0).get(0).equals("OK")){
-                                    //handler.sendEmptyMessage(0x106);
-                                    dataBase.deleteGpio(time);
-                                }else {
-                                    break;
-                                }
-                            }else {
-                                break;
-                            }
-                        }else {
-                            NetHelper.uploadNetworkError("exec PAD_SrvDataUp NetWorkError",jtbh,mac);
-                            break;
-                        }
-                    }
-                    SharedPreferences.Editor editor2=sharedPreferences.edit();
-                    editor2.putString("isUploadFinish","OK");
-                    editor2.commit();
-                }
+                uploadGpioData();
             }
         };
         timer_gpio.schedule(timerTask,0,Integer.parseInt(getString(R.string.gpio_update_time)));
+    }
+
+    private synchronized void uploadGpioData(){
+        Log.w("Synchronized_start","1");
+        String sql="";
+        List<Map<String,String>> list=dataBase.selectGpio();
+        for (int i=0;i<list.size();i++){
+            Map<String,String>map=list.get(i);
+            String mac=map.get("mac");
+            String jtbh=map.get("jtbh");
+            String zldm=map.get("zldm");
+            String gpio=map.get("gpio");
+            String time=map.get("time");
+            String num=map.get("num");
+            String desc=map.get("desc");
+            sql="exec PAD_SrvDataUp '"+mac+"','"+jtbh+"','"+zldm+"','"+gpio+"','"+time+"',"+num+",'"+desc+"'\n";
+            List<List<String>>list_result= NetHelper.getQuerysqlResult(sql);
+            if (list_result!=null){
+                if (list_result.size()>0){
+                    if (list_result.get(0).get(0).equals("OK")){
+                        //handler.sendEmptyMessage(0x106);
+                        dataBase.deleteGpio(time);
+                    }else {
+                        break;
+                    }
+                }else {
+                    break;
+                }
+            }else {
+                NetHelper.uploadNetworkError("exec PAD_SrvDataUp NetWorkError",jtbh,mac);
+                break;
+            }
+        }
+        Log.w("Synchronized_start","2");
+
     }
 
 

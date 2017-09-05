@@ -30,6 +30,9 @@ import com.ruiduoyi.R;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +58,9 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
         initView();
         initData();
     }
-
+    /*
+    MES
+    */
     Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -97,7 +102,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                     initBartChart(barChart,list2);
                     break;
                 case 0x104:
-                    List<List<String>>list3=(List<List<String>>)msg.obj;
+                    JSONArray list3= (JSONArray) msg.obj;
                     initListView(list3);
                     break;
                 case 0x105:
@@ -503,30 +508,34 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
     }
 
     //初始化巡查记录
-    private void initListView(List<List<String>>lists){
-        List<Map<String,String>>data=new ArrayList<>();
-        for (int i=0;i<lists.size();i++){
-            List<String>item=lists.get(i);
-            Map<String,String>map=new HashMap<>();
-            map.put("lab_1",item.get(0));
-            map.put("lab_2",item.get(1));
-            map.put("lab_3",item.get(2));
-            map.put("lab_4",item.get(3));
-            map.put("lab_5",item.get(4));
-            map.put("lab_6",item.get(5));
-            map.put("lab_7",item.get(6));
-            map.put("lab_8",item.get(7));
-            map.put("lab_9",item.get(8));
-            map.put("lab_10",item.get(9));
-            map.put("lab_11",item.get(10));
-            map.put("lab_12",item.get(11));
-            data.add(map);
+    private void initListView(JSONArray lists){
+        try {
+            List<Map<String,String>>data=new ArrayList<>();
+            for (int i=0;i<lists.length();i++){
+                Map<String,String>map=new HashMap<>();
+                map.put("lab_1",lists.getJSONObject(i).getString("v_rq"));
+                map.put("lab_2",lists.getJSONObject(i).getString("v_zzdh"));
+                map.put("lab_3",lists.getJSONObject(i).getString("v_mjbh"));
+                map.put("lab_4",lists.getJSONObject(i).getString("v_mjmc"));
+                map.put("lab_5",lists.getJSONObject(i).getString("v_wldm"));
+                map.put("lab_6",lists.getJSONObject(i).getString("v_pmgg"));
+                map.put("lab_7",lists.getJSONObject(i).getString("v_jlrq"));
+                map.put("lab_8",lists.getJSONObject(i).getString("v_wkname"));
+                map.put("lab_9",lists.getJSONObject(i).getString("v_pdjg"));
+                String wtms=lists.getJSONObject(i).getString("v_yyms");
+                wtms=wtms.replace("[!(ENTER)!]","\n\n");
+                map.put("lab_10",wtms);
+                map.put("lab_11",lists.getJSONObject(i).getString("v_gsfs"));
+                data.add(map);
+            }
+            SimpleAdapter adapter=new SimpleAdapter(this,data,R.layout.list_item_b4_1,
+                    new String[]{"lab_1","lab_2","lab_3","lab_4","lab_5","lab_6","lab_7","lab_8","lab_9","lab_10","lab_11"},
+                    new int[]{R.id.lab_1,R.id.lab_2,R.id.lab_3,R.id.lab_4,R.id.lab_5,R.id.lab_6,R.id.lab_7,
+                            R.id.lab_8,R.id.lab_9,R.id.lab_10,R.id.lab_11});
+            xuncha_lisView.setAdapter(adapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        SimpleAdapter adapter=new SimpleAdapter(this,data,R.layout.list_item_b4_1,
-                new String[]{"lab_1","lab_2","lab_3","lab_4","lab_5","lab_6","lab_7","lab_8","lab_9","lab_10","lab_11","lab_12"},
-                new int[]{R.id.lab_1,R.id.lab_2,R.id.lab_3,R.id.lab_4,R.id.lab_5,R.id.lab_6,R.id.lab_7,
-                        R.id.lab_8,R.id.lab_9,R.id.lab_10,R.id.lab_11,R.id.lab_12});
-        xuncha_lisView.setAdapter(adapter);
     }
 
     //初始化从工单信息表格
@@ -611,15 +620,13 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                 }
 
                 //巡查记录
-                List<List<String>>list5= NetHelper.getQuerysqlResult("Exec  PAD_Get_PzmInf 'B03','"+zzdh+"','"+jtbh+"'");
+                JSONArray list5= NetHelper.getQuerysqlResultJsonArray("Exec  PAD_Get_PzmInf 'B03','"+zzdh+"','"+jtbh+"'");
                 if (list5!=null){
-                    if (list5.size()>0){
-                        if (list5.get(0).size()>11){
-                            Message msg=handler.obtainMessage();
-                            msg.what=0x104;
-                            msg.obj=list5;
-                            handler.sendMessage(msg);
-                        }
+                    if (list5.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x104;
+                        msg.obj=list5;
+                        handler.sendMessage(msg);
                     }
                 }else {
                     handler.sendEmptyMessage(0x101);
@@ -685,3 +692,9 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 }
+
+
+
+/*
+
+*/

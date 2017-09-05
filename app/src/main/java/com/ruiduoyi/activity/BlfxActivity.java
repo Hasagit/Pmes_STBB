@@ -526,11 +526,20 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
             dialog.show();
             return false;
         }
-        if (Double.parseDouble(lpsl_text.getText().toString())<Double.parseDouble(sub_text.getText().toString().trim())){
-            dialog.setMessage("输入的数量不能大于良品数量");
-            dialog.setMessageTextColor(Color.RED);
-            dialog.show();
-            return false;
+        if (sl_radio.isChecked()){
+            if (Double.parseDouble(lpsl_text.getText().toString())<Double.parseDouble(sub_text.getText().toString().trim())){
+                dialog.setMessage("输入的数量不能大于良品数量");
+                dialog.setMessageTextColor(Color.RED);
+                dialog.show();
+                return false;
+            }
+        }else {
+            if (Double.parseDouble(lpsl_text.getText().toString())<Double.parseDouble(sub_text.getText().toString())*1000/Double.parseDouble(jzzl_text.getText().toString())){
+                dialog.setMessage("输入的数量不能大于良品数量");
+                dialog.setMessageTextColor(Color.RED);
+                dialog.show();
+                return false;
+            }
         }
         return true;
     }

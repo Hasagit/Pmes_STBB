@@ -99,6 +99,7 @@ public class YyfxFragment extends Fragment implements View.OnClickListener{
                         Map<String,String>map=new HashMap<>();
                         map.put("lab_1",list1.get(i).get(0));
                         map.put("lab_2",list1.get(i).get(1));
+                        map.put("isSelect","");
                         data1.add(map);
                     }
                     adapter=new YyfxAdapter2(getContext(),R.layout.list_item_yyfx,data1);

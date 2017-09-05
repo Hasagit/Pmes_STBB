@@ -313,6 +313,36 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
             return false;
         }
         return true;
+
+    }
+
+    private boolean isUploadReady(){
+        if (bldm_text.getText().toString().equals("") | blms_text.getText().toString().equals("")) {
+            readyDialog.setMessage("请先选择不良信息");
+            readyDialog.show();
+            return false;
+            //Toast.makeText(getContext(), "请先选择不良信息", Toast.LENGTH_SHORT).show();
+        }
+        if (spinner.getText().toString().equals("")){
+            readyDialog.setMessage("请先选取产品");
+            readyDialog.show();
+            return false;
+        }
+        if (radio_sl.isChecked()){
+            if(Double.parseDouble(activity.getLpsl_str())<Double.parseDouble(blzs_text.getText().toString())+Double.parseDouble(activity.getBlpsl_str())+Double.parseDouble(sub_text.getText().toString())){
+                readyDialog.setMessage("不良品数量不能超过良品数量");
+                readyDialog.show();
+                return false;
+            }
+        }else {
+            if (Double.parseDouble(activity.getLpsl_str())<(Double.parseDouble(sub_text.getText().toString())*1000/Double.parseDouble(sharedPreferences.getString("jzzl","")))+Double.parseDouble(blzs_text.getText().toString())){
+                dialog.setMessage("输入的数量不能大于良品数量");
+                dialog.setMessageTextColor(Color.RED);
+                dialog.show();
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -422,20 +452,7 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
                 }
                 break;
             case R.id.btn_submit:
-                if (bldm_text.getText().toString().equals("") | blms_text.getText().toString().equals("")) {
-                    readyDialog.setMessage("请先选择不良信息");
-                    readyDialog.show();
-                    //Toast.makeText(getContext(), "请先选择不良信息", Toast.LENGTH_SHORT).show();
-                } else if (spinner.getText().toString().equals("")){
-                    readyDialog.setMessage("请先选取产品");
-                    readyDialog.show();
-                    //Toast.makeText(getContext(),"请先选取产品",Toast.LENGTH_SHORT).show();
-                }else if(Double.parseDouble(activity.getLpsl_str())<Double.parseDouble(blzs_text.getText().toString())+Double.parseDouble(activity.getBlpsl_str())+Double.parseDouble(sub_text.getText().toString())){
-                    //int sum=Integer.parseInt(blzs_text.getText().toString())+Integer.parseInt(activity.getBlpsl_str())+Integer.parseInt(sub_text.getText().toString());
-                    readyDialog.setMessage("不良品数量不能超过良品数量");
-                    readyDialog.show();
-                    //Toast.makeText(getContext(),"不良品数量不能超过良品数量",Toast.LENGTH_SHORT).show();
-                }else {
+                if (isUploadReady()){
                     try {
                         String num;
                         if (radio_sl.isChecked()){

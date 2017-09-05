@@ -169,9 +169,6 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                                             type="DOC";
                                             getNetData(0x101);
                                         }else {//从statusFragment启动来的
-                                           /* if (!title.equals("人员上岗")|title.equals("品管巡机")){
-                                                AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
-                                            }*/
                                             AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
                                             finish();
                                         }
@@ -190,6 +187,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                 }).start();
             }else {//执行文档操作
                 String wkno=readCardResult.substring(2,readCardResult.length());
+                AppUtils.sendUpdateInfoFragmentReceiver(DialogGActivity.this);
                 Intent intent;
                 if (title.equals("工单管理")){
                     intent=new Intent(DialogGActivity.this,GdglActivity.class);

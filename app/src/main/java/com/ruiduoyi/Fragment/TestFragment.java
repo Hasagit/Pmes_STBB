@@ -263,7 +263,13 @@ public class TestFragment extends Fragment implements View.OnClickListener{
             @Override
             public void run() {
                try {
-                   File pdf_dir=new File(pdf_dir_str);
+                   NetHelper.downLoadFileByUrlCompareWithVer(data.get(position).get("file_url"),
+                           pdf_dir_str, data.get(position).get("lab_1")+".pdf");
+                   Message msg=handler.obtainMessage();
+                   msg.what=0x101;
+                   msg.obj=pdf_dir_str+"/"+data.get(position).get("lab_1")+".pdf";
+                   handler.sendMessage(msg);
+                   /*File pdf_dir=new File(pdf_dir_str);
                    if (pdf_dir.exists()){
                        pdf_dir.mkdir();
                    }
@@ -280,7 +286,7 @@ public class TestFragment extends Fragment implements View.OnClickListener{
                        msg.what=0x101;
                        msg.obj=pdf_dir_str+"/"+data.get(position).get("lab_1")+".pdf";
                        handler.sendMessage(msg);
-                   }
+                   }*/
                } catch (IOException e) {
                    handler.sendEmptyMessage(0x102);
                    e.printStackTrace();
