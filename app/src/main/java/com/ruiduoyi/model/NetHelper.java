@@ -557,7 +557,7 @@ public class NetHelper {
 
     //上传网络错误log
     public static void uploadNetworkError(String errms,String jtbh,String mac){
-        NetHelper.getRunsqlResult("Exec PAD_Add_PadLogInfo '7','"+errms+"','"+jtbh+"','"+mac+"'");
+        NetHelper.getQuerysqlResult("Exec PAD_Add_PadLogInfo '7','"+errms+"','"+jtbh+"','"+mac+"'");
     }
 
     //上传异常崩溃信息

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -343,22 +345,26 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     initPhotoByExistInStorage(list_phonto);
                     break;
                 case 0x106:
-                    Glide.with(getContext())
+                    /*Glide.with(getContext())
                             .load((String) msg.obj)
                             .asBitmap()
                             .centerCrop()
                             .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
                             .skipMemoryCache(true)//跳过内存缓存
-                            .into(img_pho1);
+                            .into(img_pho1);*/
+                    Bitmap bm1 = BitmapFactory.decodeFile((String) msg.obj);
+                    img_pho1.setImageBitmap(bm1);
                     break;
                 case 0x107:
-                    Glide.with(getContext())
+                    /*Glide.with(getContext())
                             .load((String) msg.obj)
                             .asBitmap()
                             .centerCrop()
                             .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
                             .skipMemoryCache(true)//跳过内存缓存
-                            .into(img_pho2);
+                            .into(img_pho2);*/
+                    Bitmap bm2 = BitmapFactory.decodeFile((String) msg.obj);
+                    img_pho2.setImageBitmap(bm2);
                     break;
                 case 0x108:
                     img_pho1.setImageResource(R.drawable.a_img);
@@ -570,13 +576,16 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
         set1 = new BarDataSet(yVals1, "");
         int[]color=new int[]{R.color.color_1,R.color.color_2,R.color.color_3,R.color.color_4,
-                R.color.color_5,R.color.color_6,R.color.color_7,R.color.color_8,R.color.color_9,R.color.color_10,};
+                R.color.color_5,R.color.color_6,R.color.color_7,R.color.color_8,R.color.color_9,
+                R.color.color_10,R.color.color_11,R.color.color_12,R.color.color_13,R.color.color_4,
+                R.color.color_15,R.color.color_16,R.color.color_17,R.color.color_18,R.color.color_19,
+                R.color.color_20};
         List<Integer>colors=new ArrayList<>();
         for (int i=0;i<yVals.size();i++){
             if (yVals.get(i).equals("0")){
                 colors.add(getResources().getColor(R.color.touming));
             }else {
-                colors.add(getResources().getColor(color[i]));
+                colors.add(getResources().getColor(color[i%color.length]));
             }
         }
         set1.setColors(colors);
@@ -788,12 +797,14 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
                         //文件缓存
                         if(file.exists()){
-                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
+                            /*Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
                                     .asBitmap()
                                     .centerCrop()
                                     .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
                                     .skipMemoryCache(true).
-                                    into(img_pho1);
+                                    into(img_pho1);*/
+                            Bitmap bm = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG");
+                            img_pho1.setImageBitmap(bm);
                         }else {
                             new Thread(new Runnable() {
                                 @Override
@@ -851,12 +862,14 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
                         //文件缓存
                         if(file.exists()){
-                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
+                            /*Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
                                     .asBitmap()
                                     .centerCrop()
                                     .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
                                     .skipMemoryCache(true).
-                                    into(img_pho2);
+                                    into(img_pho2);*/
+                            Bitmap bm = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG");
+                            img_pho2.setImageBitmap(bm);
                         }else {
                             new Thread(new Runnable() {
                                 @Override
@@ -937,31 +950,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
     }
 
     private synchronized void getInfo(){
-        List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
-        if(list!=null){
-            handler.sendEmptyMessage(0x111);
-            if(list.size()>0){
-                if (list.get(0).size()>26){
-                    Message msg=handler.obtainMessage();
-                    msg.what=0x100;
-                    msg.obj=list;
-                    handler.sendMessage(msg);
-                }
-            }
-        }else {
-            NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,mac);
-            handler.sendEmptyMessage(0x110);
-            try {
-                Thread.currentThread().sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            getNetDate();
-            return;
-        }
-
-
-
+        Log.w("getInfo","go");
 
         List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
         if(list2!=null){
@@ -986,6 +975,32 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             getNetDate();
             return;
         }
+
+
+
+        List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
+        if(list!=null){
+            handler.sendEmptyMessage(0x111);
+            if(list.size()>0){
+                if (list.get(0).size()>26){
+                    Message msg=handler.obtainMessage();
+                    msg.what=0x100;
+                    msg.obj=list;
+                    handler.sendMessage(msg);
+                }
+            }
+        }else {
+            NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,mac);
+            handler.sendEmptyMessage(0x110);
+            try {
+                Thread.currentThread().sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getNetDate();
+            return;
+        }
+
 
 
         List<List<String>>list3= NetHelper.getQuerysqlResult("Exec PAD_Get_FhChartInfo '"+jtbh+"'");
@@ -1035,6 +1050,140 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             return;
         }
     }
+
+    private void getNetDate2(){
+        //工单信息
+
+        if (sharedPreferences.getString("isBaseInfoFinish","OK").equals("OK")){
+            SharedPreferences.Editor editor=sharedPreferences.edit();
+            editor.putString("isBaseInfoFinish","NO");
+            editor.commit();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
+                    if(list!=null){
+                        handler.sendEmptyMessage(0x111);
+                        if(list.size()>0){
+                            if (list.get(0).size()>26){
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x100;
+                                msg.obj=list;
+                                handler.sendMessage(msg);
+                            }
+                        }
+                    }else {
+                        Log.e("error","1");
+                        NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,mac);
+                        handler.sendEmptyMessage(0x110);
+                        try {
+                            Thread.currentThread().sleep(4000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putString("isBaseInfoFinish","OK");
+                        editor.commit();
+                        getNetDate();
+                        return;
+                    }
+
+
+
+
+                    List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
+                    if(list2!=null){
+                        handler.sendEmptyMessage(0x111);
+                        if (list2.size()>0){
+                            if (list2.get(0).size()>11){
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x104;
+                                msg.obj=list2;
+                                handler.sendMessage(msg);
+                            }
+                        }
+                    }else {
+                        Log.e("error","2");
+                        NetHelper.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",jtbh,mac);
+                        //handler.sendEmptyMessage(0x101);
+                        handler.sendEmptyMessage(0x110);
+                        try {
+                            Thread.currentThread().sleep(4000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putString("isBaseInfoFinish","OK");
+                        editor.commit();
+                        getNetDate();
+                        return;
+                    }
+
+
+                    List<List<String>>list3= NetHelper.getQuerysqlResult("Exec PAD_Get_FhChartInfo '"+jtbh+"'");
+                    if(list3!=null){
+                        handler.sendEmptyMessage(0x111);
+                        if (list3.size()>0){
+                            if (list3.get(0).size()>2){
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x103;
+                                msg.obj=list3;
+                                handler.sendMessage(msg);
+                            }
+                        }
+                    }else {
+                        Log.e("error","3");
+                        NetHelper.uploadNetworkError("Exec PAD_Get_FhChartInfo NetWordError",jtbh,mac);
+                        handler.sendEmptyMessage(0x110);
+                        try {
+                            Thread.currentThread().sleep(4000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putString("isBaseInfoFinish","OK");
+                        editor.commit();
+                        getNetDate();
+                        return;
+                    }
+
+
+                    List<List<String>>list4= NetHelper.getQuerysqlResult("Exec PAD_Get_PhotoInfo '"+jtbh+"'");
+                    if(list4!=null){
+                        handler.sendEmptyMessage(0x111);
+                        if (list4.size()>0){
+                            if (list4.get(0).size()>6){
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x105;
+                                msg.obj=list4;
+                                handler.sendMessage(msg);
+                            }
+                        }
+                    }else {
+                        Log.e("error","4");
+                        NetHelper.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);
+                        handler.sendEmptyMessage(0x110);
+                        try {
+                            Thread.currentThread().sleep(4000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putString("isBaseInfoFinish","OK");
+                        editor.commit();
+                        getNetDate();
+                        return;
+                    }
+
+                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                    editor.putString("isBaseInfoFinish","OK");
+                    editor.commit();
+                }
+            }).start();
+        }
+
+    }
+
 
     private void umSetColor(String fcColor){
 
