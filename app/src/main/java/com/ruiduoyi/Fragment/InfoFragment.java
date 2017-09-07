@@ -345,26 +345,42 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     initPhotoByExistInStorage(list_phonto);
                     break;
                 case 0x106:
-                    /*Glide.with(getContext())
+                    Glide.with(getContext())
                             .load((String) msg.obj)
                             .asBitmap()
                             .centerCrop()
                             .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
                             .skipMemoryCache(true)//跳过内存缓存
-                            .into(img_pho1);*/
-                    Bitmap bm1 = BitmapFactory.decodeFile((String) msg.obj);
-                    img_pho1.setImageBitmap(bm1);
+                            .into(img_pho1);
+                    /*Bitmap bm1 = BitmapFactory.decodeFile((String) msg.obj);
+                    img_pho1.setImageBitmap(bm1);*/
+                    /*BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    int scale = (int)(options.outHeight/(float)200);//我们只用高度或宽度计算均可
+                    if(scale<=0){
+                        scale = 1;}
+                    options.inSampleSize = scale;
+                    Bitmap bitmap = BitmapFactory.decodeFile((String) msg.obj,options);
+                    img_pho1.setImageBitmap(bitmap);*/
                     break;
                 case 0x107:
-                    /*Glide.with(getContext())
+                    Glide.with(getContext())
                             .load((String) msg.obj)
                             .asBitmap()
                             .centerCrop()
                             .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
                             .skipMemoryCache(true)//跳过内存缓存
-                            .into(img_pho2);*/
-                    Bitmap bm2 = BitmapFactory.decodeFile((String) msg.obj);
-                    img_pho2.setImageBitmap(bm2);
+                            .into(img_pho2);
+                    /*Bitmap bm2 = BitmapFactory.decodeFile((String) msg.obj);
+                    img_pho2.setImageBitmap(bm2);*/
+                    /*BitmapFactory.Options options2 = new BitmapFactory.Options();
+                    options2.inJustDecodeBounds = true;
+                    int scale2 = (int)(options2.outHeight/(float)200);//我们只用高度或宽度计算均可
+                    if(scale2<=0){
+                        scale2 = 1;}
+                    options2.inSampleSize = scale2;
+                    Bitmap bitmap2 = BitmapFactory.decodeFile((String) msg.obj,options2);
+                    img_pho2.setImageBitmap(bitmap2);*/
                     break;
                 case 0x108:
                     img_pho1.setImageResource(R.drawable.a_img);
@@ -585,65 +601,15 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             if (yVals.get(i).equals("0")){
                 colors.add(getResources().getColor(R.color.touming));
             }else {
-                colors.add(getResources().getColor(color[i%color.length]));
+                //colors.add(getResources().getColor(color[i%color.length]));
+                if (i>color.length-1){
+                    colors.add(AppUtils.getRandColorCode());
+                }else {
+                    colors.add(getResources().getColor(color[i]));
+                }
             }
         }
         set1.setColors(colors);
-        /*switch (yVals.size()){
-            case 0:
-                set1.setColor(getResources().getColor(R.color.tongming));
-                break;
-            case 1:
-                set1.setColors(getResources().getColor(color[0]));
-                break;
-            case 2:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]));
-                break;
-            case 3:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),getResources().getColor(color[2]));
-                break;
-            case 4:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]));
-                break;
-            case 5:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]));
-                break;
-            case 6:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
-                        getResources().getColor(color[5]));
-                break;
-            case 7:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
-                        getResources().getColor(color[5]),getResources().getColor(color[6]));
-                break;
-            case 8:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
-                        getResources().getColor(color[5]),getResources().getColor(color[6]),getResources().getColor(color[7]));
-                break;
-            case 9:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
-                        getResources().getColor(color[5]),getResources().getColor(color[6]),getResources().getColor(color[7]),
-                        getResources().getColor(color[8]));
-                break;
-            case 10:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
-                        getResources().getColor(color[5]),getResources().getColor(color[6]),getResources().getColor(color[7]),
-                        getResources().getColor(color[8]),getResources().getColor(color[9]));
-                break;
-            default:
-                break;
-
-        }*/
-            /*set1.setColors(getResources().getColor(R.color.blue_sl_false),
-                    getResources().getColor(R.color.colorPrimary),
-                    getResources().getColor(R.color.bottom_sl));*/
         String[] yStr=new String[yVals.size()];
         for (int n=0;n<yVals.size();n++){
             yStr[n]=yVals.get(n);
@@ -797,14 +763,22 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
                         //文件缓存
                         if(file.exists()){
-                            /*Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
+                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
                                     .asBitmap()
                                     .centerCrop()
                                     .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
                                     .skipMemoryCache(true).
-                                    into(img_pho1);*/
-                            Bitmap bm = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG");
-                            img_pho1.setImageBitmap(bm);
+                                    into(img_pho1);
+                            /*Bitmap bm = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG");
+                            img_pho1.setImageBitmap(bm);*/
+                            /*BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inJustDecodeBounds = true;
+                            int scale = (int)(options.outHeight/(float)200);//我们只用高度或宽度计算均可
+                            if(scale<=0){
+                                scale = 1;}
+                            options.inSampleSize = scale;
+                            Bitmap bitmap = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG",options);
+                            img_pho1.setImageBitmap(bitmap);*/
                         }else {
                             new Thread(new Runnable() {
                                 @Override
@@ -846,6 +820,8 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                 }else if(item.get(0).equals("B")){
                     if (!item.get(1).equals("")){
                         File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
+                        jisu_text.setText(item.get(3));
+                        ji_name_text.setText(item.get(2));
                         if (item.get(2).length()>5){
                             ji_name_text.setSingleLine();
                             ji_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -862,14 +838,22 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
                         //文件缓存
                         if(file.exists()){
-                            /*Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
+                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
                                     .asBitmap()
                                     .centerCrop()
                                     .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
                                     .skipMemoryCache(true).
-                                    into(img_pho2);*/
-                            Bitmap bm = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG");
-                            img_pho2.setImageBitmap(bm);
+                                    into(img_pho2);
+                            /*Bitmap bm = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG");
+                            img_pho2.setImageBitmap(bm);*/
+                            /*BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inJustDecodeBounds = true;
+                            int scale = (int)(options.outHeight/(float)200);//我们只用高度或宽度计算均可
+                            if(scale<=0){
+                                scale = 1;}
+                            options.inSampleSize = scale;
+                            Bitmap bitmap = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG",options);
+                            img_pho2.setImageBitmap(bitmap);*/
                         }else {
                             new Thread(new Runnable() {
                                 @Override
@@ -1264,7 +1248,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                 break;
         }
     }
-
 
 
     private class BarCharData{

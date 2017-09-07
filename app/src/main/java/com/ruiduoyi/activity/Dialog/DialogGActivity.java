@@ -4,10 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -47,11 +49,13 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
         public void onReceive(Context context, Intent intent) {
             num=intent.getStringExtra("num");
             num_edit.setText(num);
-
-            if (title.equals("品管巡机")){
-                readEles();
-            }else {
-                getNetData(0x100);
+            if (sharedPreferences.getString("dialog_g_finish","OK").equals("OK")){
+                setFinishNO();
+                if (title.equals("品管巡机")){
+                    readEles();
+                }else {
+                    getNetData(0x100);
+                }
             }
         }
     };
@@ -78,6 +82,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                     String wkno=result.substring(2,result.length());
                     Intent intent=new Intent();
                     intent.putExtra("wkno",wkno);
+                    setFinishOK();
                     setResult(0,intent);
                     finish();
                     break;
@@ -127,6 +132,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
         IntentFilter receiverfilter=new IntentFilter();
         receiverfilter.addAction("SerialPortNum");
         registerReceiver(receiver,receiverfilter);
+        setFinishOK();
     }
 
     private void getNetData(final int what){
@@ -142,9 +148,14 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                             msg.what=what;
                             msg.obj=list.get(0).get(0);
                             handler.sendMessage(msg);
+                        }else {
+                            setFinishOK();
                         }
+                    }else {
+                        setFinishOK();
                     }
                 }else {
+                    setFinishOK();
                     handler.sendEmptyMessage(0x103);
                     NetHelper.uploadNetworkError("PAD_Read_CardID",jtbh,sharedPreferences.getString("mac",""));
                 }
@@ -169,6 +180,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                                             type="DOC";
                                             getNetData(0x101);
                                         }else {//从statusFragment启动来的
+                                            setFinishOK();
                                             AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
                                             finish();
                                         }
@@ -178,14 +190,20 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                                         msg.obj=list.get(0).get(0);
                                         handler.sendMessage(msg);
                                     }
+                                }else {
+                                    setFinishOK();
                                 }
+                            }else {
+                                setFinishOK();
                             }
                         }else {
+                            setFinishOK();
                             handler.sendEmptyMessage(0x103);
                         }
                     }
                 }).start();
             }else {//执行文档操作
+                setFinishOK();
                 String wkno=readCardResult.substring(2,readCardResult.length());
                 AppUtils.sendUpdateInfoFragmentReceiver(DialogGActivity.this);
                 Intent intent;
@@ -210,6 +228,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
 
             }
         }else {
+            setFinishOK();
             tip_text.setText(readCardResult);
             tip_text.setTextColor(Color.RED);
         }
@@ -230,15 +249,20 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                                Intent intent=new Intent(DialogGActivity.this,PzxjActivity.class);
                                intent.putExtra("wkno",readCardResult.substring(2,readCardResult.length()));
                                startActivity(intent);
+                               setFinishOK();
                                finish();
                            }else {
                                Message msg=handler.obtainMessage();
                                msg.what=0x102;
                                msg.obj=readCardResult;
                                handler.sendMessage(msg);
+                               setFinishOK();
                            }
+                       }else {
+                           setFinishOK();
                        }
                    }else {
+                       setFinishOK();
                        handler.sendEmptyMessage(0x103);
                        NetHelper.uploadNetworkError("Exec PAD_Check_Usr_Prg",jtbh,sharedPreferences.getString("mac",""));
                    }
@@ -267,6 +291,20 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                 break;
         }
     }
+
+    private void setFinishOK(){
+        Log.w("dialogG","OK");
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString("dialog_g_finish","OK");
+        editor.commit();
+    }
+    private void setFinishNO(){
+        Log.w("dialogG","NO");
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString("dialog_g_finish","NO");
+        editor.commit();
+    }
+
 
     @Override
     protected void onDestroy() {

@@ -143,6 +143,9 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                     case 0x105:
                         Toast.makeText(PzxjActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
                         break;
+                    case 0x106:
+                        ok_btn.setEnabled(true);
+                        break;
                 }
             }
         };
@@ -500,13 +503,18 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
                                 }
                                 if (sussesTime==jc_select_data.size()){
                                     finish();
+                                }else {
+                                    handler.sendEmptyMessage(0x106);
                                 }
                             }else {
+                                handler.sendEmptyMessage(0x106);
                                 //执行失败
                             }
+                        }else {
+                            handler.sendEmptyMessage(0x106);
                         }
                     }else {
-                        handler.sendEmptyMessage(0x105);
+                        handler.sendEmptyMessage(0x106);
                     }
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -540,6 +548,7 @@ public class PzxjActivity extends BaseActivity implements View.OnClickListener{
         switch (v.getId()){
             case R.id.save_btn:
                 if (isReady()){
+                    ok_btn.setEnabled(false);
                     upLoadData();
                 }
                 break;

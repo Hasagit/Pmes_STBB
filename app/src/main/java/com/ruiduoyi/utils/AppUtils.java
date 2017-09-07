@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.util.Log;
 
 import com.ruiduoyi.model.NetHelper;
@@ -23,6 +24,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by DengJf on 2017/7/1.
@@ -215,5 +217,18 @@ public class AppUtils {
         return f1;
     }
 
+    public static int getRandColorCode(){
+        String r,g,b;
+        Random random = new Random();
+        r = Integer.toHexString(random.nextInt(256)).toUpperCase();
+        g = Integer.toHexString(random.nextInt(256)).toUpperCase();
+        b = Integer.toHexString(random.nextInt(256)).toUpperCase();
+
+        r = r.length()==1 ? "0" + r : r ;
+        g = g.length()==1 ? "0" + g : g ;
+        b = b.length()==1 ? "0" + b : b ;
+
+        return  Color.rgb(Integer.parseInt(r,16),Integer.parseInt(g,16),Integer.parseInt(b,16));
+    }
 
 }

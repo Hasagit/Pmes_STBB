@@ -95,6 +95,9 @@ public class DialogMxbgActivity extends BaseDialogActivity implements View.OnCli
                     case 0x102:
                         Toast.makeText(DialogMxbgActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
                         break;
+                    case 0x103:
+                        save_btn.setEnabled(true);
+                        break;
                 }
             }
         };
@@ -114,13 +117,17 @@ public class DialogMxbgActivity extends BaseDialogActivity implements View.OnCli
                             if (array.getJSONObject(0).getString("Column1").equals("OK")){
                                 handler.sendEmptyMessage(0x101);
                             }else {
+                                handler.sendEmptyMessage(0x103);
                                 Message msg=handler.obtainMessage();
                                 msg.what=0x100;
                                 msg.obj=array.getJSONObject(0).getString("Column1");
                                 handler.sendMessage(msg);
                             }
+                        }else {
+                            handler.sendEmptyMessage(0x103);
                         }
                     }else {
+                        handler.sendEmptyMessage(0x103);
                         handler.sendEmptyMessage(0x102);
                         NetHelper.uploadNetworkError(sql,sharedPreferences.getString("jtbh",""),sharedPreferences.getString("mac",""));
                     }
@@ -157,6 +164,7 @@ public class DialogMxbgActivity extends BaseDialogActivity implements View.OnCli
                 break;
             case R.id.save_btn:
                 if (isReady()){
+                    save_btn.setEnabled(false);
                     updateMx();
                 }
                 break;

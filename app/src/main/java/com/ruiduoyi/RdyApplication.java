@@ -13,8 +13,8 @@ public class RdyApplication  extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-       // CrashHandler catchHandler = CrashHandler.getInstance();
-        //catchHandler.init(getApplicationContext());
+        CrashHandler catchHandler = CrashHandler.getInstance();
+        catchHandler.init(getApplicationContext());
 
     }
 

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ruiduoyi"
     android:versionCode="3"
-    android:versionName="3.0.1.9"
+    android:versionName="3.0.2.0"
     android:persistent="true">
 
     <!-- 13 -->
