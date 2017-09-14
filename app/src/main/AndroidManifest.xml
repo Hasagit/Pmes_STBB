@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ruiduoyi"
+    android:persistent="true"
     android:versionCode="3"
-    android:versionName="3.0.2.0"
-    android:persistent="true">
+    android:versionName="3.0.2.2">
 
     <!-- 13 -->
 
@@ -162,6 +162,16 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".activity.Dialog.DialogSgjlActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".activity.Dialog.DialogHjActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Dialog"/>
+        <activity
+            android:name=".activity.Dialog.DialogJshjActivity"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Dialog"></activity>

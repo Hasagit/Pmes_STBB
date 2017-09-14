@@ -1,5 +1,6 @@
 package com.ruiduoyi.Fragment;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -18,6 +20,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -60,8 +64,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class InfoFragment extends Fragment  implements View.OnClickListener{
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private BarChart mBarChart;
     private String jtbh;
     private TextView dq_1,dq_2,dq_3,dq_4,dq_5,dq_6,dq_7,dq_8,
@@ -350,7 +352,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                             .asBitmap()
                             .centerCrop()
                             .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
-                            .skipMemoryCache(true)//跳过内存缓存
+                            /*.skipMemoryCache(true)*///跳过内存缓存
                             .into(img_pho1);
                     /*Bitmap bm1 = BitmapFactory.decodeFile((String) msg.obj);
                     img_pho1.setImageBitmap(bm1);*/
@@ -369,7 +371,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                             .asBitmap()
                             .centerCrop()
                             .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
-                            .skipMemoryCache(true)//跳过内存缓存
+                            /*.skipMemoryCache(true)*///跳过内存缓存
                             .into(img_pho2);
                     /*Bitmap bm2 = BitmapFactory.decodeFile((String) msg.obj);
                     img_pho2.setImageBitmap(bm2);*/
@@ -415,12 +417,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         mBarChart.setDragEnabled(false);// 是否可以拖拽
         mBarChart.setScaleEnabled(false);// 是否可以缩放
         mBarChart.setDrawValueAboveBar(false);
-        // 改变y标签的位置
-        YAxis leftAxis = mBarChart.getAxisLeft();
-        leftAxis.setValueFormatter(new MyAxisValueFormatter());
-        leftAxis.setAxisMinimum(0);
-        leftAxis.setAxisMaximum(24);
-        mBarChart.getAxisRight().setEnabled(false);
 
         Legend l = mBarChart.getLegend();
         l.setEnabled(false);
@@ -556,6 +552,15 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             }
         }
 
+        // 改变y标签的位置
+        YAxis leftAxis = mBarChart.getAxisLeft();
+        leftAxis.setValueFormatter(new MyAxisValueFormatter());
+        leftAxis.setLabelCount(6);
+        leftAxis.setAxisMinimum(0);
+        leftAxis.setAxisMaximum(24);
+        mBarChart.getAxisRight().setEnabled(false);
+
+
         XAxis xLabels = mBarChart.getXAxis();
         xLabels.setLabelCount(xVals.size());
         xLabels.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -631,7 +636,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         Log.e("BarChatList",list_jhfh.toString());
     }
 
-    //初始化照片
+    //根据照片信息初始化照片
     private void initPhotoByFileVer(List<List<String>>list){
         if(list.size()>0){
             //下载图片
@@ -729,7 +734,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         }
     }
 
-    //初始化照片
+    //根据内存是否已经有这张照片初始化照片
     private void initPhotoByExistInStorage(List<List<String>>list){
         if(list.size()>0){
             //下载图片
@@ -767,7 +772,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                                     .asBitmap()
                                     .centerCrop()
                                     .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
-                                    .skipMemoryCache(true).
+                                    /*.skipMemoryCache(true)*/.
                                     into(img_pho1);
                             /*Bitmap bm = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG");
                             img_pho1.setImageBitmap(bm);*/
@@ -842,7 +847,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                                     .asBitmap()
                                     .centerCrop()
                                     .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
-                                    .skipMemoryCache(true).
+                                    /*.skipMemoryCache(true)*/.
                                     into(img_pho2);
                             /*Bitmap bm = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG");
                             img_pho2.setImageBitmap(bm);*/
@@ -910,7 +915,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             @Override
             public void run() {
                 getNetDate();
-                //Log.e("updateDataOntime","updateDataOntime go");
             }
         };
         updateTimer.schedule(timerTask,Integer.parseInt(getString(R.string.base_info_update_time)),Integer.parseInt(getString(R.string.base_info_update_time)));
@@ -918,13 +922,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
     private void getNetDate(){
         //工单信息
-
-       /*if (sharedPreferences.getString("isBaseInfoFinish","OK").equals("OK")){
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.putString("isBaseInfoFinish","NO");
-            editor.commit();
-
-        }*/
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -934,7 +931,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
     }
 
     private synchronized void getInfo(){
-        Log.w("getInfo","go");
 
         List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
         if(list2!=null){
@@ -1034,140 +1030,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             return;
         }
     }
-
-    private void getNetDate2(){
-        //工单信息
-
-        if (sharedPreferences.getString("isBaseInfoFinish","OK").equals("OK")){
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.putString("isBaseInfoFinish","NO");
-            editor.commit();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
-                    if(list!=null){
-                        handler.sendEmptyMessage(0x111);
-                        if(list.size()>0){
-                            if (list.get(0).size()>26){
-                                Message msg=handler.obtainMessage();
-                                msg.what=0x100;
-                                msg.obj=list;
-                                handler.sendMessage(msg);
-                            }
-                        }
-                    }else {
-                        Log.e("error","1");
-                        NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,mac);
-                        handler.sendEmptyMessage(0x110);
-                        try {
-                            Thread.currentThread().sleep(4000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
-                        editor.putString("isBaseInfoFinish","OK");
-                        editor.commit();
-                        getNetDate();
-                        return;
-                    }
-
-
-
-
-                    List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
-                    if(list2!=null){
-                        handler.sendEmptyMessage(0x111);
-                        if (list2.size()>0){
-                            if (list2.get(0).size()>11){
-                                Message msg=handler.obtainMessage();
-                                msg.what=0x104;
-                                msg.obj=list2;
-                                handler.sendMessage(msg);
-                            }
-                        }
-                    }else {
-                        Log.e("error","2");
-                        NetHelper.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",jtbh,mac);
-                        //handler.sendEmptyMessage(0x101);
-                        handler.sendEmptyMessage(0x110);
-                        try {
-                            Thread.currentThread().sleep(4000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
-                        editor.putString("isBaseInfoFinish","OK");
-                        editor.commit();
-                        getNetDate();
-                        return;
-                    }
-
-
-                    List<List<String>>list3= NetHelper.getQuerysqlResult("Exec PAD_Get_FhChartInfo '"+jtbh+"'");
-                    if(list3!=null){
-                        handler.sendEmptyMessage(0x111);
-                        if (list3.size()>0){
-                            if (list3.get(0).size()>2){
-                                Message msg=handler.obtainMessage();
-                                msg.what=0x103;
-                                msg.obj=list3;
-                                handler.sendMessage(msg);
-                            }
-                        }
-                    }else {
-                        Log.e("error","3");
-                        NetHelper.uploadNetworkError("Exec PAD_Get_FhChartInfo NetWordError",jtbh,mac);
-                        handler.sendEmptyMessage(0x110);
-                        try {
-                            Thread.currentThread().sleep(4000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
-                        editor.putString("isBaseInfoFinish","OK");
-                        editor.commit();
-                        getNetDate();
-                        return;
-                    }
-
-
-                    List<List<String>>list4= NetHelper.getQuerysqlResult("Exec PAD_Get_PhotoInfo '"+jtbh+"'");
-                    if(list4!=null){
-                        handler.sendEmptyMessage(0x111);
-                        if (list4.size()>0){
-                            if (list4.get(0).size()>6){
-                                Message msg=handler.obtainMessage();
-                                msg.what=0x105;
-                                msg.obj=list4;
-                                handler.sendMessage(msg);
-                            }
-                        }
-                    }else {
-                        Log.e("error","4");
-                        NetHelper.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);
-                        handler.sendEmptyMessage(0x110);
-                        try {
-                            Thread.currentThread().sleep(4000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
-                        editor.putString("isBaseInfoFinish","OK");
-                        editor.commit();
-                        getNetDate();
-                        return;
-                    }
-
-                    SharedPreferences.Editor editor=sharedPreferences.edit();
-                    editor.putString("isBaseInfoFinish","OK");
-                    editor.commit();
-                }
-            }).start();
-        }
-
-    }
-
 
     private void umSetColor(String fcColor){
 

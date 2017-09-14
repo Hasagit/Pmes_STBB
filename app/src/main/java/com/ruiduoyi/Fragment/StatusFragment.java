@@ -35,10 +35,9 @@ import java.util.List;
 public class StatusFragment extends Fragment implements View.OnClickListener{
     private CardView cardView_hm,cardView_tiaoji,cardView_hs,cardView_sj,cardView_pzyc,cardView_xm,
             cardView_jtwx,cardView_tingji,cardView_dl,cardView_sm,cardView_hl,cardView_by,cardView_dr,
-            cardView_jhtj,cardView_gdzt,cardView_rysg,cardView_pzxj,cardView_js,cardView_ts,
+            cardView_jhtj,cardView_gdzt,cardView_rysg,cardView_pzxj,cardView_js,cardView_ts,cardView_hj,cardView_jshj,
             cardView_gdgl,cardView_blfx,cardView_ycfx,cardView_pzgl,cardView_sgjl,cardView_xsbg,
             cardView_sbxx,cardView_mjxx,cardView_scrz,cardView_oee;
-    private String startType,startZldm,startZlmc;
     private Animation anim;
     private SharedPreferences sharedPreferences;
     private PopupDialog dialog;
@@ -75,10 +74,6 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
             switch (msg.what){
                 case 0x100:
                     wait_progress.setVisibility(View.GONE);
-                    List<String>list=(List<String>)msg.obj;
-                    startType=list.get(2);
-                    startZldm=list.get(0);
-                    startZlmc=list.get(1);
                     break;
                 case 0x101:
                     wait_progress.setVisibility(View.GONE);
@@ -92,52 +87,6 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
     };
 
 
-    private void getStartType(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Log.w("zldm_ss",sharedPreferences.getString("zldm_ss",""));
-                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_ZlmYywh 'A','"+sharedPreferences.getString("jtbh","")+"','"+sharedPreferences.getString("zldm_ss","")+"'");
-                if (list!=null){
-                    if (list.size()>0){
-                        if (list.get(0).size()>2){
-                            String startType=list.get(0).get(2);
-                            String startZlmc=list.get(0).get(1);
-                            String startZldm=list.get(0).get(0);
-                            switch (startType) {
-                                case "A":
-                                    Intent intent_g21 = new Intent(getContext(), DialogGActivity.class);
-                                    intent_g21.putExtra("zldm", getContext().getString(R.string.js));
-                                    intent_g21.putExtra("title", "结束");
-                                    intent_g21.putExtra("type", "OPR");
-                                    startActivity(intent_g21);
-                                    break;
-                                case "B":
-                                    Intent intent1 = new Intent(getContext(), BlYyfxActivity.class);
-                                    intent1.putExtra("title", startZlmc);
-                                    intent1.putExtra("zldm", startZldm);
-                                    startActivity(intent1);
-                                    break;
-                                case "C":
-                                    Intent intent2 = new Intent(getContext(), BlYyfxActivity.class);
-                                    intent2.putExtra("title", startZlmc);
-                                    intent2.putExtra("zldm", startZldm);
-                                    startActivity(intent2);
-                                    break;
-                                default:
-                                    Intent intent_g3 = new Intent(getContext(), DialogGActivity.class);
-                                    intent_g3.putExtra("zldm", getContext().getString(R.string.js));
-                                    intent_g3.putExtra("title", "结束");
-                                    intent_g3.putExtra("type", "OPR");
-                                    startActivity(intent_g3);
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-        }).start();
-    }
 
     public void initView(View view){
         cardView_sbxx=(CardView)view.findViewById(R.id.sbxx);
@@ -170,11 +119,13 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
         cardView_pzxj=(CardView)view.findViewById(R.id.pgxj) ;
         cardView_ts=(CardView)view.findViewById(R.id.ts);
         cardView_js=(CardView)view.findViewById(R.id.js) ;
-
+        cardView_hj=(CardView)view.findViewById(R.id.hj);
+        cardView_jshj=(CardView)view.findViewById(R.id.jshj);
         wait_progress=(ProgressBar)view.findViewById(R.id.wait_progress);
 
 
-
+        cardView_hj.setOnClickListener(this);
+        cardView_jshj.setOnClickListener(this);
         cardView_sbxx.setOnClickListener(this);
         cardView_mjxx.setOnClickListener(this);
         cardView_gdgl.setOnClickListener(this);
@@ -256,10 +207,6 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                                     startActivity(intent);
                                     break;
                                 case "C":
-                                    /*intent=new Intent(getContext(), BlYyfxActivity.class);
-                                    intent.putExtra("title",title);
-                                    intent.putExtra("zldm",zldm);
-                                    startActivity(intent);*/
                                     intent=new Intent(getContext(), DialogGActivity.class);
                                     intent.putExtra("title",title);
                                     intent.putExtra("zldm",zldm);
@@ -364,6 +311,18 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                 Intent intent_sgjl=new Intent(getContext(), DialogSgjlActivity.class);
                 startActivity(intent_sgjl);
                 break;
+            case R.id.jshj:
+                cardView_jshj.startAnimation(anim);
+                Intent intent_jshj=new Intent(getContext(),DialogGActivity.class);
+                intent_jshj.putExtra("title","结束呼叫");
+                startActivity(intent_jshj);
+                break;
+            case R.id.hj:
+                cardView_hj.startAnimation(anim);
+                Intent intent_hj=new Intent(getContext(),DialogGActivity.class);
+                intent_hj.putExtra("title","呼叫");
+                startActivity(intent_hj);
+                break;
 
 
 
@@ -465,7 +424,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                 cardView_pzxj.startAnimation(anim);
                 //startActivityByNetResult(getContext().getString(R.string.pgxj),getContext().getString(R.string.zlmc_xj),"OPR");
                 Intent intent_pzxj=new Intent(getContext(), DialogGActivity.class);
-                intent_pzxj.putExtra("title","品管巡机");
+                intent_pzxj.putExtra("title","品质巡机");
                 startActivity(intent_pzxj);
                 break;
             case R.id.ts:
@@ -498,37 +457,41 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                                 intent_blyyfx.putExtra("zldm",zldm_ss);
                                 startActivity(intent_blyyfx);
                             }else {//如果没有超时则根据启动类型来判断
-                                if (startType!=null){
-                                    switch (startType){
-                                        case "A":
-                                            Intent intent_g21=new Intent(getContext(), DialogGActivity.class);
-                                            intent_g21.putExtra("zldm",getContext().getString(R.string.js));
-                                            intent_g21.putExtra("title","结束");
-                                            intent_g21.putExtra("type","OPR");
-                                            startActivity(intent_g21);
-                                            break;
-                                        case "B":
-                                            Intent intent1=new Intent(getContext(), BlYyfxActivity.class);
-                                            intent1.putExtra("title",startZlmc);
-                                            intent1.putExtra("zldm",startZldm);
-                                            startActivity(intent1);
-                                            break;
-                                        case "C":
-                                            Intent intent2=new Intent(getContext(), BlYyfxActivity.class);
-                                            intent2.putExtra("title",startZlmc);
-                                            intent2.putExtra("zldm",startZldm);
-                                            startActivity(intent2);
-                                            break;
-                                        default:
-                                            Intent intent_g3=new Intent(getContext(), DialogGActivity.class);
-                                            intent_g3.putExtra("zldm",getContext().getString(R.string.js));
-                                            intent_g3.putExtra("title","结束");
-                                            intent_g3.putExtra("type","OPR");
-                                            startActivity(intent_g3);
-                                            break;
+                                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_ZlmYywh 'A','"+sharedPreferences.getString("jtbh","")+"','"+zldm_ss+"'");
+                                if (list!=null){
+                                    if (list.size()>0){
+                                        if (list.get(0).size()>2){
+                                            String startType=list.get(0).get(2);
+                                            switch (startType){
+                                                case "A":
+                                                    Intent intent_g21=new Intent(getContext(), DialogGActivity.class);
+                                                    intent_g21.putExtra("zldm",getContext().getString(R.string.js));
+                                                    intent_g21.putExtra("title","结束");
+                                                    intent_g21.putExtra("type","OPR");
+                                                    startActivity(intent_g21);
+                                                    break;
+                                                case "B":
+                                                    Intent intent1=new Intent(getContext(), BlYyfxActivity.class);
+                                                    intent1.putExtra("title",zlmc);
+                                                    intent1.putExtra("zldm",zldm_ss);
+                                                    startActivity(intent1);
+                                                    break;
+                                                case "C":
+                                                    Intent intent2=new Intent(getContext(), BlYyfxActivity.class);
+                                                    intent2.putExtra("title",zlmc);
+                                                    intent2.putExtra("zldm",zldm_ss);
+                                                    startActivity(intent2);
+                                                    break;
+                                                default:
+                                                    Intent intent_g3=new Intent(getContext(), DialogGActivity.class);
+                                                    intent_g3.putExtra("zldm",getContext().getString(R.string.js));
+                                                    intent_g3.putExtra("title","结束");
+                                                    intent_g3.putExtra("type","OPR");
+                                                    startActivity(intent_g3);
+                                                    break;
+                                            }
+                                        }
                                     }
-                                }else {
-                                    getStartType();
                                 }
                             }
                         }

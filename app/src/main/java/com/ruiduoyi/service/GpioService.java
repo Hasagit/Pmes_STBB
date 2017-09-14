@@ -41,13 +41,14 @@ public class GpioService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.w("gpio_oncreat","!");
+        Log.w("gpio_service","onCreate");
         initData();
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.w("gpio_service","onStartCommand");
         if (intent!=null){
             jtbh=intent.getStringExtra("jtbh");
             mac=intent.getStringExtra("mac");
@@ -70,7 +71,7 @@ public class GpioService extends Service {
         dataBase=new AppDataBase(this);
         sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
         initGpio();
-        updateGpio();
+        //updateGpio();
     }
 
 
@@ -129,6 +130,9 @@ public class GpioService extends Service {
                     default:
                         break;
                 }
+                if (level){
+                    uploadGpioData();
+                }
             }
         };
         event_gpio.MyObserverStart();
@@ -184,6 +188,7 @@ public class GpioService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        timer_gpio.cancel();
+        Log.w("gpio_service","onDestroy");
+        //timer_gpio.cancel();
     }
 }

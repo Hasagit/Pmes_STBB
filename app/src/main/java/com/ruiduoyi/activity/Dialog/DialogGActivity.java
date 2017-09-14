@@ -1,5 +1,6 @@
 package com.ruiduoyi.activity.Dialog;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +37,7 @@ import java.util.List;
 
 public class DialogGActivity extends BaseDialogActivity implements View.OnClickListener{
     private Intent intent_from;
-    private Button ok_btn,cancle_btn,yylb_spinner,yymc_spinner;
+    private Button ok_btn,cancle_btn;
     private TextView title_text,tip_text;
     private EditText num_edit;
     private String num;
@@ -51,8 +52,18 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
             num_edit.setText(num);
             if (sharedPreferences.getString("dialog_g_finish","OK").equals("OK")){
                 setFinishNO();
-                if (title.equals("品管巡机")){
+                if (title.equals("品质巡机")){
                     readEles();
+                }else if (title.equals("呼叫")){
+                    Intent intent_hj=new Intent(DialogGActivity.this,DialogHjActivity.class);
+                    intent_hj.putExtra("wkno",num);
+                    startActivity(intent_hj);
+                    finish();
+                }else if (title.equals("结束呼叫")){
+                    Intent intent_jshj=new Intent(DialogGActivity.this,DialogJshjActivity.class);
+                    intent_jshj.putExtra("wkno",num);
+                    startActivity(intent_jshj);
+                    finish();
                 }else {
                     getNetData(0x100);
                 }
@@ -246,7 +257,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                            JSONObject json=array.getJSONObject(0);
                            String readCardResult=json.getString("Column1");
                            if (readCardResult.substring(0,2).equals("OK")){
-                               Intent intent=new Intent(DialogGActivity.this,PzxjActivity.class);
+                               Intent intent=new Intent(DialogGActivity.this,PzxjActivity.class);;
                                intent.putExtra("wkno",readCardResult.substring(2,readCardResult.length()));
                                startActivity(intent);
                                setFinishOK();
