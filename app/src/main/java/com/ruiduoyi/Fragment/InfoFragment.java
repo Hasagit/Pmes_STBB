@@ -69,7 +69,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
     private TextView dq_1,dq_2,dq_3,dq_4,dq_5,dq_6,dq_7,dq_8,
                 xy_1,xy_2,xy_3,xy_4,xy_5,xy_6,xy_7,xy_8,
                 mo_1,mo_2,mo_3,mo_4,mo_5,mo_6,tong_1,tong_2,tong_3,tong_4,tong_5,tong_6,jtbh_text,status,msg_text,
-                caozuo_text,jisu_text,cao_name_text,ji_name_text,labRym;
+                caozuo_text,jisu_text,cao_name_text,cao_phone,ji_name_text,ji_phone,labRym;
     private SharedPreferences sharedPreferences;
     private ImageView img_1,img_2,img_3,img_4,img_5,img_6,img_7,img_pho1,img_pho2;
     private CardView cardView;
@@ -158,8 +158,10 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         msg_text=(TextView)view.findViewById(R.id.msg_text);
         ji_name_text=(TextView)view.findViewById(R.id.ji_name);
         jisu_text=(TextView)view.findViewById(R.id.jisu);
+        ji_phone=(TextView)view.findViewById(R.id.ji_phone);
         cao_name_text=(TextView)view.findViewById(R.id.cao_name);
         caozuo_text=(TextView)view.findViewById(R.id.caozuo);
+        cao_phone=(TextView)view.findViewById(R.id.cao_phone);
         labRym=(TextView)view.findViewById(R.id.labRym);
         img_1=(ImageView)view.findViewById(R.id.img_1);
         img_2=(ImageView)view.findViewById(R.id.img_2);
@@ -745,6 +747,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                         File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
                         caozuo_text.setText(item.get(3));
                         cao_name_text.setText(item.get(2));
+                        cao_phone.setText(item.get(8));
                         if (item.get(2).length()>5){
                             cao_name_text.setSingleLine();
                             cao_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -827,6 +830,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                         File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
                         jisu_text.setText(item.get(3));
                         ji_name_text.setText(item.get(2));
+                        ji_phone.setText(item.get(8));
                         if (item.get(2).length()>5){
                             ji_name_text.setSingleLine();
                             ji_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -1011,7 +1015,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         if(list4!=null){
             handler.sendEmptyMessage(0x111);
             if (list4.size()>0){
-                if (list4.get(0).size()>6){
+                if (list4.get(0).size()>8){
                     Message msg=handler.obtainMessage();
                     msg.what=0x105;
                     msg.obj=list4;

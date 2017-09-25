@@ -64,7 +64,13 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                     intent_jshj.putExtra("wkno",num);
                     startActivity(intent_jshj);
                     finish();
-                }else {
+                }else if (title.equals("品质管理")){
+                    Intent intent_xj=new Intent(DialogGActivity.this,DialogXjActivity.class);
+                    intent_xj.putExtra("wkno",num);
+                    intent_xj.putExtra("v_id",getIntent().getStringExtra("v_id"));
+                    startActivity(intent_xj);
+                    finish();
+                } else {
                     getNetData(0x100);
                 }
             }

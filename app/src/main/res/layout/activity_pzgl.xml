@@ -430,16 +430,18 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:visibility="gone"
+
+
             >
 
             <LinearLayout
-                android:layout_width="1215dp"
+                android:layout_width="1225dp"
                 android:layout_height="35dp"
                 android:background="@color/blue_sl_false"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="@dimen/b4_lable"
+                    android:layout_width="85dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/text_bg"
                     android:gravity="center"
@@ -447,7 +449,7 @@
                     android:textColor="@android:color/black" />
 
                 <TextView
-                    android:layout_width="@dimen/b4_lable"
+                    android:layout_width="85dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/text_bg"
                     android:gravity="center"
@@ -455,14 +457,15 @@
                     android:textColor="@android:color/black" />
 
                 <TextView
-                    android:layout_width="@dimen/b4_lable"
+                    android:layout_width="75dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/text_bg"
                     android:gravity="center"
                     android:text="模具编号"
                     android:textColor="@android:color/black" />
+
                 <TextView
-                    android:layout_width="@dimen/b4_lable"
+                    android:layout_width="85dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/text_bg"
                     android:gravity="center"
@@ -486,7 +489,7 @@
                     android:textColor="@android:color/black" />
 
                 <TextView
-                    android:layout_width="@dimen/b4_lable"
+                    android:layout_width="85dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/text_bg"
                     android:gravity="center"
@@ -494,7 +497,7 @@
                     android:textColor="@android:color/black" />
 
                 <TextView
-                    android:layout_width="@dimen/b4_lable"
+                    android:layout_width="65dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/text_bg"
                     android:gravity="center"
@@ -502,7 +505,7 @@
                     android:textColor="@android:color/black" />
 
                 <TextView
-                    android:layout_width="@dimen/b4_lable"
+                    android:layout_width="65dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/text_bg"
                     android:gravity="center"
@@ -516,6 +519,7 @@
                     android:gravity="center"
                     android:text="问题描述"
                     android:textColor="@android:color/black" />
+
                 <TextView
                     android:layout_width="135dp"
                     android:layout_height="match_parent"
@@ -523,12 +527,30 @@
                     android:gravity="center"
                     android:text="改善方法"
                     android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/text_bg"
+                    android:gravity="center"
+                    android:text="处理结果"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/text_bg"
+                    android:gravity="center"
+                    android:text="人员时间"
+                    android:textColor="@android:color/black" />
+
             </LinearLayout>
 
             <ListView
                 android:id="@+id/xuncha_listView"
-                android:layout_width="1215dp"
+                android:layout_width="1225dp"
                 android:layout_height="match_parent"
+                android:background="@drawable/text_bg"
                 android:divider="@color/touming"></ListView>
         </LinearLayout>
 
@@ -539,17 +561,19 @@
             android:visibility="gone"></com.github.mikephil.charting.charts.BarChart>
 
         <com.github.mikephil.charting.charts.LineChart
-            android:layout_marginBottom="5dp"
             android:id="@+id/lineChart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
             android:visibility="visible"></com.github.mikephil.charting.charts.LineChart>
+
+
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/layout_4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="810dp"
@@ -588,6 +612,7 @@
                     android:gravity="center"
                     android:text="实际净重(g)"
                     android:textColor="@android:color/black" />
+
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
@@ -595,6 +620,7 @@
                     android:gravity="center"
                     android:text="标准水口(g)"
                     android:textColor="@android:color/black" />
+
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
@@ -608,6 +634,7 @@
                 android:id="@+id/listView_2"
                 android:layout_width="810dp"
                 android:layout_height="match_parent"
+                android:background="@drawable/text_bg"
                 android:divider="@color/touming"></ListView>
         </LinearLayout>
     </FrameLayout>

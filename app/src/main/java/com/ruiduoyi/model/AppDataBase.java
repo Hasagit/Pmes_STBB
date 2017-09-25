@@ -68,10 +68,10 @@ public  class AppDataBase {
     public  void insertGpio(String mac,String jtbh,String zldm,String gpio,String time,int num,String desc){
         synchronized(this) {
             database.execSQL("insert into gpio_info (PadID,PadJtbh,PadZlCode,PadSignalNO,PadTime,PadVal,PadDesc)" +
-                    " values ('" + mac + "','" + jtbh + "','" + zldm + "',+'" + gpio + "','" + time + "'," + num + ",'" + desc + "')");
+                    " values ('" + mac + "','" + jtbh + "','" + zldm + "','" + gpio + "','" + time + "'," + num + ",'" + desc + "')");
         }
         Log.w("insertgpio","insert into gpio_info (PadID,PadJtbh,PadZlCode,PadSignalNO,PadTime,PadVal,PadDesc)" +
-                " values ('"+mac+"','"+jtbh+"','"+zldm+"',+'"+gpio+"','"+time+"',"+num+",'"+desc+"')");
+                " values ('"+mac+"','"+jtbh+"','"+zldm+"','"+gpio+"','"+time+"',"+num+",'"+desc+"')");
     }
 
 

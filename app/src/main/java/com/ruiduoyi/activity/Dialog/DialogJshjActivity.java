@@ -146,7 +146,7 @@ public class DialogJshjActivity extends BaseDialogActivity implements View.OnCli
                         if (array.length()>0){
                             if (array.getJSONObject(0).getString("Column1").equals("OK")){
                                 Message msg=handler.obtainMessage();
-                                if (execType.equals("CANCLE")){
+                                if (execType.equals("CANCEL")){
                                     msg.obj="放弃呼叫成功";
                                 }else {
                                     msg.obj="结束呼叫成功";

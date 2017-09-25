@@ -1,10 +1,17 @@
 package com.ruiduoyi.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -27,6 +34,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.ruiduoyi.R;
+import com.ruiduoyi.activity.Dialog.DialogGActivity;
+import com.ruiduoyi.activity.Dialog.DialogXjActivity;
+import com.ruiduoyi.adapter.EasyArrayAdapter;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 
@@ -51,6 +61,8 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
     private String jtbh;
     private ListView xuncha_lisView,listView;
     private LinearLayout layout_4;
+    private BroadcastReceiver updateReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -510,7 +522,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
     //初始化巡查记录
     private void initListView(JSONArray lists){
         try {
-            List<Map<String,String>>data=new ArrayList<>();
+            final List<Map<String,String>>data=new ArrayList<>();
             for (int i=0;i<lists.length();i++){
                 Map<String,String>map=new HashMap<>();
                 map.put("lab_1",lists.getJSONObject(i).getString("v_rq"));
@@ -526,13 +538,65 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                 wtms=wtms.replace("[!(ENTER)!]","\n\n");
                 map.put("lab_10",wtms);
                 map.put("lab_11",lists.getJSONObject(i).getString("v_gsfs"));
+                map.put("lab_12",lists.getJSONObject(i).getString("v_clsj"));
+                map.put("lab_13",lists.getJSONObject(i).getString("v_cljg"));
+                map.put("v_id",lists.getJSONObject(i).getString("v_id"));
                 data.add(map);
             }
-            SimpleAdapter adapter=new SimpleAdapter(this,data,R.layout.list_item_b4_1,
+            /*SimpleAdapter adapter=new SimpleAdapter(this,data,R.layout.list_item_b4_1,
                     new String[]{"lab_1","lab_2","lab_3","lab_4","lab_5","lab_6","lab_7","lab_8","lab_9","lab_10","lab_11"},
                     new int[]{R.id.lab_1,R.id.lab_2,R.id.lab_3,R.id.lab_4,R.id.lab_5,R.id.lab_6,R.id.lab_7,
-                            R.id.lab_8,R.id.lab_9,R.id.lab_10,R.id.lab_11});
+                            R.id.lab_8,R.id.lab_9,R.id.lab_10,R.id.lab_11});*/
+            EasyArrayAdapter adapter=new EasyArrayAdapter(this,R.layout.list_item_b4_1,data) {
+                @Override
+                public View getEasyView(int position, View convertView, ViewGroup parent) {
+                    View view;
+                    if (convertView==null){
+                        view= LayoutInflater.from(getContext()).inflate(R.layout.list_item_b4_1,null);
+                    }else {
+                        view=convertView;
+                    }
+                    TextView lab_1=(TextView)view.findViewById(R.id.lab_1);
+                    TextView lab_2=(TextView)view.findViewById(R.id.lab_2);
+                    TextView lab_3=(TextView)view.findViewById(R.id.lab_3);
+                    TextView lab_4=(TextView)view.findViewById(R.id.lab_4);
+                    TextView lab_5=(TextView)view.findViewById(R.id.lab_5);
+                    TextView lab_6=(TextView)view.findViewById(R.id.lab_6);
+                    TextView lab_7=(TextView)view.findViewById(R.id.lab_7);
+                    TextView lab_8=(TextView)view.findViewById(R.id.lab_8);
+                    TextView lab_9=(TextView)view.findViewById(R.id.lab_9);
+                    TextView lab_10=(TextView)view.findViewById(R.id.lab_10);
+                    TextView lab_11=(TextView)view.findViewById(R.id.lab_11);
+                    TextView lab_12=(TextView)view.findViewById(R.id.lab_12);
+                    TextView lab_13=(TextView)view.findViewById(R.id.lab_13);
+                    Map<String,String> map=data.get(position);
+                    lab_1.setText(map.get("lab_1"));
+                    lab_2.setText(map.get("lab_2"));
+                    lab_3.setText(map.get("lab_3"));
+                    lab_4.setText(map.get("lab_4"));
+                    lab_5.setText(map.get("lab_5"));
+                    lab_6.setText(map.get("lab_6"));
+                    lab_7.setText(map.get("lab_7"));
+                    lab_8.setText(map.get("lab_8"));
+                    lab_9.setText(map.get("lab_9"));
+                    lab_10.setText(map.get("lab_10"));
+                    lab_11.setText(map.get("lab_11"));
+                    lab_12.setText(map.get("lab_12"));
+                    lab_13.setText(map.get("lab_13"));
+                    return view;
+                }
+            };
             xuncha_lisView.setAdapter(adapter);
+            xuncha_lisView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Map<String,String>map=data.get(position);
+                    Intent intent=new Intent(PzglActivity.this, DialogGActivity.class);
+                    intent.putExtra("v_id",map.get("v_id"));
+                    intent.putExtra("title","品质管理");
+                    startActivity(intent);
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -561,6 +625,15 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
     private void initData(){
         zzdh=sharedPreferences.getString("zzdh","");
         jtbh=sharedPreferences.getString("jtbh","");
+        updateReceiver=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getXjjlData();
+            }
+        };
+        IntentFilter receiverfilter=new IntentFilter();
+        receiverfilter.addAction("com.Ruiduoyi.UpdataXunjianList");
+        registerReceiver(updateReceiver,receiverfilter);
         getNetData();
     }
 
@@ -656,6 +729,28 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
     }
 
 
+    private void getXjjlData(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //巡查记录
+                JSONArray list5= NetHelper.getQuerysqlResultJsonArray("Exec  PAD_Get_PzmInf 'B03','"+zzdh+"','"+jtbh+"'");
+                if (list5!=null){
+                    if (list5.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x104;
+                        msg.obj=list5;
+                        handler.sendMessage(msg);
+                    }
+                }else {
+                    handler.sendEmptyMessage(0x101);
+                    NetHelper.uploadNetworkError("Exec  PAD_Get_PzmInf 'B03'",jtbh,sharedPreferences.getString("mac",""));
+                }
+            }
+        }).start();
+    }
+
+
     @Override
     public void onClick(View v) {
         AppUtils.sendCountdownReceiver(PzglActivity.this);
@@ -691,10 +786,14 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                 break;
         }
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(updateReceiver);
+    }
 }
 
 
 
-/*
-
-*/

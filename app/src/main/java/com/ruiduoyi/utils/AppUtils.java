@@ -195,6 +195,12 @@ public class AppUtils {
         context.sendBroadcast(intent);
     }
 
+    public static void sendUpdateXunjianReceiver(Context context){
+        Intent intent=new Intent();
+        intent.setAction("com.Ruiduoyi.UpdataXunjianList");
+        context.sendBroadcast(intent);
+    }
+
     public static int calculate(String str,String substr){
         if (str.length()>0){
             String temp = str;

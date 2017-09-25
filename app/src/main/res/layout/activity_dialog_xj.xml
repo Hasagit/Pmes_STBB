@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="600dp"
+    android:layout_height="400dp"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    tools:context="com.ruiduoyi.activity.Dialog.DialogXjActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#99ccff">
+
+        <LinearLayout
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical|right">
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/save_sl" />
+            <Button
+                android:id="@+id/cancle_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/cmdclose_sl" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/title"
+            android:text="结果确认"
+            android:textColor="@android:color/white"
+            android:textSize="30dp" />
+    </FrameLayout>
+    <FrameLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:textColor="@android:color/black"
+            android:id="@+id/ed"
+            android:layout_width="400dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:background="@color/lable"
+            android:hint="请输入处理结果"
+            android:gravity="top|left"
+            android:textSize="18dp"/>
+    </FrameLayout>
+</LinearLayout>

@@ -4,7 +4,7 @@
     package="com.ruiduoyi"
     android:persistent="true"
     android:versionCode="3"
-    android:versionName="3.0.2.2">
+    android:versionName="3.0.2.4">
 
     <!-- 13 -->
 
@@ -169,12 +169,16 @@
             android:name=".activity.Dialog.DialogHjActivity"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Dialog"/>
+            android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".activity.Dialog.DialogJshjActivity"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Dialog"></activity>
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".activity.Dialog.DialogXjActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Dialog" ></activity>
     </application>
 
 </manifest>

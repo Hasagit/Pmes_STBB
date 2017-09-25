@@ -71,7 +71,7 @@ public class GpioService extends Service {
         dataBase=new AppDataBase(this);
         sharedPreferences=getSharedPreferences("info",MODE_PRIVATE);
         initGpio();
-        //updateGpio();
+        updateGpio();
     }
 
 
