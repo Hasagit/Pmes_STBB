@@ -156,7 +156,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<List<String>>list=NetHelper.getQuerysqlResult("PAD_Read_CardID '"
+                /*List<List<String>>list=NetHelper.getQuerysqlResult("PAD_Read_CardID '"
                         +type+"','"+zldm+"','"+num+"'");
                 if (list!=null){
                     if (list.size()>0){
@@ -175,6 +175,26 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                     setFinishOK();
                     handler.sendEmptyMessage(0x103);
                     NetHelper.uploadNetworkError("PAD_Read_CardID",jtbh,sharedPreferences.getString("mac",""));
+                }*/
+                try {
+                    JSONArray list=NetHelper.getQuerysqlResultJsonArray("PAD_Read_CardID '"
+                            +type+"','"+zldm+"','"+num+"'");
+                    if (list!=null){
+                        if (list.length()>0){
+                            Message msg=handler.obtainMessage();
+                            msg.what=what;
+                            msg.obj=list.getJSONObject(0).getString("Column1");
+                            handler.sendMessage(msg);
+                        }else {
+                            setFinishOK();
+                        }
+                    }else {
+                        setFinishOK();
+                        handler.sendEmptyMessage(0x103);
+                        NetHelper.uploadNetworkError("PAD_Read_CardID",jtbh,sharedPreferences.getString("mac",""));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -187,7 +207,7 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_SrvCon '"+jtbh+"','"+zldm+"','"+num+"',''");
+                        /*List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_SrvCon '"+jtbh+"','"+zldm+"','"+num+"',''");
                         AppUtils.sendUpdateInfoFragmentReceiver(DialogGActivity.this);
                         if (list!=null){
                             if (list.size()>0){
@@ -216,6 +236,36 @@ public class DialogGActivity extends BaseDialogActivity implements View.OnClickL
                         }else {
                             setFinishOK();
                             handler.sendEmptyMessage(0x103);
+                        }*/
+                        try {
+                            JSONArray list=NetHelper.getQuerysqlResultJsonArray("Exec PAD_SrvCon '"+jtbh+"','"+zldm+"','"+num+"',''");
+                            AppUtils.sendUpdateInfoFragmentReceiver(DialogGActivity.this);
+                            if (list!=null){
+                                if (list.length()>0){
+                                    if (list.getJSONObject(0).getString("Column1").trim().equals("OK")){
+                                        if (isFromBlyyfx){//从BlyyfxActivity启动来的
+                                            type="DOC";
+                                            getNetData(0x101);
+                                        }else {//从statusFragment启动来的
+                                            setFinishOK();
+                                            AppUtils.sendReturnToInfoReceiver(DialogGActivity.this);
+                                            finish();
+                                        }
+                                    }else {
+                                        Message msg=handler.obtainMessage();
+                                        msg.what=0x102;
+                                        msg.obj=list.getJSONObject(0).getString("Column1");
+                                        handler.sendMessage(msg);
+                                    }
+                                }else {
+                                    setFinishOK();
+                                }
+                            }else {
+                                setFinishOK();
+                                handler.sendEmptyMessage(0x103);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
                 }).start();

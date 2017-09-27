@@ -175,13 +175,16 @@ public class NetHelper {
 
     //判断服务器是否开启
     public static boolean isServerConnected(String cHttpAddress){
-        List<List<String>>list=getQuerysqlResult("select getDate()");
+        JSONArray list=getQuerysqlResultJsonArray("select getDate()");
         if (list!=null){
-            if (list.size()>0){
+            if (list.length()>0){
                 try {
-                    Date date=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(list.get(0).get(0));
+                    Date date=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(list.getJSONObject(0).getString("Column1"));
                     return true;
                 } catch (ParseException e) {
+                    e.printStackTrace();
+                    return false;
+                } catch (JSONException e) {
                     e.printStackTrace();
                     return false;
                 }
@@ -557,7 +560,7 @@ public class NetHelper {
 
     //上传网络错误log
     public static void uploadNetworkError(String errms,String jtbh,String mac){
-        NetHelper.getQuerysqlResult("Exec PAD_Add_PadLogInfo '7','"+errms+"','"+jtbh+"','"+mac+"'");
+        NetHelper.getQuerysqlResultJsonArray("Exec PAD_Add_PadLogInfo '7','"+errms+"','"+jtbh+"','"+mac+"'");
     }
 
     //上传异常崩溃信息

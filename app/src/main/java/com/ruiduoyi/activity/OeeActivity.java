@@ -33,6 +33,9 @@ import com.ruiduoyi.R;
 import com.ruiduoyi.adapter.OeeAdapter;
 import com.ruiduoyi.model.NetHelper;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,21 +88,21 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
             public void handleMessage(Message msg) {
                 switch (msg.what){
                     case 0x100:
-                        List<List<String>>list=(List<List<String>>)msg.obj;
+                        JSONArray list= (JSONArray) msg.obj;
                         initHorizontalBarChat(h_char,list);
                         h_char.startAnimation(animation);
                         break;
                     case 0x101:
                         break;
                     case 0x102:
-                        List<List<String>>list2=(List<List<String>>)msg.obj;
+                        JSONArray list2= (JSONArray) msg.obj;
                         initPieChat(p_chart,list2);
                         p_chart.startAnimation(animation);
 
                         break;
                     case 0x103:
-                        List<List<String>>list3=(List<List<String>>)msg.obj;
-                        if(list3.size()<1){
+                        JSONArray list3= (JSONArray) msg.obj;
+                        if(list3.length()<1){
                             //Toast.makeText(OeeActivity.this,"数据异常",Toast.LENGTH_SHORT).show();
                         }else {
                             initListView(list3);
@@ -127,7 +130,7 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
 
 
     //初始化水平柱形图
-    private void initHorizontalBarChat(HorizontalBarChart mHorizontalBarChart,List<List<String>>list){
+    private void initHorizontalBarChat(HorizontalBarChart mHorizontalBarChart,JSONArray list){
         //正负堆叠条形图
 
         //mHorizontalBarChart.setOnChartValueSelectedListener(this);
@@ -177,12 +180,15 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
         xAxis.setCenterAxisLabels(false);
         xAxis.setAxisLineColor(Color.WHITE);
         ArrayList<BarEntry> yValues = new ArrayList<BarEntry>();
-        float[] floats=new float[list.size()];
-        String[] color=new String[list.size()];
-        for (int i=0;i<list.size();i++){
-            List<String>item=list.get(i);
-            floats[i]=Float.parseFloat(item.get(5));
-            color[i]=item.get(6);
+        float[] floats=new float[list.length()];
+        String[] color=new String[list.length()];
+        try {
+            for (int i=0;i<list.length();i++){
+                floats[i]=Float.parseFloat(list.getJSONObject(i).getString("oee_hour"));
+                color[i]=list.getJSONObject(i).getString("oee_color");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         yValues.add(new BarEntry(1, floats));
 
@@ -202,7 +208,7 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
 
 
     //初始化饼形图
-    private void initPieChat(PieChart mPieChart,List<List<String>>list){
+    private void initPieChat(PieChart mPieChart,JSONArray list){
         mPieChart.setUsePercentValues(true);
         mPieChart.getDescription().setEnabled(false);
         mPieChart.setUsePercentValues(true);
@@ -235,12 +241,15 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
         //mPieChart.setOnChartValueSelectedListener(this);
 
         //模拟数据
-        String[] color=new String[list.size()];
+        String[] color=new String[list.length()];
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
-        for(int i=0;i<list.size();i++){
-            List<String>item=list.get(i);
-            color[i]=item.get(1);
-            entries.add(new PieEntry(Float.parseFloat(item.get(3)),""));
+        try {
+            for(int i=0;i<list.length();i++){
+                color[i]=list.getJSONObject(i).getString("oee_color");
+                entries.add(new PieEntry(Float.parseFloat(list.getJSONObject(i).getString("oee_rate")),""));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         /*entries.add(new PieEntry(40, "优秀"));
         entries.add(new PieEntry(20, "满分"));
@@ -283,18 +292,21 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
 
 
     //初始化列表
-    private void initListView(List<List<String>>lists_3){
+    private void initListView(JSONArray lists_3){
         List<Map<String,String>>data=new ArrayList<>();
-        for (int i=0;i<lists_3.size();i++){
-            List<String>item=lists_3.get(i);
-            Map<String,String>map=new HashMap<>();
-            map.put("lab_1",item.get(1));
-            map.put("lab_2",item.get(2));
-            map.put("lab_3",item.get(3));
-            map.put("lab_4",item.get(4));
-            map.put("lab_5",item.get(5));
-            map.put("color",item.get(6));
-            data.add(map);
+        try {
+            for (int i=0;i<lists_3.length();i++){
+                Map<String,String>map=new HashMap<>();
+                map.put("lab_1",lists_3.getJSONObject(i).getString("oee_zlmc"));
+                map.put("lab_2",lists_3.getJSONObject(i).getString("oee_ksrq"));
+                map.put("lab_3",lists_3.getJSONObject(i).getString("oee_jsrq"));
+                map.put("lab_4",lists_3.getJSONObject(i).getString("oee_sec"));
+                map.put("lab_5",lists_3.getJSONObject(i).getString("oee_hour"));
+                map.put("color",lists_3.getJSONObject(i).getString("oee_color"));
+                data.add(map);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OeeAdapter adapter=new OeeAdapter(this,R.layout.list_item_oee,data);
         listView.setAdapter(adapter);
@@ -357,14 +369,12 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
             @Override
             public void run() {
                 //柱状图
-                List<List<String>>list1= NetHelper.getQuerysqlResult("Exec PAD_Get_JtxlInf 'B','"+jtbh+"'");
+                JSONArray list1= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_JtxlInf 'B','"+jtbh+"'");
                 Message msg1=handler.obtainMessage();
                 if(list1!=null){
-                    if (list1.size()>0){
-                        if (list1.get(0).size()>6){
-                            msg1.what=0x100;
-                            msg1.obj=list1;
-                        }
+                    if (list1.length()>0){
+                        msg1.what=0x100;
+                        msg1.obj=list1;
                     }else {
                         handler.sendEmptyMessage(0x105);
                     }
@@ -375,14 +385,12 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
 
 
                 //饼图
-                List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtxlInf 'A','"+jtbh+"'");
+                JSONArray list2= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_JtxlInf 'A','"+jtbh+"'");
                 Message msg2=handler.obtainMessage();
                 if(list2!=null){
-                    if (list2.size()>0){
-                        if (list2.get(0).size()>3){
-                            msg2.what=0x102;
-                            msg2.obj=list2;
-                        }
+                    if (list2.length()>0){
+                        msg2.what=0x102;
+                        msg2.obj=list2;
                     }else {
                         handler.sendEmptyMessage(0x104);
                     }
@@ -393,14 +401,12 @@ public class OeeActivity extends BaseActivity implements View.OnClickListener{
 
 
                 //表
-                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_JtxlInf 'C','"+jtbh+"'");
+                JSONArray list= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_JtxlInf 'C','"+jtbh+"'");
                 Message msg=handler.obtainMessage();
                 if(list!=null){
-                    if (list.size()>0){
-                        if (list.get(0).size()>6){
-                            msg.what=0x103;
-                            msg.obj=list;
-                        }
+                    if (list.length()>0){
+                        msg.what=0x103;
+                        msg.obj=list;
                     }else {
                         msg.what=0x103;
                         msg.obj=list;

@@ -15,6 +15,9 @@ import com.ruiduoyi.model.AppDataBase;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -163,21 +166,25 @@ public class GpioService extends Service {
             String num=map.get("num");
             String desc=map.get("desc");
             sql="exec PAD_SrvDataUp '"+mac+"','"+jtbh+"','"+zldm+"','"+gpio+"','"+time+"',"+num+",'"+desc+"'\n";
-            List<List<String>>list_result= NetHelper.getQuerysqlResult(sql);
-            if (list_result!=null){
-                if (list_result.size()>0){
-                    if (list_result.get(0).get(0).equals("OK")){
-                        //handler.sendEmptyMessage(0x106);
-                        dataBase.deleteGpio(time);
+            try {
+                JSONArray list_result= NetHelper.getQuerysqlResultJsonArray(sql);
+                if (list_result!=null){
+                    if (list_result.length()>0){
+                        if (list_result.getJSONObject(0).getString("Column1").equals("OK")){
+                            //handler.sendEmptyMessage(0x106);
+                            dataBase.deleteGpio(time);
+                        }else {
+                            break;
+                        }
                     }else {
                         break;
                     }
                 }else {
+                    NetHelper.uploadNetworkError("exec PAD_SrvDataUp NetWorkError",jtbh,mac);
                     break;
                 }
-            }else {
-                NetHelper.uploadNetworkError("exec PAD_SrvDataUp NetWorkError",jtbh,mac);
-                break;
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
         Log.w("Synchronized_start","2");

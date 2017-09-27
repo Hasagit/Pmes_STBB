@@ -30,6 +30,9 @@ import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 import com.ruiduoyi.view.PopupDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.List;
 
 public class StatusFragment extends Fragment implements View.OnClickListener{
@@ -183,7 +186,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_ZlmYywh 'A','"+sharedPreferences.getString("jtbh","")+"','"+zldm+"'");
+                /*List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_ZlmYywh 'A','"+sharedPreferences.getString("jtbh","")+"','"+zldm+"'");
                 if (list!=null){
                     if (list.size()>0){
                         if (list.get(0).size()>2){
@@ -225,6 +228,50 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                     }
                 }else {
                     handler.sendEmptyMessage(0x101);
+                }*/
+                try {
+                    JSONArray list= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_ZlmYywh 'A','"+sharedPreferences.getString("jtbh","")+"','"+zldm+"'");
+                    if (list!=null){
+                        if (list.length()>0){
+                            Message msg=handler.obtainMessage();
+                            msg.what=0x100;
+                            handler.sendMessage(msg);
+                            Intent intent;
+                            switch (list.getJSONObject(0).getString("v_yytype")){
+                                case "A":
+                                    intent=new Intent(getContext(), BlYyfxActivity.class);
+                                    intent.putExtra("title",title);
+                                    intent.putExtra("zldm",zldm);
+                                    startActivity(intent);
+                                    break;
+                                case "B":
+                                    intent=new Intent(getContext(), DialogGActivity.class);
+                                    intent.putExtra("title",title);
+                                    intent.putExtra("zldm",zldm);
+                                    intent.putExtra("type",type);
+                                    startActivity(intent);
+                                    break;
+                                case "C":
+                                    intent=new Intent(getContext(), DialogGActivity.class);
+                                    intent.putExtra("title",title);
+                                    intent.putExtra("zldm",zldm);
+                                    intent.putExtra("type",type);
+                                    startActivity(intent);
+                                    break;
+                                default:
+                                    intent=new Intent(getContext(), DialogGActivity.class);
+                                    intent.putExtra("title",title);
+                                    intent.putExtra("zldm",zldm);
+                                    intent.putExtra("type",type);
+                                    startActivity(intent);
+                                    break;
+                            }
+                        }
+                    }else {
+                        handler.sendEmptyMessage(0x101);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -443,7 +490,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+sharedPreferences.getString("jtbh","")+"'");
+                /*List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+sharedPreferences.getString("jtbh","")+"'");
                 if(list2!=null){
                     handler.sendEmptyMessage(0x102);
                     if (list2.size()>0){
@@ -501,6 +548,65 @@ public class StatusFragment extends Fragment implements View.OnClickListener{
                             ,sharedPreferences.getString("mac",""));
                     handler.sendEmptyMessage(0x101);
                     //handler.sendEmptyMessage(0x110);
+                }*/
+                try {
+                    JSONArray list2= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_JtmZtInfo '"+sharedPreferences.getString("jtbh","")+"'");
+                    if(list2!=null){
+                        handler.sendEmptyMessage(0x102);
+                        if (list2.length()>0){
+                            String zldm_ss=list2.getJSONObject(0).getString("kbl_zldm");
+                            String zlmc=getZlmcByZldm(zldm_ss);
+                            String waring=list2.getJSONObject(0).getString("kbl_waring");
+                            if (waring.equals("1")){//如果超时了则必须要弹出蓝框
+                                Intent intent_blyyfx=new Intent(getContext(),BlYyfxActivity.class);
+                                intent_blyyfx.putExtra("title",zlmc);
+                                intent_blyyfx.putExtra("zldm",zldm_ss);
+                                startActivity(intent_blyyfx);
+                            }else {//如果没有超时则根据启动类型来判断
+                                JSONArray list= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_ZlmYywh 'A','"+sharedPreferences.getString("jtbh","")+"','"+zldm_ss+"'");
+                                if (list!=null){
+                                    if (list.length()>0){
+                                        String startType=list.getJSONObject(0).getString("v_yytype");
+                                        switch (startType){
+                                            case "A":
+                                                Intent intent_g21=new Intent(getContext(), DialogGActivity.class);
+                                                intent_g21.putExtra("zldm",getContext().getString(R.string.js));
+                                                intent_g21.putExtra("title","结束");
+                                                intent_g21.putExtra("type","OPR");
+                                                startActivity(intent_g21);
+                                                break;
+                                            case "B":
+                                                Intent intent1=new Intent(getContext(), BlYyfxActivity.class);
+                                                intent1.putExtra("title",zlmc);
+                                                intent1.putExtra("zldm",zldm_ss);
+                                                startActivity(intent1);
+                                                break;
+                                            case "C":
+                                                Intent intent2=new Intent(getContext(), BlYyfxActivity.class);
+                                                intent2.putExtra("title",zlmc);
+                                                intent2.putExtra("zldm",zldm_ss);
+                                                startActivity(intent2);
+                                                break;
+                                            default:
+                                                Intent intent_g3=new Intent(getContext(), DialogGActivity.class);
+                                                intent_g3.putExtra("zldm",getContext().getString(R.string.js));
+                                                intent_g3.putExtra("title","结束");
+                                                intent_g3.putExtra("type","OPR");
+                                                startActivity(intent_g3);
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }else {
+                        NetHelper.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",sharedPreferences.getString("jtbh","")
+                                ,sharedPreferences.getString("mac",""));
+                        handler.sendEmptyMessage(0x101);
+                        //handler.sendEmptyMessage(0x110);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();

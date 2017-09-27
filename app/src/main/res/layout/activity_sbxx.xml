@@ -289,6 +289,7 @@
                         android:text="最近生产时间"/>
                 </LinearLayout>
                 <ListView
+                    android:background="@drawable/text_bg"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="550dp"
                     android:layout_height="wrap_content"

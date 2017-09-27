@@ -281,6 +281,20 @@ public class FirstActivity extends BaseActivity{
                     case 0x111:
                         dialog.dismiss();
                         break;
+                    case 0x112:
+                        if (dialogAutoUpdate!=null){
+                            dialogAutoUpdate.setMessage("网络异常，更新包下载失败，请稍后再试");
+                            dialogAutoUpdate.getOkbtn().setVisibility(View.VISIBLE);
+                            dialogAutoUpdate.getOkbtn().setText("退出系统");
+                            dialogAutoUpdate.getOkbtn().setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    finish();
+                                }
+                            });
+                            dialogAutoUpdate.show();
+                        }
+                        break;
 
                 }
             }
@@ -360,7 +374,6 @@ public class FirstActivity extends BaseActivity{
                             }
 
                         }
-
                         //获取机台编号
                         String mac = "";
                         WifiManager wifiManager=((WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE));
@@ -447,6 +460,7 @@ public class FirstActivity extends BaseActivity{
                         }catch (JSONException e){
                             e.printStackTrace();
                         } catch (IOException e) {
+                            handler.sendEmptyMessage(0x112);
                             e.printStackTrace();
                         }
 

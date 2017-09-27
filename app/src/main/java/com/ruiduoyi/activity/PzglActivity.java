@@ -78,39 +78,43 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0x100:
-                    List<List<String>>list= (List<List<String>>) msg.obj;
-                    List<String>item=list.get(0);
-                    fcry_text.setText(item.get(0));
-                    fcsj_text.setText(item.get(1));
-                    pdry_text.setText(item.get(2));
-                    pdsj_text.setText(item.get(3));
-                    ys_text.setText(item.get(4));
-                    zzdh_text.setText(item.get(5));
-                    gddh_text.setText(item.get(6));
-                    scph_text.setText(item.get(7));
-                    mjbh_text.setText(item.get(8));
-                    mjmc_text.setText(item.get(9));
-                    mjqs_text.setText(item.get(10));
-                    cxzq_text.setText(item.get(11));
-                    cpbh_text.setText(item.get(12));
-                    pmgg_text.setText(item.get(13));
-                    bzjz_text.setText(item.get(14));
-                    sjjz_text.setText(item.get(15));
-                    bzsk_text.setText(item.get(16));
-                    sjsk_text.setText(item.get(17));
-                    pdjg_text.setText(item.get(18));
-                    blyy_text.setText(item.get(19));
-                    bzxx_text.setText(item.get(20));
+                    try {
+                        JSONArray list= (JSONArray) msg.obj;
+                        fcry_text.setText(list.getJSONObject(0).getString("v_ksname"));
+                        fcsj_text.setText(list.getJSONObject(0).getString("v_kssj"));
+                        pdry_text.setText(list.getJSONObject(0).getString("v_jsname"));
+                        pdsj_text.setText(list.getJSONObject(0).getString("v_jssj"));
+                        ys_text.setText(list.getJSONObject(0).getString("v_min"));
+                        zzdh_text.setText(list.getJSONObject(0).getString("v_zzdh"));
+                        gddh_text.setText(list.getJSONObject(0).getString("v_sodh"));
+                        scph_text.setText(list.getJSONObject(0).getString("v_ph"));
+                        mjbh_text.setText(list.getJSONObject(0).getString("v_mjbh"));
+                        mjmc_text.setText(list.getJSONObject(0).getString("v_mjmc"));
+                        mjqs_text.setText(list.getJSONObject(0).getString("v_bzxs"));
+                        cxzq_text.setText(list.getJSONObject(0).getString("v_bzcxsj"));
+                        cpbh_text.setText(list.getJSONObject(0).getString("v_wldm"));
+                        pmgg_text.setText(list.getJSONObject(0).getString("v_pmgg"));
+                        bzjz_text.setText(list.getJSONObject(0).getString("v_bzjz"));
+                        sjjz_text.setText(list.getJSONObject(0).getString("v_jz"));
+                        bzsk_text.setText(list.getJSONObject(0).getString("v_bzskzl"));
+                        sjsk_text.setText(list.getJSONObject(0).getString("v_skzl"));
+                        pdjg_text.setText(list.getJSONObject(0).getString("v_pdjg"));
+                        blyy_text.setText(list.getJSONObject(0).getString("v_yymc"));
+                        bzxx_text.setText(list.getJSONObject(0).getString("v_desc"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                     break;
                 case 0x101:
                     Toast.makeText(PzglActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
                     break;
                 case 0x102:
-                    List<List<String>>list1=(List<List<String>>)msg.obj;
+                    JSONArray list1= (JSONArray) msg.obj;
                     initLineChar(list1,lineChart);
                     break;
                 case 0x103:
-                    List<List<String>>list2=(List<List<String>>)msg.obj;
+                    JSONArray list2= (JSONArray) msg.obj;
                     initBartChart(barChart,list2);
                     break;
                 case 0x104:
@@ -118,7 +122,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                     initListView(list3);
                     break;
                 case 0x105:
-                    List<List<String>>list4=(List<List<String>>)msg.obj;
+                    JSONArray list4= (JSONArray) msg.obj;
                     initRightListView(list4);
                     break;
                 default:
@@ -169,7 +173,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
     }
 
     //初始化折线图质量监测
-    private void initLineChar(List<List<String>>lists,LineChart mDoubleLineChar){
+    private void initLineChar(JSONArray lists,LineChart mDoubleLineChar){
         //设置数值选择监听
         //mDoubleLineChar.setOnChartValueSelectedListener(this);
         // 没有描述的文本
@@ -192,10 +196,13 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
         //设置数据
         final List<String>xVals=new ArrayList<>();
         ArrayList<Entry> yVals = new ArrayList<Entry>();
-        for (int i = 0; i < lists.size(); i++) {
-            List<String>item=lists.get(i);
-            xVals.add(item.get(0));
-            yVals.add(new Entry(i,Integer.parseInt(item.get(1))));
+        try {
+            for (int i = 0; i < lists.length(); i++) {
+                xVals.add(lists.getJSONObject(i).getString("v_hour"));
+                yVals.add(new Entry(i,Integer.parseInt(lists.getJSONObject(i).getString("v_blsl"))));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
         LineDataSet set;
@@ -341,7 +348,7 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
 
 
     //初始化条形图
-    private void initBartChart(BarChart mBarChart,List<List<String>>lists){
+    private void initBartChart(BarChart mBarChart,JSONArray lists){
         //条形图
         //设置表格上的点，被点击的时候，的回调函数
         //mBarChart.setOnChartValueSelectedListener(this);
@@ -395,11 +402,14 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
         final List<String>xVal=new ArrayList<>();
         List<String>yVal=new ArrayList<>();
-        for (int i=0;i<lists.size();i++){
-            List<String>item=lists.get(i);
-            xVal.add(item.get(1));
-            yVal.add(item.get(2));
-            yVals1.add(new BarEntry(i,Integer.parseInt(item.get(2))));
+        try {
+            for (int i=0;i<lists.length();i++){
+                xVal.add(lists.getJSONObject(i).getString("v_blms"));
+                yVal.add(lists.getJSONObject(i).getString("v_blsl"));
+                yVals1.add(new BarEntry(i,Integer.parseInt(lists.getJSONObject(i).getString("v_blsl"))));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
         BarDataSet set1;
@@ -603,18 +613,21 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
     }
 
     //初始化从工单信息表格
-    private void initRightListView(List<List<String>>lists){
+    private void initRightListView(JSONArray lists){
         List<Map<String,String>>data=new ArrayList<>();
-        for (int i=0;i<lists.size();i++){
-            List<String>item=lists.get(i);
-            Map<String,String>map=new HashMap<>();
-            map.put("lab_1",item.get(0));
-            map.put("lab_2",item.get(1));
-            map.put("lab_3",item.get(2));
-            map.put("lab_4",item.get(3));
-            map.put("lab_5",item.get(4));
-            map.put("lab_6",item.get(5));
-            data.add(map);
+        try {
+            for (int i=0;i<lists.length();i++){
+                Map<String,String>map=new HashMap<>();
+                map.put("lab_1",lists.getJSONObject(i).getString("v_wldm"));
+                map.put("lab_2",lists.getJSONObject(i).getString("v_pmgg"));
+                map.put("lab_3",lists.getJSONObject(i).getString("v_bzjz"));
+                map.put("lab_4",lists.getJSONObject(i).getString("v_jz"));
+                map.put("lab_5",lists.getJSONObject(i).getString("v_bzskzl"));
+                map.put("lab_6",lists.getJSONObject(i).getString("v_skzl"));
+                data.add(map);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         SimpleAdapter adapter=new SimpleAdapter(this,data,R.layout.list_item_b4_2,
                 new String[]{"lab_1","lab_2","lab_3","lab_4","lab_5","lab_6"},
@@ -642,15 +655,13 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
             @Override
             public void run() {
                 //首件信息
-                List<List<String>>list1=NetHelper.getQuerysqlResult("Exec  PAD_Get_PzmInf 'A','"+zzdh+"','"+jtbh+"'");
+                JSONArray list1=NetHelper.getQuerysqlResultJsonArray("Exec  PAD_Get_PzmInf 'A','"+zzdh+"','"+jtbh+"'");
                 if (list1!=null){
-                    if (list1.size()>0){
-                        if (list1.get(0).size()>20){
-                            Message msg=handler.obtainMessage();
-                            msg.obj=list1;
-                            msg.what=0x100;
-                            handler.sendMessage(msg);
-                        }
+                    if (list1.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.obj=list1;
+                        msg.what=0x100;
+                        handler.sendMessage(msg);
                     }
                 }else {
                     handler.sendEmptyMessage(0x101);
@@ -659,15 +670,13 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
 
 
                 //质量检测
-                List<List<String>>list2= NetHelper.getQuerysqlResult("Exec  PAD_Get_PzmInf 'B01','"+zzdh+"','"+jtbh+"'");
+                JSONArray list2= NetHelper.getQuerysqlResultJsonArray("Exec  PAD_Get_PzmInf 'B01','"+zzdh+"','"+jtbh+"'");
                 if (list2!=null){
-                    if (list2.size()>0){
-                        if (list2.get(0).size()>1){
-                            Message msg=handler.obtainMessage();
-                            msg.obj=list2;
-                            msg.what=0x102;
-                            handler.sendMessage(msg);
-                        }
+                    if (list2.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.obj=list2;
+                        msg.what=0x102;
+                        handler.sendMessage(msg);
                     }
                 }else {
                     handler.sendEmptyMessage(0x101);
@@ -677,15 +686,13 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
 
 
                 //不良统计
-                List<List<String>>list4= NetHelper.getQuerysqlResult("Exec  PAD_Get_PzmInf 'B02','"+zzdh+"','"+jtbh+"'");
+                JSONArray list4= NetHelper.getQuerysqlResultJsonArray("Exec  PAD_Get_PzmInf 'B02','"+zzdh+"','"+jtbh+"'");
                 if (list4!=null){
-                    if (list4.size()>0){
-                        if (list4.get(0).size()>2){
-                            Message msg=handler.obtainMessage();
-                            msg.what=0x103;
-                            msg.obj=list4;
-                            handler.sendMessage(msg);
-                        }
+                    if (list4.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x103;
+                        msg.obj=list4;
+                        handler.sendMessage(msg);
                     }
                 }else {
                     handler.sendEmptyMessage(0x101);
@@ -707,15 +714,13 @@ public class PzglActivity extends BaseActivity implements View.OnClickListener{
                 }
 
                 //从工单信息
-                List<List<String>>list6= NetHelper.getQuerysqlResult("Exec  PAD_Get_PzmInf 'G','"+zzdh+"','"+jtbh+"'");
+                JSONArray list6= NetHelper.getQuerysqlResultJsonArray("Exec  PAD_Get_PzmInf 'G','"+zzdh+"','"+jtbh+"'");
                 if (list6!=null){
-                    if (list6.size()>0){
-                        if (list6.get(0).size()>5){
-                            Message msg=handler.obtainMessage();
-                            msg.what=0x105;
-                            msg.obj=list6;
-                            handler.sendMessage(msg);
-                        }
+                    if (list6.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x105;
+                        msg.obj=list6;
+                        handler.sendMessage(msg);
                     }
                 }else {
                     handler.sendEmptyMessage(0x101);

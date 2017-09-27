@@ -70,18 +70,22 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0x100://初始化
-                    List<List<String>>list_spinner=(List<List<String>>)msg.obj;
+                    JSONArray list_spinner= (JSONArray) msg.obj;
                     initSpinner(list_spinner);
                     break;
                 case 0x101:
-                    List<List<String>>list1= (List<List<String>>) msg.obj;
+                    JSONArray list1= (JSONArray) msg.obj;
                     data1=new ArrayList<>();
-                    for (int i=0;i<list1.size();i++){
-                        Map<String,String>map=new HashMap<>();
-                        map.put("lab_1",list1.get(i).get(0));
-                        map.put("lab_2",list1.get(i).get(1));
-                        map.put("lab_3","0");
-                        data1.add(map);
+                    try {
+                        for (int i=0;i<list1.length();i++){
+                            Map<String,String>map=new HashMap<>();
+                            map.put("lab_1",list1.getJSONObject(i).getString("bll_bldm"));
+                            map.put("lab_2",list1.getJSONObject(i).getString("bll_blmc"));
+                            map.put("lab_3","0");
+                            data1.add(map);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                     adapter2= new SigleSelectAdapter(BlfxActivity.this, data1) {
                         @Override
@@ -270,12 +274,15 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
     }
 
 
-    private void initSpinner(List<List<String>>lists){
+    private void initSpinner(JSONArray lists){
         final List<String>data=new ArrayList<>();
-        for (int i=0;i<lists.size();i++){
-            List<String>item=lists.get(i);
-            data.add(item.get(1)+"\t\t"+item.get(2));
-            zzdh_list.add(item.get(0));
+        try {
+            for (int i=0;i<lists.length();i++){
+                data.add(lists.getJSONObject(i).getString("v_wldm")+"\t\t"+lists.getJSONObject(i).getString("v_pmgg"));
+                zzdh_list.add(lists.getJSONObject(i).getString("v_zzdh"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         popupWindowSpinner=new PopupWindowSpinner(BlfxActivity.this,data,R.layout.spinner_list_b7,R.id.lab_1,305);
         popupWindowSpinner.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -436,7 +443,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
             public void run() {
 
                 //产品选取
-                List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_ZlmYywh 'D','"+jtbh+"','"+zzdh_str+"'");
+                /*List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_ZlmYywh 'D','"+jtbh+"','"+zzdh_str+"'");
                 if (list!=null){
                     if (list.size()>0){
                         if (list.get(0).size()>2){
@@ -450,11 +457,24 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                     handler.sendEmptyMessage(0x105);
                     NetHelper.uploadNetworkError("Exec PAD_Get_ZlmYywh 'D'"+jtbh+"','",sharedPreferences.getString("jtnh",""),
                             sharedPreferences.getString("mac",""));
+                }*/
+                JSONArray list=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_ZlmYywh 'D','"+jtbh+"','"+zzdh_str+"'");
+                if (list!=null){
+                    if (list.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x100;
+                        msg.obj=list;
+                        handler.sendMessage(msg);
+                    }
+                }else {
+                    handler.sendEmptyMessage(0x105);
+                    NetHelper.uploadNetworkError("Exec PAD_Get_ZlmYywh 'D'"+jtbh+"','",sharedPreferences.getString("jtnh",""),
+                            sharedPreferences.getString("mac",""));
                 }
 
 
                 //不良表格
-                List<List<String>>list1=NetHelper.getQuerysqlResult("Exec PAD_Get_Blllist");
+                /*List<List<String>>list1=NetHelper.getQuerysqlResult("Exec PAD_Get_Blllist");
                 if (list1!=null){
                     if (list1.size()>0){
                         if (list1.get(0).size()>1){
@@ -463,6 +483,19 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                             msg.obj=list1;
                             handler.sendMessage(msg);
                         }
+                    }
+                }else {
+                    handler.sendEmptyMessage(0x105);
+                    NetHelper.uploadNetworkError("Exec PAD_Get_Blllist",sharedPreferences.getString("jtbh",""),
+                            sharedPreferences.getString("mac",""));
+                }*/
+                JSONArray list1=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_Blllist");
+                if (list1!=null){
+                    if (list1.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x101;
+                        msg.obj=list1;
+                        handler.sendMessage(msg);
                     }
                 }else {
                     handler.sendEmptyMessage(0x105);
@@ -501,6 +534,12 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
 
 
     private boolean isReady(){
+        if (jzzl_text.getText().toString().equals("")){
+            dialog.setMessage("没有维护净重");
+            dialog.setMessageTextColor(Color.RED);
+            dialog.show();
+            return false;
+        }
         if (sub_text.getText().toString().length()>9){
             dialog.setMessage("数值已经超过允许范围");
             dialog.setMessageTextColor(Color.RED);
@@ -548,22 +587,6 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
         new Thread(new Runnable() {
             @Override
             public void run() {
-                /*List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
-                if(list!=null){
-                    handler.sendEmptyMessage(0x111);
-                    if(list.size()>0){
-                        if (list.get(0).size()>26){
-                            Message msg=handler.obtainMessage();
-                            msg.what=0x103;
-                            msg.obj=list;
-                            handler.sendMessage(msg);
-                        }
-                    }
-                }else {
-                    handler.sendEmptyMessage(0x105);
-                    NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,sharedPreferences.getString("mac",""));
-                    //handler.sendEmptyMessage(0x110);
-                }*/
                 JSONArray list= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
                 if(list!=null){
                     handler.sendEmptyMessage(0x111);
@@ -592,7 +615,7 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
             blsl=(int)(Double.parseDouble(sub_text.getText().toString())*1000/Double.parseDouble(jzzl_text.getText().toString()))+"";
             zl=sub_text.getText().toString();
         }
-        List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Add_BlmInfo " +
+        /*List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Add_BlmInfo " +
                 "'A','"+zzdh_list.get(zzdh_position)+"','','','"+jtbh+"','','"+bldm_text.getText().toString()+"'," +
                 blsl+",'"+wkno+"','"+AppUtils.nunFormat(zl,2)+"'");
         handler.sendEmptyMessage(0x104);
@@ -614,6 +637,36 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
                         }
                         return ;
                     }
+                }
+            }
+        }else {
+            handler.sendEmptyMessage(0x105);
+            upLoadOneData(wkno);
+        }*/
+        JSONArray list=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Add_BlmInfo " +
+                "'A','"+zzdh_list.get(zzdh_position)+"','','','"+jtbh+"','','"+bldm_text.getText().toString()+"'," +
+                blsl+",'"+wkno+"','"+AppUtils.nunFormat(zl,2)+"'");
+        handler.sendEmptyMessage(0x104);
+        if (list!=null){
+            if (list.length()>0){
+                try {
+                    if (list.getJSONObject(0).getString("Column1").equals("OK")){
+                        getGdInfo();
+                        JSONArray list2=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_BlmInfo '"+jtbh+"'");
+                        if (list2!=null){
+                            if (list2.length()>0){
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x102;
+                                msg.obj=list2;
+                                handler.sendMessage(msg);
+                            }
+                        }else {
+                            handler.sendEmptyMessage(0x105);
+                        }
+                        return ;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }else {

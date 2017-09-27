@@ -14,6 +14,9 @@ import com.ruiduoyi.R;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,20 +42,23 @@ public class SbxxActivity extends BaseDialogActivity implements View.OnClickList
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0x100:
-                    List<List<String>>list1=(List<List<String>>)msg.obj;
-                    List<String>item1=list1.get(0);
-                    jtbh_text.setText(item1.get(0));
-                    jtmc_text.setText(item1.get(1));
-                    bbdm_text.setText(item1.get(2));
-                    jtdw_text.setText(item1.get(3));
-                    wgip_text.setText(item1.get(4));
-                    minkd_text.setText(item1.get(5));
-                    maxkd_text.setText(item1.get(6));
-                    minhd_text.setText(item1.get(7));
-                    maxhd_text.setText(item1.get(8));
+                    try {
+                        JSONArray list1= (JSONArray) msg.obj;
+                        jtbh_text.setText(list1.getJSONObject(0).getString("v_jtbh"));
+                        jtmc_text.setText(list1.getJSONObject(0).getString("v_jtmc"));
+                        bbdm_text.setText(list1.getJSONObject(0).getString("v_bbdm"));
+                        jtdw_text.setText(list1.getJSONObject(0).getString("v_jtdw"));
+                        wgip_text.setText(list1.getJSONObject(0).getString("v_wgip"));
+                        minkd_text.setText(list1.getJSONObject(0).getString("v_minkd"));
+                        maxkd_text.setText(list1.getJSONObject(0).getString("v_maxkd"));
+                        minhd_text.setText(list1.getJSONObject(0).getString("v_minhd"));
+                        maxhd_text.setText(list1.getJSONObject(0).getString("v_maxhd"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 0x101:
-                    List<List<String>>list=(List<List<String>>)msg.obj;
+                    JSONArray list= (JSONArray) msg.obj;
                     initList(list);
                     break;
                 case 0x102:
@@ -91,17 +97,20 @@ public class SbxxActivity extends BaseDialogActivity implements View.OnClickList
     }
 
 
-    private void initList(List<List<String>>list){
+    private void initList(JSONArray list){
         List<Map<String,String>>data=new ArrayList<>();
-        for (int i=0;i<list.size();i++){
-            List<String>item=list.get(i);
-            Map<String,String>map=new HashMap<>();
-            map.put("mjbh",item.get(0));
-            map.put("mjmc",item.get(1));
-            map.put("hmcs",item.get(2));
-            map.put("rate",item.get(3));
-            map.put("newsj",item.get(4));
-            data.add(map);
+        try {
+            for (int i=0;i<list.length();i++){
+                Map<String,String>map=new HashMap<>();
+                map.put("mjbh",list.getJSONObject(i).getString("v_mjbh"));
+                map.put("mjmc",list.getJSONObject(i).getString("v_mjmc"));
+                map.put("hmcs",list.getJSONObject(i).getString("v_hmcs"));
+                map.put("rate",list.getJSONObject(i).getString("v_rate"));
+                map.put("newsj",list.getJSONObject(i).getString("v_newsj"));
+                data.add(map);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         adapter=new SimpleAdapter(this,data,R.layout.list_item_b1,new String[]{"mjbh","mjmc","hmcs","rate","newsj"},
                 new int[]{R.id.lab_1,R.id.lab_2,R.id.lab_3,R.id.lab_4,R.id.lab_5});
@@ -129,15 +138,13 @@ public class SbxxActivity extends BaseDialogActivity implements View.OnClickList
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_JtmMstr '"+jtbh+"'");
+                JSONArray list=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_JtmMstr '"+jtbh+"'");
                 if (list!=null){
-                    if (list.size()>0){
-                        if (list.get(0).size()>8){
-                            Message msg=handler.obtainMessage();
-                            msg.what=0x100;
-                            msg.obj=list;
-                            handler.sendMessage(msg);
-                        }
+                    if (list.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x100;
+                        msg.obj=list;
+                        handler.sendMessage(msg);
                     }
                 }else {
                     handler.sendEmptyMessage(0x102);
@@ -150,15 +157,13 @@ public class SbxxActivity extends BaseDialogActivity implements View.OnClickList
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_SbmHgl '"+jtbh+"'");
+                JSONArray list=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_SbmHgl '"+jtbh+"'");
                 if (list!=null){
-                    if (list.size()>0){
-                        if (list.get(0).size()>4){
-                            Message msg=handler.obtainMessage();
-                            msg.what=0x101;
-                            msg.obj=list;
-                            handler.sendMessage(msg);
-                        }
+                    if (list.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x101;
+                        msg.obj=list;
+                        handler.sendMessage(msg);
                     }
                 }else {
                     handler.sendEmptyMessage(0x102);

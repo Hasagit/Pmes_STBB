@@ -10,10 +10,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.ruiduoyi.R;
+import com.ruiduoyi.activity.Dialog.DialogMjbgActivity;
 import com.ruiduoyi.adapter.WorkOrderAdapter;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 import com.ruiduoyi.view.PopupDialog;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +42,7 @@ public class GdglActivity extends BaseActivity implements View.OnClickListener{
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0x100:
-                    List<List<String>>list=(List<List<String>>)msg.obj;
+                    JSONArray list= (JSONArray) msg.obj;
                     initListView(list);
                     break;
                 case 0x101:
@@ -49,8 +53,26 @@ public class GdglActivity extends BaseActivity implements View.OnClickListener{
                         dialog.show();
                     }
                     break;
-                case 0x102:
+                case 0x102://启动
+                    beginEvent((Map<String, String>) msg.obj);
+                    break;
+                case 0x103://暂停
+                    stopEvent((Map<String, String>) msg.obj);
+                    break;
+                case 0x104:
                     Toast.makeText(GdglActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                    break;
+                case 0x105:
+                    dialog.setMessage((String) msg.obj);
+                    dialog.show();
+                    break;
+                case 0x106://模具变更
+                    Map<String,String>map= (Map<String, String>) msg.obj;
+                    Intent intent=new Intent(GdglActivity.this, DialogMjbgActivity.class);
+                    intent.putExtra("mjbh",map.get("mjbh"));
+                    intent.putExtra("wldm",map.get("wldm"));
+                    intent.putExtra("zzdh",map.get("zzdh"));
+                    startActivityForResult(intent,1);
                     break;
             }
         }
@@ -81,26 +103,29 @@ public class GdglActivity extends BaseActivity implements View.OnClickListener{
         getNetData();
     }
 
-    private void  initListView(List<List<String>>lists){
+    private void  initListView(JSONArray lists){
         List<Map<String,String>>data=new ArrayList<>();
-        for (int i=0;i<lists.size();i++){
-            List<String>item=lists.get(i);
-            Map<String,String>map=new HashMap<>();
-            map.put("moeid",item.get(0));
-            map.put("scrq",item.get(1));
-            map.put("scxh",item.get(2));
-            map.put("zzdh",item.get(3));
-            map.put("sodh",item.get(4));
-            map.put("ph",item.get(5));
-            map.put("mjbh",item.get(6));
-            map.put("mjmc",item.get(7));
-            map.put("wldm",item.get(8));
-            map.put("pmgg",item.get(9));
-            map.put("wgrq",item.get(10));
-            map.put("scsl",item.get(11));
-            map.put("lpsl",item.get(12));
-            map.put("ztbz",item.get(13));
-            data.add(map);
+        try {
+            for (int i=0;i<lists.length();i++){
+                Map<String,String>map=new HashMap<>();
+                map.put("moeid",lists.getJSONObject(i).getString("v_moeid"));
+                map.put("scrq",lists.getJSONObject(i).getString("v_scrq"));
+                map.put("scxh",lists.getJSONObject(i).getString("v_scxh"));
+                map.put("zzdh",lists.getJSONObject(i).getString("v_zzdh"));
+                map.put("sodh",lists.getJSONObject(i).getString("v_sodh"));
+                map.put("ph",lists.getJSONObject(i).getString("v_ph"));
+                map.put("mjbh",lists.getJSONObject(i).getString("v_mjbh"));
+                map.put("mjmc",lists.getJSONObject(i).getString("v_mjmc"));
+                map.put("wldm",lists.getJSONObject(i).getString("v_wldm"));
+                map.put("pmgg",lists.getJSONObject(i).getString("v_pmgg"));
+                map.put("wgrq",lists.getJSONObject(i).getString("v_wgrq"));
+                map.put("scsl",lists.getJSONObject(i).getString("v_scsl"));
+                map.put("lpsl",lists.getJSONObject(i).getString("v_lpsl"));
+                map.put("ztbz",lists.getJSONObject(i).getString("v_ztbz"));
+                data.add(map);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         WorkOrderAdapter adapter=new WorkOrderAdapter(GdglActivity.this,R.layout.list_item_b3,data,wkno,handler);
         listView.setAdapter(adapter);
@@ -122,15 +147,13 @@ public class GdglActivity extends BaseActivity implements View.OnClickListener{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_MoeDet 'A','"+jtbh+"'");
+                JSONArray list=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_MoeDet 'A','"+jtbh+"'");
                 if (list!=null){
-                    if (list.size()>0){
-                        if (list.get(0).size()>13){
-                            Message msg=handler.obtainMessage();
-                            msg.what=0x100;
-                            msg.obj=list;
-                            handler.sendMessage(msg);
-                        }
+                    if (list.length()>0){
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x100;
+                        msg.obj=list;
+                        handler.sendMessage(msg);
                     }
                 }else {
                     handler.sendEmptyMessage(0x102);
@@ -140,6 +163,76 @@ public class GdglActivity extends BaseActivity implements View.OnClickListener{
         }).start();
     }
 
+
+    private void stopEvent(final Map<String,String>map){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONArray list= NetHelper.getQuerysqlResultJsonArray("Exec  PAD_Start_MoeInfo 'Stop','"
+                            +map.get("moeid")+"','"+wkno+"'");
+                    if (list!=null){
+                        if (list.length()>0){
+                            if (list.getJSONObject(0).getString("Column1").equals("OK")){
+                                getNetData();
+                            }else {
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x105;
+                                msg.obj=list.getJSONObject(0).getString("Column1");
+                                handler.sendMessage(msg);
+                            }
+                        }
+                    }else {
+                        handler.sendEmptyMessage(0x104);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
+    private void beginEvent(final Map<String,String>map){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONArray list= NetHelper.getQuerysqlResultJsonArray("Exec  PAD_Start_MoeInfo 'Start','"
+                            +map.get("moeid")+"','"+wkno+"'");
+                    if (list!=null){
+                        if (list.length()>0){
+                            if (list.getJSONObject(0).getString("Column1").equals("OK")){
+                                getNetData();
+                            }else {
+                                Message msg=handler.obtainMessage();
+                                msg.what=0x105;
+                                msg.obj=list.getJSONObject(0).getString("Column1");
+                                handler.sendMessage(msg);
+                            }
+                        }
+                    }else {
+                        handler.sendEmptyMessage(0x104);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case 0:
+                getNetData();
+                break;
+            case 1:
+                break;
+        }
+    }
 
     @Override
     protected void onDestroy() {

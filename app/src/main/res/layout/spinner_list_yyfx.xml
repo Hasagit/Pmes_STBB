@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="60dp"
+    android:background="@drawable/btn_sl">
     <TextView
         android:layout_marginLeft="10dp"
-        android:background="@drawable/btn_sl"
         android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="60dp"

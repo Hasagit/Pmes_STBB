@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.glongtech.gpio.GpioEvent;
 import com.ruiduoyi.Fragment.InfoFragment;
@@ -39,6 +40,9 @@ import com.ruiduoyi.utils.OnDoubleClickListener;
 import com.ruiduoyi.service.SerialPortService;
 import com.ruiduoyi.view.AppDialog;
 import com.ruiduoyi.view.PopupDialog;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.IOException;
@@ -128,7 +132,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     view2.setImageResource(R.drawable.gpio_true);
                     break;
                 case 0x104:
-                    //Toast.makeText(MainActivity.this,"服务器异常",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"网络异常，下载更新包失败，请稍后再试",Toast.LENGTH_SHORT).show();
                     break;
                 case 0x105:
                     //Toast.makeText(MainActivity.this,"更新失败",Toast.LENGTH_SHORT).show();
@@ -137,7 +141,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     //Toast.makeText(MainActivity.this,"更新成功",Toast.LENGTH_SHORT).show();
                     break;
                 case 0x107:
-                    dialog.setMessage("下载更新包中...");
+                    dialog.dismiss();
+                    //dialog.setMessage("下载更新包中...");
+                    Toast.makeText(MainActivity.this,"下载更新包中...",Toast.LENGTH_LONG).show();
                     break;
                 case 0x108:
                     dialog.setMessage("当前已是最新版本");
@@ -153,8 +159,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     updata_tip.getCancle_btn().setVisibility(View.VISIBLE);
                     break;
                 case 0x111:
-                    updata_tip.setMessage("下载更新包当中...");
+                    //updata_tip.setMessage("下载更新包当中...");
+                    Toast.makeText(MainActivity.this,"下载更新包中...",Toast.LENGTH_LONG).show();
+                    updata_tip.dismiss();
                     updata_tip.getCancle_btn().setVisibility(View.GONE);
+
                     break;
                 case 0x112:
                     updata_tip.dismiss();
@@ -380,7 +389,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void AutoUpdateApp(){
         int auto_updata_num=sharedPreferences.getInt("auto_updata_num",0);
-        //Log.e("auto_updata_num",auto_updata_num+"");
+        Log.e("auto_updata_num",auto_updata_num+"");
         String delay_time=getResources().getString(R.string.update_app_delay_time);
         if (auto_updata_num<Integer.parseInt(delay_time)){
             SharedPreferences.Editor editor=sharedPreferences.edit();
@@ -489,7 +498,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_WebAddr");
+                /*List<List<String>>list=NetHelper.getQuerysqlResult("Exec PAD_Get_WebAddr");
                 if (list!=null){
                     if (list.size()>0){
                         String oldVersionName= AppUtils.getAppVersionName(MainActivity.this);
@@ -550,13 +559,89 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             editor.commit();
                         }
 
+                       *//*Message msg=handler.obtainMessage();
+                        msg.what=0x107;
+                        msg.obj=list;
+                        handler.sendMessage(msg);*//*
+                    }
+                }else {
+                    NetHelper.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",jtbh,mac);
+                }*/
+                try {
+                    JSONArray list=NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_WebAddr");
+                    if (list!=null){
+                        if (list.length()>0){
+                            String oldVersionName= AppUtils.getAppVersionName(MainActivity.this);
+                            String newVersionName=list.getJSONObject(0).getString("v_WebAppVer");
+                            if (type==1){
+                                if (!oldVersionName.equals(newVersionName)){
+                                    handler.sendEmptyMessage(0x107);
+                                    try {
+                                        NetHelper.downLoadFileByUrl(list.getJSONObject(0).getString("v_WebAppPath"),
+                                                Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/RdyPmes.apk")),
+                                            "application/vnd.android.package-archive");
+                                    startActivity(intent);
+                                    handler.sendEmptyMessage(0x109);
+                                }else {
+                                    NetHelper.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",jtbh,mac);
+                                    handler.sendEmptyMessage(0x108);
+                                }
+                            }else if (type==2){
+                                if (!oldVersionName.equals(newVersionName)){
+                                    int i=60;
+                                    while (!sharedPreferences.getBoolean("cancle_update",false)){
+                                        i=i-1;
+                                        if (i>0){
+                                            try {
+                                                Message msg=handler.obtainMessage();
+                                                msg.what=0x110;
+                                                msg.obj="将在"+i+"秒后自动更新";
+                                                handler.sendMessage(msg);
+                                                Thread.currentThread().sleep(1000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }else {
+                                            handler.sendEmptyMessage(0x111);
+                                            try {
+                                                NetHelper.downLoadFileByUrl(list.getJSONObject(0).getString("v_WebAppPath"),
+                                                        Environment.getExternalStorageDirectory().getPath(),"RdyPmes.apk");
+                                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/RdyPmes.apk")),
+                                                        "application/vnd.android.package-archive");
+                                                startActivity(intent);
+                                                handler.sendEmptyMessage(0x112);
+                                            } catch (IOException e) {
+                                                handler.sendEmptyMessage(0x104);
+                                                e.printStackTrace();
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            break;
+                                        }
+                                    }
+
+                                }
+                                SharedPreferences.Editor editor=sharedPreferences.edit();
+                                editor.putBoolean("cancle_update",false);
+                                editor.commit();
+                            }
+
                        /*Message msg=handler.obtainMessage();
                         msg.what=0x107;
                         msg.obj=list;
                         handler.sendMessage(msg);*/
+                        }
+                    }else {
+                        NetHelper.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",jtbh,mac);
                     }
-                }else {
-                    NetHelper.uploadNetworkError("Exec PAD_Get_WebAddr NetWordError",jtbh,mac);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();

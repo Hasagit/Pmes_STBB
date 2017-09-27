@@ -55,6 +55,10 @@ import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 import com.ruiduoyi.utils.MyAxisValueFormatter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -189,79 +193,82 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0x100:
-                    List<List<String>>list=(List<List<String>>)msg.obj;
-                    if(list.size()>0){
-                        List<String>item=list.get(0);
-                        dq_1.setText(item.get(0));
-                        dq_2.setText(item.get(1));
+                    try {
+                        JSONArray list= (JSONArray) msg.obj;
+                        if(list.length()>0){
+                            dq_1.setText(list.getJSONObject(0).getString("kbm_sxrq"));
+                            dq_2.setText(list.getJSONObject(0).getString("kbm_zzdh"));
 
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
-                        editor.putString("sjsx",item.get(0));
-                        editor.putString("zzdh",item.get(1));//制造单号
-                        editor.putString("gddh",item.get(2));
-                        editor.putString("scph",item.get(3));
-                        editor.putString("mjbh",item.get(4));//模具编号
-                        editor.putString("cpbh",item.get(5));
-                        editor.putString("pmgg",item.get(6));
-                        editor.putString("ysdm",item.get(7));
-                        editor.putString("mjmc",item.get(16));
-                        editor.putString("jhsl",item.get(21));
-                        editor.putString("lpsl",item.get(23));
-                        editor.putString("blsl",item.get(24));
-                        editor.putString("jzzl",item.get(27));
-                        editor.commit();
-                        dq_3.setText(item.get(2));
-                        dq_4.setText(item.get(3));
-                        dq_5.setText(item.get(4));
-                        dq_6.setText(item.get(5));
-                        dq_7.setText(item.get(6));
-                        dq_8.setText(item.get(7));
-                        xy_1.setText(item.get(8));
-                        xy_2.setText(item.get(9));
-                        xy_3.setText(item.get(10));
-                        xy_4.setText(item.get(11));
-                        xy_5.setText(item.get(12));
-                        xy_6.setText(item.get(13));
-                        xy_7.setText(item.get(14));
-                        xy_8.setText(item.get(15));
-                        mo_1.setText(item.get(4));
-                        mo_2.setText(item.get(16));
-                        mo_3.setText(item.get(17));
-                        mo_4.setText(item.get(18));
-                        mo_5.setText(item.get(19));
-                        mo_6.setText(item.get(20));
-                        tong_1.setText(item.get(21));
-                        tong_2.setText(item.get(22));
-                        tong_3.setText(item.get(23));
-                        tong_4.setText(item.get(24));
-                        tong_5.setText(item.get(25));
-                        tong_6.setText(item.get(26));
+                            SharedPreferences.Editor editor=sharedPreferences.edit();
+                            editor.putString("sjsx",list.getJSONObject(0).getString("kbm_sxrq"));
+                            editor.putString("zzdh",list.getJSONObject(0).getString("kbm_zzdh"));//制造单号
+                            editor.putString("gddh",list.getJSONObject(0).getString("kbm_sodh"));
+                            editor.putString("scph",list.getJSONObject(0).getString("kbm_ph"));
+                            editor.putString("mjbh",list.getJSONObject(0).getString("kbm_mjbh"));//模具编号
+                            editor.putString("cpbh",list.getJSONObject(0).getString("kbm_wldm"));
+                            editor.putString("pmgg",list.getJSONObject(0).getString("kbm_pmgg"));
+                            editor.putString("ysdm",list.getJSONObject(0).getString("kbm_ysdm"));
+                            editor.putString("mjmc",list.getJSONObject(0).getString("kbm_mjmc"));
+                            editor.putString("jhsl",list.getJSONObject(0).getString("kbm_scsl"));
+                            editor.putString("lpsl",list.getJSONObject(0).getString("kbm_lpsl"));
+                            editor.putString("blsl",list.getJSONObject(0).getString("kbm_blsl"));
+                            editor.putString("jzzl",list.getJSONObject(0).getString("kbm_jzzl"));
+                            editor.commit();
+                            dq_3.setText(list.getJSONObject(0).getString("kbm_sodh"));
+                            dq_4.setText(list.getJSONObject(0).getString("kbm_ph"));
+                            dq_5.setText(list.getJSONObject(0).getString("kbm_mjbh"));
+                            dq_6.setText(list.getJSONObject(0).getString("kbm_wldm"));
+                            dq_7.setText(list.getJSONObject(0).getString("kbm_pmgg"));
+                            dq_8.setText(list.getJSONObject(0).getString("kbm_ysdm"));
+                            xy_1.setText(list.getJSONObject(0).getString("kbm_xxrq"));
+                            xy_2.setText(list.getJSONObject(0).getString("kbm_nextzzdh"));
+                            xy_3.setText(list.getJSONObject(0).getString("kbm_nextsodh"));
+                            xy_4.setText(list.getJSONObject(0).getString("kbm_nextph"));
+                            xy_5.setText(list.getJSONObject(0).getString("kbm_nextmjbh"));
+                            xy_6.setText(list.getJSONObject(0).getString("kbm_nextwldm"));
+                            xy_7.setText(list.getJSONObject(0).getString("kbm_nextpmgg"));
+                            xy_8.setText(list.getJSONObject(0).getString("kbm_nextysdm"));
+                            mo_1.setText(list.getJSONObject(0).getString("kbm_mjbh"));
+                            mo_2.setText(list.getJSONObject(0).getString("kbm_mjmc"));
+                            mo_3.setText(list.getJSONObject(0).getString("kbm_xs"));
+                            mo_4.setText(list.getJSONObject(0).getString("kbm_cxsj"));
+                            mo_5.setText(list.getJSONObject(0).getString("kbm_sjcxsj"));
+                            mo_6.setText(list.getJSONObject(0).getString("kbm_mjsb"));
+                            tong_1.setText(list.getJSONObject(0).getString("kbm_scsl"));
+                            tong_2.setText(list.getJSONObject(0).getString("kbm_chsl"));
+                            tong_3.setText(list.getJSONObject(0).getString("kbm_lpsl"));
+                            tong_4.setText(list.getJSONObject(0).getString("kbm_blsl"));
+                            tong_5.setText(list.getJSONObject(0).getString("kbm_blv"));
+                            tong_6.setText(list.getJSONObject(0).getString("kbm_jdcy"));
 
-                        if (!(item.get(4).trim().equals("")|item.get(12).trim().equals(""))){
-                            if(!item.get(4).trim().equals(item.get(12).trim())){
-                                xy_5.setBackgroundColor(getResources().getColor(R.color.text_bg));
+                            if (!(list.getJSONObject(0).getString("kbm_mjbh").trim().equals("")|list.getJSONObject(0).getString("kbm_nextmjbh").trim().equals(""))){
+                                if(!list.getJSONObject(0).getString("kbm_mjbh").trim().equals(list.getJSONObject(0).getString("kbm_nextmjbh").trim())){
+                                    xy_5.setBackgroundColor(getResources().getColor(R.color.text_bg));
+                                }else {
+                                    xy_5.setBackgroundColor(Color.WHITE);
+                                }
                             }else {
                                 xy_5.setBackgroundColor(Color.WHITE);
                             }
-                        }else {
-                            xy_5.setBackgroundColor(Color.WHITE);
-                        }
-                        if (!(item.get(5).trim().equals("")|item.get(13).trim().equals(""))){
-                            if(!item.get(5).trim().equals(item.get(13).trim() )){
-                                xy_6.setBackgroundColor(getResources().getColor(R.color.text_bg));
+                            if (!(list.getJSONObject(0).getString("kbm_wldm").trim().equals("")|list.getJSONObject(0).getString("kbm_nextwldm").trim().equals(""))){
+                                if(!list.getJSONObject(0).getString("kbm_wldm").trim().equals(list.getJSONObject(0).getString("kbm_nextwldm").trim() )){
+                                    xy_6.setBackgroundColor(getResources().getColor(R.color.text_bg));
+                                }else {
+                                    xy_6.setBackgroundColor(Color.WHITE);
+                                }
                             }else {
                                 xy_6.setBackgroundColor(Color.WHITE);
                             }
-                        }else {
-                            xy_6.setBackgroundColor(Color.WHITE);
-                        }
 
 
-                        if(Integer.parseInt(item.get(26))>0){
-                            tong_6.setBackgroundColor(getResources().getColor(R.color.large));
-                        }else {
-                            tong_6.setBackgroundColor(getResources().getColor(R.color.small));
+                            if(Integer.parseInt(list.getJSONObject(0).getString("kbm_jdcy"))>0){
+                                tong_6.setBackgroundColor(getResources().getColor(R.color.large));
+                            }else {
+                                tong_6.setBackgroundColor(getResources().getColor(R.color.small));
+                            }
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                     break;
                 case 0x101:
@@ -293,9 +300,38 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                 case 0x103:
                     try {
                         boolean isSame=false;
+                        JSONArray array= (JSONArray) msg.obj;
+                       /* JSONObject object=new JSONObject();
+                        object.put("v_scrq","9-6");
+                        object.put("v_moeid","1");
+                        object.put("v_hval","8");
+                        array.put(object);
+                        JSONObject object2=new JSONObject();
+                        object2.put("v_scrq","9-6");
+                        object2.put("v_moeid","2");
+                        object2.put("v_hval","12");
+                        array.put(object2);
+                        JSONObject object3=new JSONObject();
+                        object3.put("v_scrq","9-7");
+                        object3.put("v_moeid","1");
+                        object3.put("v_hval","12");
+                        array.put(object3);
+                        JSONObject object4=new JSONObject();
+                        object4.put("v_scrq","9-7");
+                        object4.put("v_moeid","2");
+                        object4.put("v_hval","8");
+                        array.put(object4);*/
+
+                        List<List<String>>list_jhfh=new ArrayList<>();
+                        for (int i=0;i<array.length();i++){
+                            List<String>item=new ArrayList<>();
+                            item.add(array.getJSONObject(i).getString("v_scrq"));
+                            item.add(array.getJSONObject(i).getString("v_moeid"));
+                            item.add(array.getJSONObject(i).getString("v_hval"));
+                            list_jhfh.add(item);
+                        }
                         ArrayList<String> xVals = new ArrayList<>();//X轴数据
                         List<String>yVals=new ArrayList<>();//Y轴数据
-                        List<List<String>>list_jhfh=(List<List<String>>)msg.obj;
                         for (int i=0;i<list_jhfh.size();i++){
                             List<String>items_jhfh=list_jhfh.get(i);
                             String x=items_jhfh.get(0);
@@ -334,19 +370,29 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                         setData(xVals,yVals,list_jhfh);
                     }catch (IndexOutOfBoundsException e){
                         e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                break;
+                    break;
                 case 0x104:
-                    List<List<String>>list_jcxx=(List<List<String>>)msg.obj;
-                    SharedPreferences.Editor editor=sharedPreferences.edit();
-                    editor.putString("zldm_ss",list_jcxx.get(0).get(1));
-                    //editor.putString("waring",list_jcxx.get(0).get(5));
-                    editor.commit();
-                    initBasicInfo(list_jcxx);
+                    try {
+                        JSONArray list_jcxx= (JSONArray) msg.obj;
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putString("zldm_ss",list_jcxx.getJSONObject(0).getString("kbl_zldm"));
+                        //editor.putString("waring",list_jcxx.get(0).get(5));
+                        editor.commit();
+                        initBasicInfo(list_jcxx);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 0x105:
-                    List<List<String>>list_phonto=(List<List<String>>)msg.obj;
-                    initPhotoByExistInStorage(list_phonto);
+                    JSONArray list_phonto= (JSONArray) msg.obj;
+                    try {
+                        initPhotoByExistInStorage(list_phonto);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 0x106:
                     Glide.with(getContext())
@@ -419,6 +465,12 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         mBarChart.setDragEnabled(false);// 是否可以拖拽
         mBarChart.setScaleEnabled(false);// 是否可以缩放
         mBarChart.setDrawValueAboveBar(false);
+        // 改变y标签的位置
+        YAxis leftAxis = mBarChart.getAxisLeft();
+        leftAxis.setValueFormatter(new MyAxisValueFormatter());
+        leftAxis.setAxisMinimum(0);
+        leftAxis.setAxisMaximum(24);
+        mBarChart.getAxisRight().setEnabled(false);
 
         Legend l = mBarChart.getLegend();
         l.setEnabled(false);
@@ -432,51 +484,50 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         mBarChart.getDescription().setText("");
     }
 
-    private void initBasicInfo(List<List<String>>list_jcxx){
-        if (list_jcxx.size()<1){
+    private void initBasicInfo(JSONArray list_jcxx) throws JSONException {
+        if (list_jcxx.length()<1){
             //Toast.makeText(getContext(),"没有数据",Toast.LENGTH_SHORT).show();
         }else {
-            List<String>item=list_jcxx.get(0);
-            jtbh_text.setText(item.get(0));
-            status.setText(item.get(10));
-            umSetColor(item.get(2));
-            String[] temp=item.get(11).split("\\\\n");
+            jtbh_text.setText(list_jcxx.getJSONObject(0).getString("kbl_jtbh"));
+            status.setText(list_jcxx.getJSONObject(0).getString("kbl_zlmc"));
+            umSetColor(list_jcxx.getJSONObject(0).getString("kbl_color"));
+            String[] temp=list_jcxx.getJSONObject(0).getString("kbl_msginfo").split("\\\\n");
             String tip="";
             for (int i=0;i<temp.length;i++){
                 tip=tip+temp[i]+"\n";
             }
             msg_text.setText(tip);
-            if (item.get(3).equals("1")){
+            if (list_jcxx.getJSONObject(0).getString("kbl_jpflag").equals("1")){
                 img_1.setVisibility(View.VISIBLE);
             }else {
                 img_1.setVisibility(View.GONE);
             }
-            if (item.get(4).equals("1")){
+            if (list_jcxx.getJSONObject(0).getString("kbl_lpflag").equals("1")){
                 img_2.setVisibility(View.VISIBLE);
             }else {
                 img_2.setVisibility(View.GONE);
             }
-            if (item.get(5).equals("1")){
+            if (list_jcxx.getJSONObject(0).getString("kbl_waring").equals("1")){
                 img_3.setVisibility(View.VISIBLE);
             }else {
                 img_3.setVisibility(View.GONE);
             }
-            if (item.get(6).equals("1")){
+            if (list_jcxx.getJSONObject(0).getString("kbl_clflag").equals("1")){
                 img_4.setVisibility(View.VISIBLE);
             }else {
                 img_4.setVisibility(View.GONE);
             }
-            if (item.get(7).equals("1")){
+            if (list_jcxx.getJSONObject(0).getString("kbl_blflag").equals("1")){
                 img_5.setVisibility(View.VISIBLE);
             }else {
                 img_5.setVisibility(View.GONE);
             }
-            if (item.get(8).equals("1")){
+            if (list_jcxx.getJSONObject(0).getString("kbl_cxsjflag").equals("1")){
                 img_6.setVisibility(View.VISIBLE);
             }else {
                 img_6.setVisibility(View.GONE);
             }
-            if (item.get(9).equals("1")){
+            if (list_jcxx.getJSONObject(0).getString("kbl_hdflag").equals("1")){
                 img_7.setVisibility(View.VISIBLE);
             }else {
                 img_7.setVisibility(View.GONE);
@@ -554,15 +605,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             }
         }
 
-        // 改变y标签的位置
-        YAxis leftAxis = mBarChart.getAxisLeft();
-        leftAxis.setValueFormatter(new MyAxisValueFormatter());
-        leftAxis.setLabelCount(6);
-        leftAxis.setAxisMinimum(0);
-        leftAxis.setAxisMaximum(24);
-        mBarChart.getAxisRight().setEnabled(false);
-
-
         XAxis xLabels = mBarChart.getXAxis();
         xLabels.setLabelCount(xVals.size());
         xLabels.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -599,24 +641,71 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
         set1 = new BarDataSet(yVals1, "");
         int[]color=new int[]{R.color.color_1,R.color.color_2,R.color.color_3,R.color.color_4,
-                R.color.color_5,R.color.color_6,R.color.color_7,R.color.color_8,R.color.color_9,
-                R.color.color_10,R.color.color_11,R.color.color_12,R.color.color_13,R.color.color_4,
-                R.color.color_15,R.color.color_16,R.color.color_17,R.color.color_18,R.color.color_19,
-                R.color.color_20};
+                R.color.color_5,R.color.color_6,R.color.color_7,R.color.color_8,R.color.color_9,R.color.color_10,};
         List<Integer>colors=new ArrayList<>();
         for (int i=0;i<yVals.size();i++){
             if (yVals.get(i).equals("0")){
                 colors.add(getResources().getColor(R.color.touming));
             }else {
-                //colors.add(getResources().getColor(color[i%color.length]));
-                if (i>color.length-1){
-                    colors.add(AppUtils.getRandColorCode());
-                }else {
-                    colors.add(getResources().getColor(color[i]));
-                }
+                colors.add(getResources().getColor(color[i]));
             }
         }
         set1.setColors(colors);
+        /*switch (yVals.size()){
+            case 0:
+                set1.setColor(getResources().getColor(R.color.tongming));
+                break;
+            case 1:
+                set1.setColors(getResources().getColor(color[0]));
+                break;
+            case 2:
+                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]));
+                break;
+            case 3:
+                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),getResources().getColor(color[2]));
+                break;
+            case 4:
+                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
+                        getResources().getColor(color[2]),getResources().getColor(color[3]));
+                break;
+            case 5:
+                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
+                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]));
+                break;
+            case 6:
+                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
+                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
+                        getResources().getColor(color[5]));
+                break;
+            case 7:
+                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
+                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
+                        getResources().getColor(color[5]),getResources().getColor(color[6]));
+                break;
+            case 8:
+                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
+                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
+                        getResources().getColor(color[5]),getResources().getColor(color[6]),getResources().getColor(color[7]));
+                break;
+            case 9:
+                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
+                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
+                        getResources().getColor(color[5]),getResources().getColor(color[6]),getResources().getColor(color[7]),
+                        getResources().getColor(color[8]));
+                break;
+            case 10:
+                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
+                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
+                        getResources().getColor(color[5]),getResources().getColor(color[6]),getResources().getColor(color[7]),
+                        getResources().getColor(color[8]),getResources().getColor(color[9]));
+                break;
+            default:
+                break;
+
+        }*/
+            /*set1.setColors(getResources().getColor(R.color.blue_sl_false),
+                    getResources().getColor(R.color.colorPrimary),
+                    getResources().getColor(R.color.bottom_sl));*/
         String[] yStr=new String[yVals.size()];
         for (int n=0;n<yVals.size();n++){
             yStr[n]=yVals.get(n);
@@ -737,18 +826,18 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
     }
 
     //根据内存是否已经有这张照片初始化照片
-    private void initPhotoByExistInStorage(List<List<String>>list){
-        if(list.size()>0){
+    private void initPhotoByExistInStorage(final JSONArray list) throws JSONException {
+        if(list.length()>0){
             //下载图片
-            for (int i=0;i<list.size();i++){
-                final List<String>item=list.get(i);
-                if(item.get(0).equals("A")){
-                    if (!item.get(1).equals("")){
-                        File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
-                        caozuo_text.setText(item.get(3));
-                        cao_name_text.setText(item.get(2));
-                        cao_phone.setText(item.get(8));
-                        if (item.get(2).length()>5){
+            for (int i=0;i<list.length();i++){
+                final JSONObject item=list.getJSONObject(i);
+                if(item.getString("wkm_lb").equals("A")){
+                    if (!item.getString("wkm_wkno").equals("")){
+                        File file=new File(filePhath+"/Photos/"+item.getString("wkm_wkno")+".JPG");
+                        caozuo_text.setText(item.getString("wkm_zwmc"));
+                        cao_name_text.setText(item.getString("wkm_name"));
+                        cao_phone.setText(item.getString("wkm_phone"));
+                        if (item.getString("wkm_name").length()>5){
                             cao_name_text.setSingleLine();
                             cao_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                             cao_name_text.setHorizontallyScrolling(true);
@@ -761,7 +850,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                             cao_name_text.setFocusableInTouchMode(false);
                             cao_name_text.requestFocus();
                         }
-                        String[] str=item.get(6).split("&lt;br&gt;");
+                        String[] str=item.getString("wkm_rymname").split("&lt;br&gt;");
                         String rym="";
                         for (int j=0;j<str.length;j++){
                             rym=rym+str[j]+"\n";
@@ -771,7 +860,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
                         //文件缓存
                         if(file.exists()){
-                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
+                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.getString("wkm_wkno")+".JPG")
                                     .asBitmap()
                                     .centerCrop()
                                     .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
@@ -796,7 +885,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                                         if (!dir.exists()){
                                             dir.mkdir();
                                         }
-                                        URL url=new URL(item.get(4));
+                                        URL url=new URL(item.getString("wkm_PicFile"));
                                         HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();
                                         urlConnection.setDoInput(true);
                                         urlConnection.setUseCaches(false);
@@ -804,7 +893,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                                         urlConnection.setConnectTimeout(5000);
                                         urlConnection.connect();
                                         InputStream in=urlConnection.getInputStream();
-                                        OutputStream out=new FileOutputStream(filePhath+"/Photos/"+item.get(1)+".JPG",false);
+                                        OutputStream out=new FileOutputStream(filePhath+"/Photos/"+item.getString("wkm_wkno")+".JPG",false);
                                         byte[] buff=new byte[1024];
                                         int size;
                                         while ((size = in.read(buff)) != -1) {
@@ -812,11 +901,13 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                                         }
                                         Message msg=handler.obtainMessage();
                                         msg.what=0x106;
-                                        msg.obj=filePhath+"/Photos/"+item.get(1)+".JPG";
+                                        msg.obj=filePhath+"/Photos/"+item.getString("wkm_wkno")+".JPG";
                                         handler.sendMessage(msg);
                                     } catch (MalformedURLException e) {
                                         e.printStackTrace();
                                     } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 }
@@ -825,13 +916,13 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     }else {
                         handler.sendEmptyMessage(0x108);
                     }
-                }else if(item.get(0).equals("B")){
-                    if (!item.get(1).equals("")){
-                        File file=new File(filePhath+"/Photos/"+item.get(1)+".JPG");
-                        jisu_text.setText(item.get(3));
-                        ji_name_text.setText(item.get(2));
-                        ji_phone.setText(item.get(8));
-                        if (item.get(2).length()>5){
+                }else if(item.getString("wkm_lb").equals("B")){
+                    if (!item.getString("wkm_wkno").equals("")){
+                        File file=new File(filePhath+"/Photos/"+item.getString("wkm_wkno")+".JPG");
+                        jisu_text.setText(item.getString("wkm_zwmc"));
+                        ji_name_text.setText(item.getString("wkm_name"));
+                        ji_phone.setText(item.getString("wkm_phone"));
+                        if (item.getString("wkm_name").length()>5){
                             ji_name_text.setSingleLine();
                             ji_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                             ji_name_text.setHorizontallyScrolling(true);
@@ -847,7 +938,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
                         //文件缓存
                         if(file.exists()){
-                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.get(1)+".JPG")
+                            Glide.with(getContext()).load(filePhath+"/Photos/"+item.getString("wkm_wkno")+".JPG")
                                     .asBitmap()
                                     .centerCrop()
                                     .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
@@ -872,7 +963,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                                         if (!dir.exists()){
                                             dir.mkdir();
                                         }
-                                        URL url=new URL(item.get(4));
+                                        URL url=new URL(item.getString("wkm_PicFile"));
                                         HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();
                                         urlConnection.setDoInput(true);
                                         urlConnection.setUseCaches(false);
@@ -880,7 +971,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                                         urlConnection.setConnectTimeout(15000);
                                         urlConnection.connect();
                                         InputStream in=urlConnection.getInputStream();
-                                        OutputStream out=new FileOutputStream(filePhath+"/Photos/"+item.get(1)+".JPG",false);
+                                        OutputStream out=new FileOutputStream(filePhath+"/Photos/"+item.getString("wkm_wkno")+".JPG",false);
                                         byte[] buff=new byte[1024];
                                         int size;
                                         while ((size = in.read(buff)) != -1) {
@@ -888,11 +979,13 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                                         }
                                         Message msg=handler.obtainMessage();
                                         msg.what=0x107;
-                                        msg.obj=filePhath+"/Photos/"+item.get(1)+".JPG";
+                                        msg.obj=filePhath+"/Photos/"+item.getString("wkm_wkno")+".JPG";
                                         handler.sendMessage(msg);
                                     } catch (MalformedURLException e) {
                                         e.printStackTrace();
                                     } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 }
@@ -936,7 +1029,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
     private synchronized void getInfo(){
 
-        List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
+        /*List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
         if(list2!=null){
             handler.sendEmptyMessage(0x111);
             if (list2.size()>0){
@@ -958,11 +1051,33 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             }
             getNetDate();
             return;
+        }*/
+
+        JSONArray list2= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
+        if(list2!=null){
+            handler.sendEmptyMessage(0x111);
+            if (list2.length()>0){
+                Message msg=handler.obtainMessage();
+                msg.what=0x104;
+                msg.obj=list2;
+                handler.sendMessage(msg);
+            }
+        }else {
+            NetHelper.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",jtbh,mac);
+            //handler.sendEmptyMessage(0x101);
+            handler.sendEmptyMessage(0x110);
+            try {
+                Thread.currentThread().sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getNetDate();
+            return;
         }
 
 
 
-        List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
+        /*List<List<String>>list= NetHelper.getQuerysqlResult("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
         if(list!=null){
             handler.sendEmptyMessage(0x111);
             if(list.size()>0){
@@ -983,11 +1098,31 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             }
             getNetDate();
             return;
+        }*/
+        JSONArray list= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_OrderInfo  '"+jtbh+"'");
+        if(list!=null){
+            handler.sendEmptyMessage(0x111);
+            if(list.length()>0){
+                Message msg=handler.obtainMessage();
+                msg.what=0x100;
+                msg.obj=list;
+                handler.sendMessage(msg);
+            }
+        }else {
+            NetHelper.uploadNetworkError("Exec PAD_Get_OrderInfo NetWorkError",jtbh,mac);
+            handler.sendEmptyMessage(0x110);
+            try {
+                Thread.currentThread().sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getNetDate();
+            return;
         }
 
 
 
-        List<List<String>>list3= NetHelper.getQuerysqlResult("Exec PAD_Get_FhChartInfo '"+jtbh+"'");
+        /*List<List<String>>list3= NetHelper.getQuerysqlResult("Exec PAD_Get_FhChartInfo '"+jtbh+"'");
         if(list3!=null){
             handler.sendEmptyMessage(0x111);
             if (list3.size()>0){
@@ -1008,10 +1143,30 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             }
             getNetDate();
             return;
+        }*/
+        JSONArray list3= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_FhChartInfo '"+jtbh+"'");
+        if(list3!=null){
+            handler.sendEmptyMessage(0x111);
+            if (list3.length()>0){
+                Message msg=handler.obtainMessage();
+                msg.what=0x103;
+                msg.obj=list3;
+                handler.sendMessage(msg);
+            }
+        }else {
+            NetHelper.uploadNetworkError("Exec PAD_Get_FhChartInfo NetWordError",jtbh,mac);
+            handler.sendEmptyMessage(0x110);
+            try {
+                Thread.currentThread().sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getNetDate();
+            return;
         }
 
 
-        List<List<String>>list4= NetHelper.getQuerysqlResult("Exec PAD_Get_PhotoInfo '"+jtbh+"'");
+        /*List<List<String>>list4= NetHelper.getQuerysqlResult("Exec PAD_Get_PhotoInfo '"+jtbh+"'");
         if(list4!=null){
             handler.sendEmptyMessage(0x111);
             if (list4.size()>0){
@@ -1021,6 +1176,26 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     msg.obj=list4;
                     handler.sendMessage(msg);
                 }
+            }
+        }else {
+            NetHelper.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);
+            handler.sendEmptyMessage(0x110);
+            try {
+                Thread.currentThread().sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getNetDate();
+            return;
+        }*/
+        JSONArray list4= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_PhotoInfo '"+jtbh+"'");
+        if(list4!=null){
+            handler.sendEmptyMessage(0x111);
+            if (list4.length()>0){
+                Message msg=handler.obtainMessage();
+                msg.what=0x105;
+                msg.obj=list4;
+                handler.sendMessage(msg);
             }
         }else {
             NetHelper.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);
@@ -1115,31 +1290,5 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         }
     }
 
-
-    private class BarCharData{
-        private BarData data;
-        private List<String>xVals;
-
-        public BarCharData(BarData data, List<String> xVals) {
-            this.data = data;
-            this.xVals = xVals;
-        }
-
-        public BarData getData() {
-            return data;
-        }
-
-        public void setData(BarData data) {
-            this.data = data;
-        }
-
-        public List<String> getxVals() {
-            return xVals;
-        }
-
-        public void setxVals(List<String> xVals) {
-            this.xVals = xVals;
-        }
-    }
 
 }
