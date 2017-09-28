@@ -374,6 +374,11 @@ public class BlfxFragment extends Fragment implements View.OnClickListener{
     }
 
     private boolean isUploadReady(){
+        if (sub_text.getText().equals("-")){
+            readyDialog.setMessage("请输入不良数量");
+            readyDialog.show();
+            return false;
+        }
         if (sharedPreferences.getString("jzzl","").equals("")){
             readyDialog.setMessage("没有维护净重");
             readyDialog.show();

@@ -52,14 +52,19 @@ public class DialogJshjActivity extends BaseDialogActivity implements View.OnCli
             public void handleMessage(Message msg) {
                 switch (msg.what){
                     case 0x100:
+                        JSONArray array= (JSONArray) msg.obj;
                         try {
-                            JSONArray array= (JSONArray) msg.obj;
                             text_hjnr.setText(array.getJSONObject(0).getString("cal_ycms"));
                             text_hjsj.setText(array.getJSONObject(0).getString("cal_kssj"));
                             text_ys.setText(array.getJSONObject(0).getString("cal_ys"));
                             text_hjr.setText(array.getJSONObject(0).getString("cal_hjchry_name"));
                             yhjr=array.getJSONObject(0).getString("cal_hjry");
                         } catch (JSONException e) {
+                            try {
+                                Toast.makeText(DialogJshjActivity.this,array.getJSONObject(0).getString("Column1"),Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                            }
                             e.printStackTrace();
                         }
                         break;

@@ -170,9 +170,9 @@ public class JtjqsbgActivity extends BaseActivity implements View.OnClickListene
                 map.put("wgrq",lists.getJSONObject(i).getString("v_wgrq"));
                 map.put("scsl",lists.getJSONObject(i).getString("v_scsl"));
                 map.put("lpsl",lists.getJSONObject(i).getString("v_lpsl"));
-                map.put("ztbz",lists.getJSONObject(i).getString("v_ztbz_"));
-                map.put("mjqs",lists.getJSONObject(i).getString("v_mjqs"));
-                map.put("cpqs",lists.getJSONObject(i).getString("v_cpqs"));
+                map.put("ztbz",lists.getJSONObject(i).getString("v_ztbz"));
+                map.put("mjqs",lists.getJSONObject(i).getString("v_itdxs"));
+                map.put("cpqs",lists.getJSONObject(i).getString("v_moexs"));
                 data.add(map);
             }
         } catch (JSONException e) {

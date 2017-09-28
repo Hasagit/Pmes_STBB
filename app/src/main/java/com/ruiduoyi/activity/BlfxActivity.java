@@ -565,6 +565,12 @@ public class BlfxActivity extends BaseDialogActivity implements View.OnClickList
             dialog.show();
             return false;
         }
+        if (sub_text.getText().toString().equals("-")){
+            dialog.setMessage("请先输入不良数");
+            dialog.setMessageTextColor(Color.RED);
+            dialog.show();
+            return false;
+        }
         if (sl_radio.isChecked()){
             if (Double.parseDouble(lpsl_text.getText().toString())<Double.parseDouble(sub_text.getText().toString().trim())){
                 dialog.setMessage("输入的数量不能大于良品数量");

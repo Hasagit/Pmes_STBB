@@ -113,7 +113,7 @@ public class YcfxActivity extends BaseActivity implements View.OnClickListener{
                 map.put("lab_9",list.getJSONObject(i).getString("v_bzgs"));
                 map.put("lab_10",list.getJSONObject(i).getString("v_ksname"));
                 map.put("lab_11",list.getJSONObject(i).getString("v_jsname"));
-                map.put("lab_12",list.getJSONObject(i).getString("v_zzdh"));
+                map.put("lab_12",list.getJSONObject(i).getString("v_zldm"));
                 map.put("keyid",list.getJSONObject(i).getString("v_keyid"));
                 data.add(map);
             }
