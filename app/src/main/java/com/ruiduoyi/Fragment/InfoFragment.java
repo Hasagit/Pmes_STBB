@@ -87,7 +87,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
     private BroadcastReceiver receiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            getNetDate();
+            getNetDate(0);
         }
     };
 
@@ -180,7 +180,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         cardView.setOnClickListener(this);
         tip_layout=(ScrollView)view.findViewById(R.id.tip_bg);
         filePhath= Environment.getExternalStorageDirectory().getPath()+"/RdyPmes";
-        getNetDate();
+        getNetDate(0);
         updateDataOntime();
         initBarChart(mBarChart);
     }
@@ -301,27 +301,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                     try {
                         boolean isSame=false;
                         JSONArray array= (JSONArray) msg.obj;
-                       /* JSONObject object=new JSONObject();
-                        object.put("v_scrq","9-6");
-                        object.put("v_moeid","1");
-                        object.put("v_hval","8");
-                        array.put(object);
-                        JSONObject object2=new JSONObject();
-                        object2.put("v_scrq","9-6");
-                        object2.put("v_moeid","2");
-                        object2.put("v_hval","12");
-                        array.put(object2);
-                        JSONObject object3=new JSONObject();
-                        object3.put("v_scrq","9-7");
-                        object3.put("v_moeid","1");
-                        object3.put("v_hval","12");
-                        array.put(object3);
-                        JSONObject object4=new JSONObject();
-                        object4.put("v_scrq","9-7");
-                        object4.put("v_moeid","2");
-                        object4.put("v_hval","8");
-                        array.put(object4);*/
-
                         List<List<String>>list_jhfh=new ArrayList<>();
                         for (int i=0;i<array.length();i++){
                             List<String>item=new ArrayList<>();
@@ -389,7 +368,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                 case 0x105:
                     JSONArray list_phonto= (JSONArray) msg.obj;
                     try {
-                        initPhotoByExistInStorage(list_phonto);
+                        initPhoto(list_phonto);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -397,40 +376,22 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                 case 0x106:
                     Glide.with(getContext())
                             .load((String) msg.obj)
-                            .asBitmap()
                             .centerCrop()
+                            .placeholder(R.drawable.a_img)
+                            .error(R.drawable.a_img)
                             .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
-                            /*.skipMemoryCache(true)*///跳过内存缓存
+                            .skipMemoryCache(true)///跳过内存缓存
                             .into(img_pho1);
-                    /*Bitmap bm1 = BitmapFactory.decodeFile((String) msg.obj);
-                    img_pho1.setImageBitmap(bm1);*/
-                    /*BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    int scale = (int)(options.outHeight/(float)200);//我们只用高度或宽度计算均可
-                    if(scale<=0){
-                        scale = 1;}
-                    options.inSampleSize = scale;
-                    Bitmap bitmap = BitmapFactory.decodeFile((String) msg.obj,options);
-                    img_pho1.setImageBitmap(bitmap);*/
                     break;
                 case 0x107:
                     Glide.with(getContext())
                             .load((String) msg.obj)
-                            .asBitmap()
                             .centerCrop()
+                            .placeholder(R.drawable.b_img)
+                            .error(R.drawable.b_img)
                             .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
-                            /*.skipMemoryCache(true)*///跳过内存缓存
+                            .skipMemoryCache(true)///跳过内存缓存
                             .into(img_pho2);
-                    /*Bitmap bm2 = BitmapFactory.decodeFile((String) msg.obj);
-                    img_pho2.setImageBitmap(bm2);*/
-                    /*BitmapFactory.Options options2 = new BitmapFactory.Options();
-                    options2.inJustDecodeBounds = true;
-                    int scale2 = (int)(options2.outHeight/(float)200);//我们只用高度或宽度计算均可
-                    if(scale2<=0){
-                        scale2 = 1;}
-                    options2.inSampleSize = scale2;
-                    Bitmap bitmap2 = BitmapFactory.decodeFile((String) msg.obj,options2);
-                    img_pho2.setImageBitmap(bitmap2);*/
                     break;
                 case 0x108:
                     img_pho1.setImageResource(R.drawable.a_img);
@@ -452,8 +413,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
 
 
     private void initBarChart(BarChart mBarChart){
-        //mBarChart.setOnChartValueSelectedListener(this);
-        //mBarChart.getDescription().setEnabled(false);
         mBarChart.setMaxVisibleValueCount(40);
         // 扩展现在只能分别在x轴和y轴
         mBarChart.setPinchZoom(false);
@@ -482,6 +441,12 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         l.setFormToTextSpace(0f);
         l.setXEntrySpace(0f);
         mBarChart.getDescription().setText("");
+
+        //设置表格透明
+        //mBarChart.getXAxis().setAxisLineColor(getResources().getColor(R.color.touming));
+        mBarChart.getXAxis().setGridColor(getResources().getColor(R.color.touming));
+        //mBarChart.getAxisLeft().setAxisLineColor(getResources().getColor(R.color.touming));
+        mBarChart.getAxisLeft().setGridColor(getResources().getColor(R.color.touming));
     }
 
     private void initBasicInfo(JSONArray list_jcxx) throws JSONException {
@@ -651,61 +616,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             }
         }
         set1.setColors(colors);
-        /*switch (yVals.size()){
-            case 0:
-                set1.setColor(getResources().getColor(R.color.tongming));
-                break;
-            case 1:
-                set1.setColors(getResources().getColor(color[0]));
-                break;
-            case 2:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]));
-                break;
-            case 3:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),getResources().getColor(color[2]));
-                break;
-            case 4:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]));
-                break;
-            case 5:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]));
-                break;
-            case 6:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
-                        getResources().getColor(color[5]));
-                break;
-            case 7:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
-                        getResources().getColor(color[5]),getResources().getColor(color[6]));
-                break;
-            case 8:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
-                        getResources().getColor(color[5]),getResources().getColor(color[6]),getResources().getColor(color[7]));
-                break;
-            case 9:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
-                        getResources().getColor(color[5]),getResources().getColor(color[6]),getResources().getColor(color[7]),
-                        getResources().getColor(color[8]));
-                break;
-            case 10:
-                set1.setColors(getResources().getColor(color[0]),getResources().getColor(color[1]),
-                        getResources().getColor(color[2]),getResources().getColor(color[3]),getResources().getColor(color[4]),
-                        getResources().getColor(color[5]),getResources().getColor(color[6]),getResources().getColor(color[7]),
-                        getResources().getColor(color[8]),getResources().getColor(color[9]));
-                break;
-            default:
-                break;
-
-        }*/
-            /*set1.setColors(getResources().getColor(R.color.blue_sl_false),
-                    getResources().getColor(R.color.colorPrimary),
-                    getResources().getColor(R.color.bottom_sl));*/
         String[] yStr=new String[yVals.size()];
         for (int n=0;n<yVals.size();n++){
             yStr[n]=yVals.get(n);
@@ -866,16 +776,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                                     .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
                                     /*.skipMemoryCache(true)*/.
                                     into(img_pho1);
-                            /*Bitmap bm = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG");
-                            img_pho1.setImageBitmap(bm);*/
-                            /*BitmapFactory.Options options = new BitmapFactory.Options();
-                            options.inJustDecodeBounds = true;
-                            int scale = (int)(options.outHeight/(float)200);//我们只用高度或宽度计算均可
-                            if(scale<=0){
-                                scale = 1;}
-                            options.inSampleSize = scale;
-                            Bitmap bitmap = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG",options);
-                            img_pho1.setImageBitmap(bitmap);*/
                         }else {
                             new Thread(new Runnable() {
                                 @Override
@@ -944,16 +844,6 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
                                     .diskCacheStrategy( DiskCacheStrategy.NONE )//禁用磁盘缓存
                                     /*.skipMemoryCache(true)*/.
                                     into(img_pho2);
-                            /*Bitmap bm = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG");
-                            img_pho2.setImageBitmap(bm);*/
-                            /*BitmapFactory.Options options = new BitmapFactory.Options();
-                            options.inJustDecodeBounds = true;
-                            int scale = (int)(options.outHeight/(float)200);//我们只用高度或宽度计算均可
-                            if(scale<=0){
-                                scale = 1;}
-                            options.inSampleSize = scale;
-                            Bitmap bitmap = BitmapFactory.decodeFile(filePhath+"/Photos/"+item.get(1)+".JPG",options);
-                            img_pho2.setImageBitmap(bitmap);*/
                         }else {
                             new Thread(new Runnable() {
                                 @Override
@@ -1005,54 +895,114 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         }
     }
 
+    private void initPhoto(final JSONArray list) throws JSONException {
+        if(list.length()>0){
+            //下载图片
+            for (int i=0;i<list.length();i++){
+                final JSONObject item=list.getJSONObject(i);
+                if(item.getString("wkm_lb").equals("A")){
+                    if (!item.getString("wkm_wkno").equals("")){
+                        File file=new File(filePhath+"/Photos/"+item.getString("wkm_wkno")+".JPG");
+                        caozuo_text.setText(item.getString("wkm_zwmc"));
+                        cao_name_text.setText(item.getString("wkm_name"));
+                        cao_phone.setText(item.getString("wkm_phone"));
+                        if (item.getString("wkm_name").length()>5){
+                            cao_name_text.setSingleLine();
+                            cao_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                            cao_name_text.setHorizontallyScrolling(true);
+                            cao_name_text.setMarqueeRepeatLimit(-1);
+                            cao_name_text.setFocusable(true);
+                            cao_name_text.setFocusableInTouchMode(true);
+                            cao_name_text.requestFocus();
+                        }else {
+                            cao_name_text.setFocusable(false);
+                            cao_name_text.setFocusableInTouchMode(false);
+                            cao_name_text.requestFocus();
+                        }
+                        String[] str=item.getString("wkm_rymname").split("&lt;br&gt;");
+                        String rym="";
+                        for (int j=0;j<str.length;j++){
+                            rym=rym+str[j]+"\n";
+                        }
+                        labRym.setText(rym);
+
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x106;
+                        msg.obj=item.getString("wkm_PicFile");
+                        handler.sendMessage(msg);
+
+                        Log.e("show_Img","A");
+
+                    }else {
+                        handler.sendEmptyMessage(0x108);
+                    }
+                }else if(item.getString("wkm_lb").equals("B")){
+                    if (!item.getString("wkm_wkno").equals("")){
+                        File file=new File(filePhath+"/Photos/"+item.getString("wkm_wkno")+".JPG");
+                        jisu_text.setText(item.getString("wkm_zwmc"));
+                        ji_name_text.setText(item.getString("wkm_name"));
+                        ji_phone.setText(item.getString("wkm_phone"));
+                        if (item.getString("wkm_name").length()>5){
+                            ji_name_text.setSingleLine();
+                            ji_name_text.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                            ji_name_text.setHorizontallyScrolling(true);
+                            ji_name_text.setMarqueeRepeatLimit(-1);
+                            ji_name_text.setFocusable(true);
+                            ji_name_text.setFocusableInTouchMode(true);
+                            ji_name_text.requestFocus();
+                        }else {
+                            ji_name_text.setFocusable(false);
+                            ji_name_text.setFocusableInTouchMode(false);
+                            ji_name_text.requestFocus();
+                        }
+
+
+                        Message msg=handler.obtainMessage();
+                        msg.what=0x107;
+                        //item.getString("wkm_PicFile")
+                        msg.obj=item.getString("wkm_PicFile");
+                        handler.sendMessage(msg);
+                        Log.e("show_Img","B");
+
+                    }else {
+                        handler.sendEmptyMessage(0x109);
+                    }
+
+                }
+            }
+        }else {
+            jisu_text.setText("【技术员】");
+            ji_name_text.setText("技术员");
+            caozuo_text.setText("【操作员】");
+            cao_name_text.setText("操作员");
+            labRym.setText("");
+        }
+    }
     //定时刷新
     private void updateDataOntime(){
         updateTimer=new Timer();
         TimerTask timerTask=new TimerTask() {
             @Override
             public void run() {
-                getNetDate();
+                getNetDate(1);
             }
         };
         updateTimer.schedule(timerTask,Integer.parseInt(getString(R.string.base_info_update_time)),Integer.parseInt(getString(R.string.base_info_update_time)));
     }
 
-    private void getNetDate(){
+    private void getNetDate(final int type){
+        //type为1的时候不刷新照片
+        //type为0的时候刷新照片
         //工单信息
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getInfo();
+                getInfo(type);
             }
         }).start();
     }
 
-    private synchronized void getInfo(){
-
-        /*List<List<String>>list2= NetHelper.getQuerysqlResult("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
-        if(list2!=null){
-            handler.sendEmptyMessage(0x111);
-            if (list2.size()>0){
-                if (list2.get(0).size()>11){
-                    Message msg=handler.obtainMessage();
-                    msg.what=0x104;
-                    msg.obj=list2;
-                    handler.sendMessage(msg);
-                }
-            }
-        }else {
-            NetHelper.uploadNetworkError("Exec PAD_Get_JtmZtInfo NetWordError",jtbh,mac);
-            //handler.sendEmptyMessage(0x101);
-            handler.sendEmptyMessage(0x110);
-            try {
-                Thread.currentThread().sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            getNetDate();
-            return;
-        }*/
-
+    private synchronized void getInfo(int type){
         JSONArray list2= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_JtmZtInfo '"+jtbh+"'");
         if(list2!=null){
             handler.sendEmptyMessage(0x111);
@@ -1071,7 +1021,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            getNetDate();
+            getNetDate(type);
             return;
         }
 
@@ -1116,7 +1066,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            getNetDate();
+            getNetDate(type);
             return;
         }
 
@@ -1161,7 +1111,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            getNetDate();
+            getNetDate(type);
             return;
         }
 
@@ -1188,25 +1138,27 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
             getNetDate();
             return;
         }*/
-        JSONArray list4= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_PhotoInfo '"+jtbh+"'");
-        if(list4!=null){
-            handler.sendEmptyMessage(0x111);
-            if (list4.length()>0){
-                Message msg=handler.obtainMessage();
-                msg.what=0x105;
-                msg.obj=list4;
-                handler.sendMessage(msg);
+        if (type!=1){
+            JSONArray list4= NetHelper.getQuerysqlResultJsonArray("Exec PAD_Get_PhotoInfo '"+jtbh+"'");
+            if(list4!=null){
+                handler.sendEmptyMessage(0x111);
+                if (list4.length()>0){
+                    Message msg=handler.obtainMessage();
+                    msg.what=0x105;
+                    msg.obj=list4;
+                    handler.sendMessage(msg);
+                }
+            }else {
+                NetHelper.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);
+                handler.sendEmptyMessage(0x110);
+                try {
+                    Thread.currentThread().sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                getNetDate(type);
+                return;
             }
-        }else {
-            NetHelper.uploadNetworkError("Exec PAD_Get_PhotoInfo NetWordError",jtbh,mac);
-            handler.sendEmptyMessage(0x110);
-            try {
-                Thread.currentThread().sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            getNetDate();
-            return;
         }
     }
 
@@ -1285,7 +1237,7 @@ public class InfoFragment extends Fragment  implements View.OnClickListener{
         AppUtils.sendCountdownReceiver(getContext());
         switch (v.getId()){
             case R.id.cardView:
-                getNetDate();
+                getNetDate(0);
                 break;
         }
     }

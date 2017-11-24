@@ -27,7 +27,7 @@ import java.util.TimerTask;
 
 public class GpioService extends Service {
     private int i=0;
-    private GpioEvent event_gpio;
+    private static GpioEvent event_gpio;
     private AppDataBase dataBase;
     private SharedPreferences sharedPreferences;
     private String mac,jtbh;
@@ -88,7 +88,7 @@ public class GpioService extends Service {
                 SimpleDateFormat format2=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
                 //发广播给MainActivity接收
-                String ymd_hms=format2.format(date);
+                final String ymd_hms=format2.format(date);
                 Intent intent=new Intent();
                 intent.putExtra("index",index);
                 intent.putExtra("level",level);
@@ -100,17 +100,29 @@ public class GpioService extends Service {
                     case 1:
                         if(level){
                         }else {
-                            dataBase.insertGpio(mac,jtbh,"A","1",ymd_hms,1,"");
-                            //dataBase.insertGpio2(mac,jtbh,"A","1",ymd_hms,1,"");
-                            dataBase.selectGpio();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dataBase.insertGpio(mac,jtbh,"A","1",ymd_hms,1,"");
+                                    dataBase.insertCollGpio(mac,jtbh,"A","1",ymd_hms,1,"");
+                                    //dataBase.insertGpio2(mac,jtbh,"A","1",ymd_hms,1,"");
+                                    dataBase.selectGpio();
+                                }
+                            }).start();
                         }
                         break;
                     case 2:
                         if(level){
 
                         }else {
-                            dataBase.insertGpio(mac,jtbh,"A","2",ymd_hms,1,"");
-                            //dataBase.insertGpio2(mac,jtbh,"A","2",ymd_hms,1,"");
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dataBase.insertGpio(mac,jtbh,"A","2",ymd_hms,1,"");
+                                    dataBase.insertCollGpio(mac,jtbh,"A","2",ymd_hms,1,"");
+                                    //dataBase.insertGpio2(mac,jtbh,"A","2",ymd_hms,1,"");
+                                }
+                            }).start();
                         }
 
                         break;
@@ -118,16 +130,28 @@ public class GpioService extends Service {
                         if(level){
 
                         }else {
-                            dataBase.insertGpio(mac,jtbh,"A","3",ymd_hms,1,"");
-                            //dataBase.insertGpio2(mac,jtbh,"A","3",ymd_hms,1,"");
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dataBase.insertGpio(mac,jtbh,"A","3",ymd_hms,1,"");
+                                    dataBase.insertCollGpio(mac,jtbh,"A","3",ymd_hms,1,"");
+                                    //dataBase.insertGpio2(mac,jtbh,"A","3",ymd_hms,1,"");
+                                }
+                            }).start();
                         }
                         break;
                     case 4:
                         if(level){
 
                         }else {
-                            dataBase.insertGpio(mac,jtbh,"A","4",ymd_hms,1,"");
-                            //dataBase.insertGpio2(mac,jtbh,"A","4",ymd_hms,1,"");
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dataBase.insertGpio(mac,jtbh,"A","4",ymd_hms,1,"");
+                                    dataBase.insertCollGpio(mac,jtbh,"A","4",ymd_hms,1,"");
+                                    //dataBase.insertGpio2(mac,jtbh,"A","4",ymd_hms,1,"");
+                                }
+                            }).start();
                         }
                         break;
                     default:
@@ -172,6 +196,7 @@ public class GpioService extends Service {
                     if (list_result.length()>0){
                         if (list_result.getJSONObject(0).getString("Column1").equals("OK")){
                             //handler.sendEmptyMessage(0x106);
+                            dataBase.insertUploadGpio(mac,jtbh,"A",gpio,time,1,"");
                             dataBase.deleteGpio(time);
                         }else {
                             break;
@@ -195,6 +220,7 @@ public class GpioService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        dataBase.closeDataBase();
         Log.w("gpio_service","onDestroy");
         //timer_gpio.cancel();
     }

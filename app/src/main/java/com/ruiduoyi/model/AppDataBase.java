@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,7 @@ public  class AppDataBase {
 
     public AppDataBase(Context context) {
         this.context=context;
-        openHelper=new SQLiteOpenHelper(context,"Rdyapp.db",null,2) {
+        openHelper=new SQLiteOpenHelper(context,"Rdyapp.db",null,3) {
             @Override
             public void onCreate(SQLiteDatabase db) {
                 db.execSQL("create table if not exists gpio_info("
@@ -55,6 +57,28 @@ public  class AppDataBase {
                 db.execSQL("create table if not exists file_info("
                         +"file_name varchar primary key,"
                         +"file_ver varchar not null)");
+
+                //上传成功的gpio信号
+                db.execSQL("create table if not exists upload_gpio("
+                        +"id integer primary key autoincrement,"
+                        +"PadID varchar not null,"
+                        +"PadJtbh varchar not null,"
+                        +"PadZlCode varchar not null,"
+                        +"PadSignalNO varchar not null,"
+                        +"PadTime datetime not null,"
+                        +"PadVal int not null,"
+                        +"PadDesc varchar not null)");
+
+                //采集到的gpio信号
+                db.execSQL("create table if not exists coll_gpio("
+                        +"id integer primary key autoincrement,"
+                        +"PadID varchar not null,"
+                        +"PadJtbh varchar not null,"
+                        +"PadZlCode varchar not null,"
+                        +"PadSignalNO varchar not null,"
+                        +"PadTime datetime not null,"
+                        +"PadVal int not null,"
+                        +"PadDesc varchar not null)");
                 Log.e("sql_update","succes");
             }
         };
@@ -74,6 +98,21 @@ public  class AppDataBase {
                 " values ('"+mac+"','"+jtbh+"','"+zldm+"','"+gpio+"','"+time+"',"+num+",'"+desc+"')");
     }
 
+    public void insertCollGpio(String mac,String jtbh,String zldm,String gpio,String time,int num,String desc){
+        synchronized(this) {
+            database.execSQL("insert into coll_gpio (PadID,PadJtbh,PadZlCode,PadSignalNO,PadTime,PadVal,PadDesc)" +
+                    " values ('" + mac + "','" + jtbh + "','" + zldm + "','" + gpio + "','" + time + "'," + num + ",'" + desc + "')");
+        }
+    }
+
+
+    public void insertUploadGpio(String mac,String jtbh,String zldm,String gpio,String time,int num,String desc){
+        synchronized(this) {
+            database.execSQL("insert into upload_gpio (PadID,PadJtbh,PadZlCode,PadSignalNO,PadTime,PadVal,PadDesc)" +
+                    " values ('" + mac + "','" + jtbh + "','" + zldm + "','" + gpio + "','" + time + "'," + num + ",'" + desc + "')");
+        }
+    }
+
 
     public  void deleteGpio(String time){
         synchronized(this) {
@@ -82,10 +121,32 @@ public  class AppDataBase {
         Log.e("delete",time);
     }
 
+    public  void deleteThreeDayCollGpio(){
+        synchronized(this) {
+            Date date=new Date(System.currentTimeMillis());
+            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            String dateStr=simpleDateFormat.format(date);
+
+            database.execSQL("delete from coll_gpio where PadTime <date('"+dateStr+"','start of day','-2 days')");
+            Log.e("del_sql","delete from coll_gpio where PadTime <date('"+dateStr+"','start of day','-3 days')");
+        }
+    }
+
+    public  void deleteThreeDayUploadGpio(){
+        synchronized(this) {
+            Date date=new Date(System.currentTimeMillis());
+            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            String dateStr=simpleDateFormat.format(date);
+            database.execSQL("delete from upload_gpio where PadTime <date('"+dateStr+"','start of day','-2 days')");
+            Log.e("del_sql","delete from upload_gpio where PadTime <date('"+dateStr+"','start of day','-3 days')");
+        }
+    }
+
+
     public  List<Map<String,String>> selectGpio(){
         synchronized(this) {
             List<Map<String,String>> list=new ArrayList<>();
-            Cursor cursor = database.rawQuery("select * from gpio_info order by PadTime", null);
+            Cursor cursor = database.rawQuery("select * from gpio_info order by PadTime limit 0,10", null);
             int num = 0;
             while (cursor.moveToNext()) {
                 Map<String, String> item = new HashMap<>();
@@ -103,6 +164,7 @@ public  class AppDataBase {
                 list.add(item);
                 Log.e("sql", item.toString());
             }
+            cursor.close();
             return list;
         }
     }
@@ -135,6 +197,10 @@ public  class AppDataBase {
             database.execSQL("insert into file_info (file_name,file_ver)" +
                     " values ('"+file_name+"','"+file_ver+"')");
         }
+    }
+
+    public void closeDataBase(){
+        database.close();
     }
 
 }

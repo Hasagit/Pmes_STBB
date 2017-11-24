@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ruiduoyi.R;
 import com.ruiduoyi.activity.Dialog.ReSetServerIpActivity;
+import com.ruiduoyi.model.AppDataBase;
 import com.ruiduoyi.model.NetHelper;
 import com.ruiduoyi.utils.AppUtils;
 import com.ruiduoyi.view.PopupDialog;
@@ -94,6 +95,9 @@ public class FirstActivity extends BaseActivity{
         }else {
             NetHelper.URL="http://"+sharedPreferences.getString("service_ip","")+":8080/Service1.asmx";
         }
+
+
+        deleteThreeDayGpioDate();
 
 
         handler=new Handler(){
@@ -471,6 +475,20 @@ public class FirstActivity extends BaseActivity{
             }).start();
 
     }
+
+
+    private void deleteThreeDayGpioDate(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AppDataBase dataBase=new AppDataBase(FirstActivity.this);
+                dataBase.deleteThreeDayCollGpio();
+                dataBase.deleteThreeDayUploadGpio();
+                dataBase.closeDataBase();
+            }
+        }).start();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
