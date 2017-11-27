@@ -3,6 +3,7 @@ package com.ruiduoyi.service;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Gpio;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.IntDef;
@@ -80,6 +81,10 @@ public class GpioService extends Service {
 
 
     public void initGpio(){
+        int g1=Gpio.SetGpioInput("gpio1");
+        int g2=Gpio.SetGpioInput("gpio2");
+        int g3=Gpio.SetGpioInput("gpio3");
+        int g4=Gpio.SetGpioInput("gpio4");
         event_gpio = new GpioEvent() {
             @Override
             public void onGpioSignal(int index,boolean level) {
@@ -158,7 +163,12 @@ public class GpioService extends Service {
                         break;
                 }
                 if (level){
-                    uploadGpioData();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            uploadGpioData();
+                        }
+                    }).start();
                 }
             }
         };
